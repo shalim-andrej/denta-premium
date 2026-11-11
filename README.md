@@ -1,36 +1,100 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# DentaPremium — сайт стоматологии с онлайн-записью и оплатой
 
-## Getting Started
+Премиальный сайт стоматологической клиники: лендинг, страницы врачей и услуг,
+онлайн-запись с выбором слотов, приём платежей через ЮKassa (карта + СБП) и
+админ-панель (CRM) для управления клиникой.
 
-First, run the development server:
+## Стек
+
+- **Next.js 16** (App Router, Server Actions, Turbopack) + **React 19** + **TypeScript**
+- **Tailwind CSS 4**, иконки **lucide-react**, календарь **react-day-picker**
+- **Prisma 7** + SQLite (драйвер better-sqlite3)
+- **Zod** — валидация на сервере
+- **ЮKassa** — оплата картой и по СБП
+
+## Возможности
+
+**Публичная часть**
+
+- Лендинг с hero, преимуществами и топ-врачами
+- Страницы «Врачи» и «Услуги» с ценами и длительностью
+- Контакты, политика конфиденциальности, оферта, лицензия
+- Cookie-баннер, SEO-метаданные и Open Graph на каждой странице
+
+**Онлайн-запись (`/book`)**
+
+- Пошаговая форма: врач → услуга → дата → время → контакты → оплата
+- Слоты считает **сервер**: расписание врача (`Schedule`), длительность услуги,
+  уже занятые записи, прошедшее время. Воскресенье — выходной, если расписание
+  не заполнено (дефолт пн–сб 9:00–18:00)
+- Проверка пересечения записей на сервере (race-safe запрос к БД)
+- Оплата картой или СБП; после успеха — страница `/book/success`
+
+**Админ-панель (`/admin`)**
+
+- Добавление врачей с расписанием приёма и услуг с ценами
+- Лента записей: пациент, врач, услуга, статус оплаты
+- Кнопки «Принять»/«Отклонить» для заявок в статусе PENDING
+
+## Безопасность
+
+- Сумма платежа берётся **из БД по записи** — клиент не может назначить свою цену
+- Вебхук ЮKassa принимает запросы **только с IP-адресов ЮKassa**
+  (карты сетей + IPv6 `2a02:5180::/32`)
+- Сессия администратора — подписанная HMAC-SHA256 cookie (`HttpOnly`),
+  подделать значение из браузера нельзя
+- Сравнение пароля — за постоянное время (`timingSafeEqual`)
+- `dev.db` и `.env` вне git; персональные данные в репозиторий не попадают
+
+## Быстрый старт
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+cp .env.example .env          # заполнить ADMIN_PASSWORD и ключи ЮKassa
+npm run db:push               # создать схему БД
+npm run seed                  # демо-врачи, расписание и услуги
+npm run dev                   # http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Админка: `/login` → пароль из `ADMIN_PASSWORD` → `/admin`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Переменные окружения
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| Переменная | Назначение |
+| --- | --- |
+| `DATABASE_URL` | Путь к SQLite, по умолчанию `file:./prisma/dev.db` |
+| `ADMIN_PASSWORD` | Пароль входа в `/admin` |
+| `YOOKASSA_SHOP_ID` | ID магазина ЮKassa |
+| `YOOKASSA_SECRET_KEY` | Секретный ключ ЮKassa |
 
-## Learn More
+Вебхук ЮKassa: `POST /api/webhooks/yookassa` — обработка `payment.succeeded`
+(запись → CONFIRMED + PAID) и `payment.canceled`.
 
-To learn more about Next.js, take a look at the following resources:
+## Структура
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```
+src/
+  app/
+    (marketing)/        — лендинг, врачи, услуги, контакты, документы
+    (auth)/login/       — вход администратора
+    admin/              — CRM: врачи, услуги, записи
+    book/               — онлайн-запись + страница успеха
+    api/slots/          — расчёт свободных слотов (GET)
+    api/payments/       — создание платежа ЮKassa (POST)
+    api/webhooks/       — вебхук ЮKassa (POST)
+    actions.ts          — Server Actions (запись, вход, статусы)
+  components/           — Header, Footer, CookieBanner
+  lib/                  — prisma-клиент, подписанная админ-сессия
+  proxy.ts              — защита роутов /admin (Next.js 16 proxy)
+prisma/
+  schema.prisma         — Doctor, Schedule, Service, Booking, User
+  seed.mjs              — демо-данные
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Что дальше (роадмап)
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- Хэширование пароля администратора (bcrypt) и rate-limit на `/login`
+- SMS/Telegram-уведомления о новых записях
+- Повторное подтверждение записи за 24 часа
+- Перевод SQLite → PostgreSQL при росте нагрузки
+- Отмена записи пациентом по ссылке из SMS
