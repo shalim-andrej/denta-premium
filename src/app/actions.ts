@@ -9,8 +9,8 @@ import { z } from "zod";
 import { timingSafeEqual, randomBytes } from "crypto";
 import { format } from "date-fns";
 import { ru } from "date-fns/locale";
-import { ADMIN_COOKIE, adminSessionValue } from "@/lib/auth";
-import { dayIntervals, coversInterval } from "@/lib/slots";
+import { ADMIN_COOKIE, adminSessionValue, isAdminRequest } from "@/lib/auth";
+import { dayIntervals, coversInterval, hasOverlap } from "@/lib/slots";
 import { bookingByToken } from "@/lib/tokens";
 import { notifyAdminTelegram, sendEmail, emailShell, siteUrl, isRealEmail } from "@/lib/notify";
 import { rateLimit } from "@/lib/ratelimit";
@@ -31,6 +31,7 @@ const doctorSchema = z.object({
 });
 
 export async function createDoctor(formData: FormData) {
+  await requireAdmin();
   const parsed = doctorSchema.safeParse({
     name: formData.get("name"),
     specialty: formData.get("specialty"),
@@ -60,6 +61,7 @@ const serviceSchema = z.object({
 });
 
 export async function createService(formData: FormData) {
+  await requireAdmin();
   const parsed = serviceSchema.safeParse({
     title: formData.get("title"),
     category: formData.get("category"),
@@ -244,6 +246,7 @@ export async function createBooking(formData: FormData) {
 }
 
 export async function updateBookingStatus(formData: FormData) {
+  await requireAdmin();
   const bookingId = formData.get("bookingId") as string;
   const newStatus = formData.get("status") as string;
   if (!bookingId || !newStatus) return;
@@ -329,4 +332,262 @@ export async function loginAction(formData: FormData): Promise<{ error: string }
 export async function logoutAction() {
   (await cookies()).delete(ADMIN_COOKIE);
   redirect("/login");
+}
+/* ============ Защита админских экшенов ============ */
+
+// Серверные экшены вызываются POST-запросами — проверяем админ-сессию
+// ВНУТРИ каждого экшена, а не только в proxy.ts.
+export async function requireAdmin(): Promise<void> {
+  const c = await cookies();
+  const ok = await isAdminRequest(c.get(ADMIN_COOKIE)?.value);
+  if (!ok) throw new Error("Unauthorized: только для администратора");
+}
+
+/* ============ Расписание врачей ============ */
+
+const scheduleSchema = z.object({
+  doctorId: z.string().min(1),
+  dayOfWeek: z.coerce.number().int().min(0).max(6),
+  startTime: z.string().regex(/^\d{2}:\d{2}$/),
+  endTime: z.string().regex(/^\d{2}:\d{2}$/),
+});
+
+export async function createSchedule(formData: FormData) {
+  await requireAdmin();
+  const parsed = scheduleSchema.safeParse({
+    doctorId: formData.get("doctorId"),
+    dayOfWeek: formData.get("dayOfWeek"),
+    startTime: formData.get("startTime"),
+    endTime: formData.get("endTime"),
+  });
+  if (!parsed.success) return;
+
+  const { doctorId, dayOfWeek, startTime, endTime } = parsed.data;
+  // Интервал должен быть корректным: конец после начала
+  const [sh, sm] = startTime.split(":").map(Number);
+  const [eh, em] = endTime.split(":").map(Number);
+  if (eh * 60 + em <= sh * 60 + sm) return;
+
+  try {
+    const doctor = await prisma.doctor.findUnique({ where: { id: doctorId } });
+    if (!doctor) return;
+    await prisma.schedule.create({ data: { doctorId, dayOfWeek, startTime, endTime } });
+    revalidatePath("/admin/schedule");
+  } catch (e) {
+    console.error("createSchedule failed:", e);
+  }
+}
+
+export async function deleteSchedule(formData: FormData) {
+  await requireAdmin();
+  const id = String(formData.get("id") || "");
+  if (!id) return;
+  try {
+    await prisma.schedule.delete({ where: { id } });
+    revalidatePath("/admin/schedule");
+  } catch (e) {
+    console.error("deleteSchedule failed:", e);
+  }
+}
+
+/* ============ Услуги: редактирование и вкл/выкл ============ */
+
+export async function updateService(formData: FormData) {
+  await requireAdmin();
+  const parsed = serviceSchema.safeParse({
+    title: formData.get("title"),
+    category: formData.get("category"),
+    price: formData.get("price"),
+    duration: formData.get("duration"),
+  });
+  const id = String(formData.get("id") || "");
+  if (!parsed.success || !id) return;
+
+  try {
+    await prisma.service.update({ where: { id }, data: parsed.data });
+    revalidatePath("/admin/services");
+    revalidatePath("/services");
+    revalidatePath("/book");
+  } catch (e) {
+    console.error("updateService failed:", e);
+  }
+}
+
+export async function toggleServiceActive(formData: FormData) {
+  await requireAdmin();
+  const id = String(formData.get("id") || "");
+  if (!id) return;
+  try {
+    const service = await prisma.service.findUnique({ where: { id }, select: { isActive: true } });
+    if (!service) return;
+    await prisma.service.update({ where: { id }, data: { isActive: !service.isActive } });
+    revalidatePath("/admin/services");
+    revalidatePath("/services");
+    revalidatePath("/book");
+  } catch (e) {
+    console.error("toggleServiceActive failed:", e);
+  }
+}
+
+/* ============ Ручная запись пациента администратором ============ */
+
+const adminBookingSchema = z.object({
+  serviceId: z.string(),
+  doctorId: z.string(),
+  startTime: z.string(),
+  clientName: z.string().min(2),
+  clientPhone: z.string().min(10),
+  clientEmail: z.string().email().optional(),
+});
+
+export async function adminCreateBooking(formData: FormData) {
+  await requireAdmin();
+  const parsed = adminBookingSchema.safeParse({
+    serviceId: formData.get("serviceId"),
+    doctorId: formData.get("doctorId"),
+    startTime: formData.get("startTime"),
+    clientName: formData.get("clientName"),
+    clientPhone: formData.get("clientPhone"),
+    clientEmail: formData.get("clientEmail"),
+  });
+  if (!parsed.success) return { error: "Проверьте данные пациента" };
+
+  const data = parsed.data;
+  const startTime = new Date(data.startTime);
+  if (isNaN(startTime.getTime())) return { error: "Некорректное время" };
+
+  try {
+    const service = await prisma.service.findUnique({ where: { id: data.serviceId } });
+    const doctor = await prisma.doctor.findUnique({ where: { id: data.doctorId } });
+    if (!service || !doctor) return { error: "Услуга или врач не найдены" };
+
+    const endTime = new Date(startTime.getTime() + service.duration * 60000);
+
+    // Админ знает контекст (пациент на телефоне) — график не проверяем,
+    // но пересечение с существующими записями всё равно не допускаем.
+    const overlap = await hasOverlap(data.doctorId, startTime, endTime);
+    if (overlap) return { error: "Это время у врача уже занято" };
+
+    const emailToUse = data.clientEmail || `${data.clientPhone}@temp.dentapremium.ru`;
+    const user = await prisma.user.upsert({
+      where: { email: emailToUse },
+      update: { name: data.clientName, phone: data.clientPhone },
+      create: { name: data.clientName, phone: data.clientPhone, email: emailToUse },
+    });
+
+    const booking = await prisma.booking.create({
+      data: {
+        startTime,
+        endTime,
+        userId: user.id,
+        serviceId: service.id,
+        doctorId: doctor.id,
+        status: "CONFIRMED", // админ подтверждает сразу
+      },
+    });
+
+    const manageToken = randomBytes(32).toString("base64url");
+    await prisma.bookingToken.create({
+      data: {
+        token: manageToken,
+        bookingId: booking.id,
+        expiresAt: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000),
+      },
+    });
+
+    revalidatePath("/admin");
+
+    const when = format(startTime, "d MMMM, HH:mm", { locale: ru });
+    await notifyAdminTelegram(
+      `<b>Запись создана админом</b>\n👤 ${data.clientName}, +${data.clientPhone}\n🕐 ${when}\n${doctor.name}: ${service.title}`
+    );
+    if (data.clientEmail && isRealEmail(data.clientEmail)) {
+      const base = await siteUrl();
+      await sendEmail(
+        data.clientEmail,
+        `Вы записаны в клинику — ${when}`,
+        emailShell(
+          "Вы записаны в DentaPremium",
+          `<p>Здравствуйте, ${data.clientName}!</p>` +
+            `<p>Вас записали на <b>${service.title}</b> (${service.price} руб.).</p>` +
+            `<p><b>Когда:</b> ${when}<br/><b>Врач:</b> ${doctor.name}</p>` +
+            `<p>Управление записью: <a href="${base}/booking/${manageToken}">ссылка на запись</a></p>`
+        )
+      );
+    }
+
+    return { success: true, manageToken };
+  } catch (e: any) {
+    console.error("adminCreateBooking failed:", e);
+    return { error: "Ошибка базы данных" };
+  }
+}
+
+/** Отметка оплаты в клинике (наличные/терминал). */
+export async function updatePaymentStatus(formData: FormData) {
+  await requireAdmin();
+  const bookingId = String(formData.get("bookingId") || "");
+  const paymentStatus = String(formData.get("paymentStatus") || "");
+  if (!bookingId || !["PAID", "UNPAID"].includes(paymentStatus)) return;
+  try {
+    await prisma.booking.update({ where: { id: bookingId }, data: { paymentStatus } });
+    revalidatePath("/admin");
+  } catch (e) {
+    console.error(e);
+  }
+}
+
+/* ============ Отзывы ============ */
+
+const reviewSchema = z.object({
+  name: z.string().min(2).max(60),
+  rating: z.coerce.number().int().min(1).max(5),
+  text: z.string().min(10).max(1000),
+});
+
+/** Публичная форма отзыва: попадает на сайт только после модерации. */
+export async function submitReview(formData: FormData) {
+  const parsed = reviewSchema.safeParse({
+    name: formData.get("name"),
+    rating: formData.get("rating"),
+    text: formData.get("text"),
+  });
+  if (!parsed.success) return { error: "Заполните имя, оценку и отзыв (от 10 символов)" };
+
+  try {
+    await prisma.review.create({ data: parsed.data });
+    revalidatePath("/admin/reviews");
+    return { success: true };
+  } catch (e) {
+    console.error("submitReview failed:", e);
+    return { error: "Не удалось сохранить отзыв" };
+  }
+}
+
+export async function approveReview(formData: FormData) {
+  await requireAdmin();
+  const id = String(formData.get("id") || "");
+  if (!id) return;
+  try {
+    const review = await prisma.review.findUnique({ where: { id }, select: { approved: true } });
+    if (!review) return;
+    await prisma.review.update({ where: { id }, data: { approved: !review.approved } });
+    revalidatePath("/admin/reviews");
+    revalidatePath("/");
+  } catch (e) {
+    console.error("approveReview failed:", e);
+  }
+}
+
+export async function deleteReview(formData: FormData) {
+  await requireAdmin();
+  const id = String(formData.get("id") || "");
+  if (!id) return;
+  try {
+    await prisma.review.delete({ where: { id } });
+    revalidatePath("/admin/reviews");
+    revalidatePath("/");
+  } catch (e) {
+    console.error("deleteReview failed:", e);
+  }
 }

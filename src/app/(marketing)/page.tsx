@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { ArrowRight, Star, ShieldCheck, Clock, Award, Stethoscope } from "lucide-react";
 import { Suspense } from "react";
 import { connection } from "next/server";
+import ReviewsSection from "@/components/ReviewsSection";
 
 // Асинхронный компонент для загрузки врачей (динамические данные)
 async function TopDoctors() {
@@ -115,6 +116,11 @@ export default function HomePage() {
           </Suspense>
         </div>
       </section>
+
+      {/* Reviews */}
+      <Suspense fallback={<div className="text-center text-slate-500 py-10">Загрузка отзывов...</div>}>
+        <ReviewsSection />
+      </Suspense>
 
       {/* CTA Section */}
       <section className="px-6 pb-24">
