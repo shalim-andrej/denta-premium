@@ -34,17 +34,20 @@ model Service {
   description String?
   price       Int
   duration    Int
+  isActive    Boolean   @default(true)
   bookings    Booking[]
   createdAt   DateTime  @default(now())
 }
 
 model Booking {
-  id            String   @id @default(cuid())
-  startTime     DateTime
-  endTime       DateTime
-  status        String   @default("PENDING")
-  paymentStatus String   @default("UNPAID")
-  comment       String?
+  id             String    @id @default(cuid())
+  startTime      DateTime
+  endTime        DateTime
+  status         String    @default("PENDING")
+  paymentStatus  String    @default("UNPAID")
+  comment        String?
+  paymentId      String?   // id платежа ЮKassa из вебхука — нужен для возвратов
+  reminderSentAt DateTime? // когда отправлено напоминание за 24 часа
   
   userId        String
   user          User     @relation(fields: [userId], references: [id])
@@ -55,7 +58,19 @@ model Booking {
   doctorId      String
   doctor        Doctor   @relation(fields: [doctorId], references: [id])
   
+  manageTokens  BookingToken[]
   createdAt     DateTime @default(now())
+}
+
+// Ссылка «управление записью»: пациент отменяет/переносит запись без звонка в клинику.
+// Токен — 256 бит энтропии, угадать невозможно; доступ только по ссылке.
+model BookingToken {
+  id        String   @id @default(cuid())
+  token     String   @unique
+  bookingId String
+  booking   Booking  @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+  createdAt DateTime @default(now())
 }
 
 model User {
@@ -66,4 +81,21 @@ model User {
   role      String    @default("CLIENT")
   bookings  Booking[]
   createdAt DateTime  @default(now())
+}
+
+// Отзыв пациента. Публикуется на главной только после модерации в админке.
+model Review {
+  id        String   @id @default(cuid())
+  name      String
+  rating    Int
+  text      String
+  approved  Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
+
+// Идемпотентность вебхука ЮKassa: повторная доставка того же события
+// не должна второй раз менять запись (PAID не задваивается).
+model ProcessedEvent {
+  id         String   @id // "<event>:<paymentId>"
+  receivedAt DateTime @default(now())
 }

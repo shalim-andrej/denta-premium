@@ -73,6 +73,13 @@ const services = [
   { title: "Установка элайнеров (этап)", category: "Ортодонтия", price: 29900, duration: 60 },
 ];
 
+const reviews = [
+  { name: "Марина К.", rating: 5, text: "Записалась онлайн вечером, оплатила через СБП — всё заняло пару минут. Волкова Елена Сергеевна вылечила каналы абсолютно без боли. Одобряю и рекомендую!", approved: true },
+  { name: "Дмитрий Соловьёв", rating: 5, text: "Делал имплантацию у Шалимова Андрея Михайловича. Чёткий план, никаких «сюрпризов» по цене — всё как в договоре и на сайте.", approved: true },
+  { name: "Ольга П.", rating: 4, text: "Хорошая клиника, современное оборудование. Единственное — в вечер буднего дня слоты быстро разбирают, приходилось бронировать за неделю.", approved: true },
+  { name: "Ирина В.", rating: 5, text: "Наблюдаемся всей семьёй: дочка носит элайнеры у Ким Ирины Викторовны, результат уже видно. Напоминание о приёме приходит заранее — очень удобно.", approved: true },
+];
+
 async function main() {
   console.log("Сеем демо-данные...");
 
@@ -97,6 +104,16 @@ async function main() {
     }
     await prisma.service.create({ data: s });
     console.log("  + услуга:", s.title);
+  }
+
+  for (const r of reviews) {
+    const existing = await prisma.review.findFirst({ where: { name: r.name, text: r.text } });
+    if (existing) {
+      console.log("  отзыв уже есть:", r.name);
+      continue;
+    }
+    await prisma.review.create({ data: r });
+    console.log("  + отзыв:", r.name);
   }
 
   console.log("Готово.");
