@@ -11,7 +11,6 @@ import { createBooking } from "../actions";
 interface Service { id: string; title: string; duration: number; price: number; }
 interface Doctor { id: string; name: string; specialty: string; }
 
-// Добавляем doctors в пропсы
 export default function BookingWidget({ services, doctors }: { services: Service[], doctors: Doctor[] }) {
   const [selectedDoctor, setSelectedDoctor] = useState<Doctor | null>(null);
   const [selectedService, setSelectedService] = useState<Service | null>(null);
@@ -20,6 +19,9 @@ export default function BookingWidget({ services, doctors }: { services: Service
   const [clientName, setClientName] = useState("");
   const [clientPhone, setClientPhone] = useState("");
   const [clientEmail, setClientEmail] = useState("");
+  const [paymentMethod, setPaymentMethod] = useState<"card" | "sbp">("sbp");
+  
+  const [isLoading, setIsLoading] = useState(false);
   const [message, setMessage] = useState<{ type: "error" | "success"; text: string } | null>(null);
   const [availableSlots, setAvailableSlots] = useState<string[]>([]);
 
@@ -27,9 +29,9 @@ export default function BookingWidget({ services, doctors }: { services: Service
     if (!selectedDate || !selectedService || !selectedDoctor) return;
     const slots: string[] = [];
     let current = new Date(selectedDate);
-    current.setHours(9, 0, 0, 0); // Клиника работает с 9:00
+    current.setHours(9, 0, 0, 0);
 
-    while (current.getHours() < 18) { // до 18:00
+    while (current.getHours() < 18) {
       slots.push(current.toISOString());
       current = addMinutes(current, 30);
     }
@@ -44,6 +46,9 @@ export default function BookingWidget({ services, doctors }: { services: Service
       return;
     }
 
+    setIsLoading(true);
+    setMessage(null);
+
     const formData = new FormData();
     formData.append("doctorId", selectedDoctor.id);
     formData.append("serviceId", selectedService.id);
@@ -54,11 +59,39 @@ export default function BookingWidget({ services, doctors }: { services: Service
 
     const result = await createBooking(formData);
 
-    if (result.success) {
-      setMessage({ type: "success", text: "Вы успешно записаны! Мы свяжемся с вами для подтверждения." });
-      setClientName(""); setClientPhone(""); setClientEmail(""); setSelectedTime("");
-    } else {
-      setMessage({ type: "error", text: result.error || "Ошибка" });
+    if (result.error) {
+      setMessage({ type: "error", text: result.error });
+      setIsLoading(false);
+      return;
+    }
+
+    if (result.success && result.bookingId) {
+      try {
+        const paymentRes = await fetch("/api/payments/create", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            amount: selectedService.price,
+            description: `Оплата услуги: ${selectedService.title}`,
+            bookingId: result.bookingId,
+            returnUrl: `${window.location.origin}/book/success`,
+            method: paymentMethod,
+          }),
+        });
+
+        const paymentData = await paymentRes.json();
+
+        if (paymentData.confirmationUrl) {
+          window.location.href = paymentData.confirmationUrl;
+        } else {
+          setMessage({ type: "error", text: "Ошибка создания платежа. Попробуйте позже." });
+          setIsLoading(false);
+        }
+      } catch (err) {
+        console.error(err);
+        setMessage({ type: "error", text: "Ошибка сети при создании платежа." });
+        setIsLoading(false);
+      }
     }
   };
 
@@ -144,7 +177,7 @@ export default function BookingWidget({ services, doctors }: { services: Service
           </div>
         )}
 
-        {/* Шаг 5: Данные */}
+        {/* Шаг 5: Данные и Оплата */}
         {selectedTime && (
           <form onSubmit={handleSubmit} className="space-y-4 pt-4 border-t border-gray-100">
             <label className="block text-sm font-semibold text-gray-700">5. Ваши данные</label>
@@ -160,11 +193,40 @@ export default function BookingWidget({ services, doctors }: { services: Service
                 placeholder="Телефон *"
               />
             </div>
+
+            {/* Выбор оплаты */}
+            <div className="pt-4 border-t border-gray-100">
+              <label className="block text-sm font-semibold text-gray-700 mb-3">Способ оплаты</label>
+              <div className="grid grid-cols-2 gap-3">
+                <button
+                  type="button"
+                  onClick={() => setPaymentMethod("sbp")}
+                  className={`p-4 rounded-xl border-2 text-left transition-all ${
+                    paymentMethod === "sbp" ? "border-teal-500 bg-teal-50" : "border-gray-200 hover:border-gray-300"
+                  }`}
+                >
+                  <div className="font-bold text-sm text-gray-900">СБП</div>
+                  <div className="text-xs text-gray-500 mt-1">По QR-коду</div>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setPaymentMethod("card")}
+                  className={`p-4 rounded-xl border-2 text-left transition-all ${
+                    paymentMethod === "card" ? "border-teal-500 bg-teal-50" : "border-gray-200 hover:border-gray-300"
+                  }`}
+                >
+                  <div className="font-bold text-sm text-gray-900">Банковская карта</div>
+                  <div className="text-xs text-gray-500 mt-1">Visa, Mastercard, МИР</div>
+                </button>
+              </div>
+            </div>
+
             <button
               type="submit"
-              className="w-full bg-teal-600 text-white font-bold py-3 px-4 rounded-xl hover:bg-teal-700 transition-colors shadow-lg shadow-teal-600/20"
+              disabled={isLoading}
+              className="w-full bg-teal-600 text-white font-bold py-3 px-4 rounded-xl hover:bg-teal-700 transition-colors shadow-lg shadow-teal-600/20 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
             >
-              Записаться на {format(new Date(selectedTime), "HH:mm")}
+              {isLoading ? "Переход к оплате..." : `Перейти к оплате (${selectedService?.price ?? 0} ₽)`}
             </button>
           </form>
         )}

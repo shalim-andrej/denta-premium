@@ -70,7 +70,7 @@ const bookingSchema = z.object({
   doctorId: z.string(),
   startTime: z.string(),
   clientName: z.string().min(2),
-  clientPhone: z.string().min(5),
+  clientPhone: z.string().min(10),
   clientEmail: z.string().email().optional(),
 });
 
@@ -85,8 +85,8 @@ export async function createBooking(formData: FormData) {
   });
 
   if (!parsed.success) {
-    console.error(parsed.error.issues);
-    return { error: "Неверные данные" }; 
+    console.error("Zod validation failed:", parsed.error.issues);
+    return { error: "Проверьте правильность введенных данных" }; 
   }
 
   const data = parsed.data;
@@ -98,6 +98,7 @@ export async function createBooking(formData: FormData) {
 
     const endTime = new Date(startTime.getTime() + service.duration * 60000);
 
+    // 1. Проверяем, не занято ли время
     const existing = await prisma.booking.findFirst({
       where: {
         doctorId: data.doctorId,
@@ -110,19 +111,26 @@ export async function createBooking(formData: FormData) {
       },
     });
 
-    if (existing) return { error: "Время занято" };
+    if (existing) return { error: "Это время уже занято. Пожалуйста, выберите другое." };
 
-    let user = await prisma.user.findFirst({ where: { phone: data.clientPhone } });
-    if (!user) {
-      user = await prisma.user.create({
-        data: {
-          name: data.clientName,
-          phone: data.clientPhone,
-          email: data.clientEmail || `${Date.now()}@temp.ru`,
-        },
-      });
-    }
+    // 2. Генерируем email, если не передан (используем телефон как основу для уникальности)
+    const emailToUse = data.clientEmail || `${data.clientPhone}@temp.dentapremium.ru`;
 
+    // 3. Используем upsert: если пользователь с таким email есть — обновляем имя/телефон, если нет — создаем
+    const user = await prisma.user.upsert({
+      where: { email: emailToUse },
+      update: {
+        name: data.clientName,
+        phone: data.clientPhone,
+      },
+      create: {
+        name: data.clientName,
+        phone: data.clientPhone,
+        email: emailToUse,
+      },
+    });
+
+    // 4. Создаем запись
     const booking = await prisma.booking.create({
       data: {
         startTime,
@@ -135,9 +143,9 @@ export async function createBooking(formData: FormData) {
 
     revalidatePath("/admin");
     return { success: true, bookingId: booking.id }; 
-  } catch (e) {
-    console.error(e);
-    return { error: "Ошибка бронирования" };
+  } catch (e: any) {
+    console.error("PRISMA ERROR IN createBooking:", e);
+    return { error: "Ошибка базы данных при бронировании." };
   }
 }
 
@@ -157,7 +165,6 @@ export async function updateBookingStatus(formData: FormData) {
   }
 }
 
-// ИСПРАВЛЕНА ТИПИЗАЦИЯ
 export async function loginAction(formData: FormData): Promise<{ error: string } | void> {
   const password = formData.get("password") as string;
   
@@ -165,7 +172,7 @@ export async function loginAction(formData: FormData): Promise<{ error: string }
     (await cookies()).set("admin_session", "true", {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
-      maxAge: 604800, // 7 дней
+      maxAge: 604800,
       path: "/",
     });
     redirect("/admin");
