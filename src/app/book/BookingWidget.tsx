@@ -254,6 +254,11 @@ export default function BookingWidget({ services, doctors, initialDoctorId, init
                 placeholder="Телефон *"
               />
             </div>
+            <input
+              type="email" value={clientEmail} onChange={(e) => setClientEmail(e.target.value)}
+              className="w-full p-3 border rounded-xl bg-gray-50 focus:ring-2 focus:ring-teal-500 outline-none"
+              placeholder="Email (необязательно — пришлём подтверждение и напоминание)"
+            />
             {!selectedDoctor && (
               <p className="text-xs text-gray-500">
                 Врач будет назначен автоматически — свободный специалист на выбранное время.
