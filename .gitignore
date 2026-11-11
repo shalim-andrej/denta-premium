@@ -36,3 +36,14 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# sqlite базы данных (содержат персональные данные пациентов)
+dev.db
+dev.db-journal
+*.db-journal
+
+# артефакты AI-инструментов (пересоздаются prisma skills sync)
+.agents/
+.claude/
+.cursor/
+.devin/
