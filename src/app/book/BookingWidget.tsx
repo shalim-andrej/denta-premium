@@ -4,7 +4,7 @@
 import { useState, useEffect } from "react";
 import { DayPicker } from "react-day-picker";
 import "react-day-picker/dist/style.css";
-import { format, addMinutes } from "date-fns";
+import { format } from "date-fns";
 import { ru } from "date-fns/locale";
 import { createBooking } from "../actions";
 
@@ -29,6 +29,7 @@ export default function BookingWidget({ services, doctors, initialDoctorId, init
   const [paymentMethod, setPaymentMethod] = useState<"card" | "sbp">("sbp");
   
   const [isLoading, setIsLoading] = useState(false);
+  const [loadingSlots, setLoadingSlots] = useState(false);
   const [message, setMessage] = useState<{ type: "error" | "success"; text: string } | null>(null);
   const [availableSlots, setAvailableSlots] = useState<string[]>([]);
 
@@ -44,18 +45,31 @@ export default function BookingWidget({ services, doctors, initialDoctorId, init
     }
   }, [initialDoctorId, initialServiceId, doctors, services]);
 
+  // Слоты считает СЕРВЕР: расписание врача, занятые записи, длительность услуги.
+  // Клиент просто показывает ответ /api/slots.
   useEffect(() => {
-    if (!selectedDate || !selectedService || !selectedDoctor) return;
-    const slots: string[] = [];
-    let current = new Date(selectedDate);
-    current.setHours(9, 0, 0, 0);
-
-    while (current.getHours() < 18) {
-      slots.push(current.toISOString());
-      current = addMinutes(current, 30);
+    if (!selectedDate || !selectedService || !selectedDoctor) {
+      setAvailableSlots([]);
+      return;
     }
-    setAvailableSlots(slots);
-    setSelectedTime("");
+
+    const controller = new AbortController();
+    setLoadingSlots(true);
+    const dateStr = format(selectedDate, "yyyy-MM-dd");
+
+    fetch(
+      `/api/slots?doctorId=${selectedDoctor.id}&serviceId=${selectedService.id}&date=${dateStr}`,
+      { signal: controller.signal }
+    )
+      .then((res) => res.json())
+      .then((data) => {
+        setAvailableSlots(Array.isArray(data.slots) ? data.slots : []);
+        setSelectedTime("");
+      })
+      .catch(() => {}) // отменённый запрос игнорируем
+      .finally(() => setLoadingSlots(false));
+
+    return () => controller.abort();
   }, [selectedDate, selectedService, selectedDoctor]);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -81,7 +95,10 @@ export default function BookingWidget({ services, doctors, initialDoctorId, init
     formData.append("startTime", selectedTime);
     formData.append("clientName", clientName);
     formData.append("clientPhone", cleanPhone);
-    formData.append("clientEmail", clientEmail || "no-email@clinic.ru");
+    // email отправляем ТОЛЬКО если заполнен: сервер сам сгенерирует уникальный
+    // временный email из телефона. Единый "no-email@clinic.ru" ломал данные —
+    // все гости без email перезаписывали одну и ту же учётку.
+    if (clientEmail.trim()) formData.append("clientEmail", clientEmail.trim());
 
     const result = await createBooking(formData);
 
@@ -97,8 +114,6 @@ export default function BookingWidget({ services, doctors, initialDoctorId, init
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            amount: selectedService.price,
-            description: `Оплата услуги: ${selectedService.title}`,
             bookingId: result.bookingId,
             returnUrl: `${window.location.origin}/book/success`,
             method: paymentMethod,
@@ -184,22 +199,30 @@ export default function BookingWidget({ services, doctors, initialDoctorId, init
         {selectedDate && selectedService && (
           <div>
             <label className="block text-sm font-semibold text-gray-700 mb-2">4. Выберите время</label>
-            <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-2">
-              {availableSlots.map((slot) => (
-                <button
-                  key={slot}
-                  type="button"
-                  onClick={() => setSelectedTime(slot)}
-                  className={`p-2 text-sm border rounded-lg transition-colors font-medium ${
-                    selectedTime === slot
-                      ? "bg-teal-600 text-white border-teal-600"
-                      : "bg-white text-gray-700 border-gray-200 hover:border-teal-500 hover:text-teal-600"
-                  }`}
-                >
-                  {format(new Date(slot), "HH:mm")}
-                </button>
-              ))}
-            </div>
+            {loadingSlots ? (
+              <div className="text-sm text-gray-500 py-2">Загружаем свободные слоты...</div>
+            ) : availableSlots.length === 0 ? (
+              <div className="text-sm text-gray-500 py-2">
+                На выбранную дату свободных слотов нет. Попробуйте другой день.
+              </div>
+            ) : (
+              <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-2">
+                {availableSlots.map((slot) => (
+                  <button
+                    key={slot}
+                    type="button"
+                    onClick={() => setSelectedTime(slot)}
+                    className={`p-2 text-sm border rounded-lg transition-colors font-medium ${
+                      selectedTime === slot
+                        ? "bg-teal-600 text-white border-teal-600"
+                        : "bg-white text-gray-700 border-gray-200 hover:border-teal-500 hover:text-teal-600"
+                    }`}
+                  >
+                    {format(new Date(slot), "HH:mm")}
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
         )}
 
