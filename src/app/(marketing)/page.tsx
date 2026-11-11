@@ -5,6 +5,7 @@ import { ArrowRight, Star, ShieldCheck, Clock, Award, Stethoscope } from "lucide
 import { Suspense } from "react";
 import { connection } from "next/server";
 import ReviewsSection from "@/components/ReviewsSection";
+import StructuredData from "@/components/StructuredData";
 
 // Асинхронный компонент для загрузки врачей (динамические данные)
 async function TopDoctors() {
@@ -120,6 +121,49 @@ export default function HomePage() {
       {/* Reviews */}
       <Suspense fallback={<div className="text-center text-slate-500 py-10">Загрузка отзывов...</div>}>
         <ReviewsSection />
+      </Suspense>
+
+      {/* FAQ */}
+      <section className="px-6 pb-24">
+        <div className="max-w-3xl mx-auto">
+          <h2 className="text-3xl md:text-4xl font-bold text-white mb-8 text-center">Частые вопросы</h2>
+          <div className="space-y-3">
+            {[
+              {
+                q: "Как записаться на приём?",
+                a: "Через форму онлайн-записи: выберите услугу и удобное время — подтверждение придёт на email. Врач можно не выбирать: назначим свободного специалиста.",
+              },
+              {
+                q: "Нужно ли платить сразу при записи?",
+                a: "Да, оплата картой или через СБП фиксирует за вами время. Цена на сайте совпадает с ценой в договоре.",
+              },
+              {
+                q: "Можно ли отменить или перенести запись?",
+                a: "Да, по ссылке из письма — в пару кликов, без звонка в клинику.",
+              },
+              {
+                q: "Есть ли гарантия на лечение?",
+                a: "Гарантия предоставляется официально по договору на все виды лечения.",
+              },
+            ].map((item, i) => (
+              <details
+                key={i}
+                className="group bg-white/5 border border-white/10 rounded-2xl overflow-hidden"
+              >
+                <summary className="cursor-pointer list-none px-6 py-4 font-medium text-white hover:bg-white/5 transition-colors flex justify-between items-center">
+                  {item.q}
+                  <span className="text-teal-400 group-open:rotate-45 transition-transform text-xl leading-none">+</span>
+                </summary>
+                <p className="px-6 pb-5 text-sm text-slate-400 leading-relaxed">{item.a}</p>
+              </details>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* JSON-LD: организация, рейтинг, FAQ */}
+      <Suspense fallback={null}>
+        <StructuredData />
       </Suspense>
 
       {/* CTA Section */}

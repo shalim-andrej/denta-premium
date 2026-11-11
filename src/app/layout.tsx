@@ -8,8 +8,17 @@ import Footer from "@/components/Footer";
 const inter = Inter({ subsets: ["latin", "cyrillic"] });
 
 export const metadata: Metadata = {
-  title: "DentaPremium | Премиальная стоматология в Москве",
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"),
+  title: {
+    default: "DentaPremium | Премиальная стоматология в Москве",
+    template: "%s | DentaPremium",
+  },
   description: "Современное оборудование, врачи с опытом более 10 лет и индивидуальный подход. Запишитесь онлайн за 2 минуты.",
+  openGraph: {
+    type: "website",
+    locale: "ru_RU",
+    siteName: "DentaPremium",
+  },
 };
 
 export default function RootLayout({
