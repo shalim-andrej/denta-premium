@@ -16,7 +16,7 @@ async function BookingData({ searchParams }: { searchParams: Promise<{ doctor?: 
   const serviceId = params.service;
 
   await connection();
-  const services = await prisma.service.findMany({ orderBy: { title: "asc" } });
+  const services = await prisma.service.findMany({ where: { isActive: true }, orderBy: { title: "asc" } });
   const doctors = await prisma.doctor.findMany({ orderBy: { name: "asc" } });
 
   if (services.length === 0 || doctors.length === 0) {

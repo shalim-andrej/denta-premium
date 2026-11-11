@@ -10,6 +10,7 @@ import { createBooking } from "../actions";
 
 interface Service { id: string; title: string; duration: number; price: number; }
 interface Doctor { id: string; name: string; specialty: string; }
+interface Slot { time: string; doctorId: string; }
 
 interface BookingWidgetProps {
   services: Service[];
@@ -22,16 +23,17 @@ export default function BookingWidget({ services, doctors, initialDoctorId, init
   const [selectedDoctor, setSelectedDoctor] = useState<Doctor | null>(null);
   const [selectedService, setSelectedService] = useState<Service | null>(null);
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
-  const [selectedTime, setSelectedTime] = useState<string>("");
+  const [selectedSlot, setSelectedSlot] = useState<Slot | null>(null);
   const [clientName, setClientName] = useState("");
   const [clientPhone, setClientPhone] = useState("");
   const [clientEmail, setClientEmail] = useState("");
   const [paymentMethod, setPaymentMethod] = useState<"card" | "sbp">("sbp");
-  
+
   const [isLoading, setIsLoading] = useState(false);
   const [loadingSlots, setLoadingSlots] = useState(false);
+  const [slotsNonce, setSlotsNonce] = useState(0); // принудительный перезапрос слотов
   const [message, setMessage] = useState<{ type: "error" | "success"; text: string } | null>(null);
-  const [availableSlots, setAvailableSlots] = useState<string[]>([]);
+  const [availableSlots, setAvailableSlots] = useState<Slot[]>([]);
 
   // Устанавливаем начальные значения из URL при монтировании
   useEffect(() => {
@@ -45,10 +47,10 @@ export default function BookingWidget({ services, doctors, initialDoctorId, init
     }
   }, [initialDoctorId, initialServiceId, doctors, services]);
 
-  // Слоты считает СЕРВЕР: расписание врача, занятые записи, длительность услуги.
-  // Клиент просто показывает ответ /api/slots.
+  // Слоты считает СЕРВЕР: график врача (или всех врачей — «подберите за меня»),
+  // занятые записи, длительность услуги. Клиент только показывает ответ /api/slots.
   useEffect(() => {
-    if (!selectedDate || !selectedService || !selectedDoctor) {
+    if (!selectedDate || !selectedService) {
       setAvailableSlots([]);
       return;
     }
@@ -56,31 +58,32 @@ export default function BookingWidget({ services, doctors, initialDoctorId, init
     const controller = new AbortController();
     setLoadingSlots(true);
     const dateStr = format(selectedDate, "yyyy-MM-dd");
+    const doctorParam = selectedDoctor ? `&doctorId=${selectedDoctor.id}` : "";
 
     fetch(
-      `/api/slots?doctorId=${selectedDoctor.id}&serviceId=${selectedService.id}&date=${dateStr}`,
+      `/api/slots?serviceId=${selectedService.id}&date=${dateStr}${doctorParam}`,
       { signal: controller.signal }
     )
       .then((res) => res.json())
       .then((data) => {
         setAvailableSlots(Array.isArray(data.slots) ? data.slots : []);
-        setSelectedTime("");
+        setSelectedSlot(null);
       })
       .catch(() => {}) // отменённый запрос игнорируем
       .finally(() => setLoadingSlots(false));
 
     return () => controller.abort();
-  }, [selectedDate, selectedService, selectedDoctor]);
+  }, [selectedDate, selectedService, selectedDoctor, slotsNonce]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!selectedService || !selectedTime || !selectedDoctor) {
-      setMessage({ type: "error", text: "Выберите врача, услугу и время" });
+    if (!selectedService || !selectedSlot) {
+      setMessage({ type: "error", text: "Выберите услугу и время" });
       return;
     }
 
     const cleanPhone = clientPhone.replace(/\D/g, "");
-    
+
     if (cleanPhone.length < 10) {
       setMessage({ type: "error", text: "Пожалуйста, введите корректный номер телефона (минимум 10 цифр)" });
       return;
@@ -90,9 +93,11 @@ export default function BookingWidget({ services, doctors, initialDoctorId, init
     setMessage(null);
 
     const formData = new FormData();
-    formData.append("doctorId", selectedDoctor.id);
+    // doctorId не передаём в режиме «подберите за меня» — сервер назначит
+    // свободного врача и перепроверит занятость в транзакции.
+    if (selectedDoctor) formData.append("doctorId", selectedDoctor.id);
     formData.append("serviceId", selectedService.id);
-    formData.append("startTime", selectedTime);
+    formData.append("startTime", selectedSlot.time);
     formData.append("clientName", clientName);
     formData.append("clientPhone", cleanPhone);
     // email отправляем ТОЛЬКО если заполнен: сервер сам сгенерирует уникальный
@@ -105,17 +110,23 @@ export default function BookingWidget({ services, doctors, initialDoctorId, init
     if (result.error) {
       setMessage({ type: "error", text: result.error });
       setIsLoading(false);
+      setSlotsNonce((n) => n + 1); // слоты могли устареть — перезапрашиваем
       return;
     }
 
     if (result.success && result.bookingId) {
       try {
+        // manageToken даёт пациенту страницу управления записью после оплаты
+        const manageUrl = result.manageToken
+          ? `${window.location.origin}/book/success?t=${result.manageToken}`
+          : `${window.location.origin}/book/success`;
+
         const paymentRes = await fetch("/api/payments/create", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             bookingId: result.bookingId,
-            returnUrl: `${window.location.origin}/book/success`,
+            returnUrl: manageUrl,
             method: paymentMethod,
           }),
         });
@@ -141,9 +152,9 @@ export default function BookingWidget({ services, doctors, initialDoctorId, init
       <h2 className="text-2xl font-bold mb-6 text-gray-900">Запись на прием</h2>
 
       <div className="space-y-6">
-        {/* Шаг 1: Врач */}
+        {/* Шаг 1: Врач (опционально) */}
         <div>
-          <label className="block text-sm font-semibold text-gray-700 mb-2">1. Выберите врача</label>
+          <label className="block text-sm font-semibold text-gray-700 mb-2">1. Врач — можно не выбирать</label>
           <select
             className="w-full p-3 border rounded-xl bg-gray-50 focus:ring-2 focus:ring-teal-500 outline-none"
             onChange={(e) => {
@@ -152,7 +163,7 @@ export default function BookingWidget({ services, doctors, initialDoctorId, init
             }}
             value={selectedDoctor?.id || ""}
           >
-            <option value="">-- Выберите специалиста --</option>
+            <option value="">— Подберите за меня (любой свободный специалист) —</option>
             {doctors.map((doc) => (
               <option key={doc.id} value={doc.id}>{doc.name} — {doc.specialty}</option>
             ))}
@@ -160,24 +171,22 @@ export default function BookingWidget({ services, doctors, initialDoctorId, init
         </div>
 
         {/* Шаг 2: Услуга */}
-        {selectedDoctor && (
-          <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-2">2. Выберите услугу</label>
-            <select
-              className="w-full p-3 border rounded-xl bg-gray-50 focus:ring-2 focus:ring-teal-500 outline-none"
-              onChange={(e) => {
-                const srv = services.find((s) => s.id === e.target.value);
-                setSelectedService(srv || null);
-              }}
-              value={selectedService?.id || ""}
-            >
-              <option value="">-- Выберите услугу --</option>
-              {services.map((srv) => (
-                <option key={srv.id} value={srv.id}>{srv.title} ({srv.duration} мин.) — {srv.price} ₽</option>
-              ))}
-            </select>
-          </div>
-        )}
+        <div>
+          <label className="block text-sm font-semibold text-gray-700 mb-2">2. Выберите услугу</label>
+          <select
+            className="w-full p-3 border rounded-xl bg-gray-50 focus:ring-2 focus:ring-teal-500 outline-none"
+            onChange={(e) => {
+              const srv = services.find((s) => s.id === e.target.value);
+              setSelectedService(srv || null);
+            }}
+            value={selectedService?.id || ""}
+          >
+            <option value="">-- Выберите услугу --</option>
+            {services.map((srv) => (
+              <option key={srv.id} value={srv.id}>{srv.title} ({srv.duration} мин.) — {srv.price} ₽</option>
+            ))}
+          </select>
+        </div>
 
         {/* Шаг 3: Дата */}
         {selectedService && (
@@ -196,29 +205,32 @@ export default function BookingWidget({ services, doctors, initialDoctorId, init
         )}
 
         {/* Шаг 4: Время */}
-        {selectedDate && selectedService && (
+        {selectedService && (
           <div>
             <label className="block text-sm font-semibold text-gray-700 mb-2">4. Выберите время</label>
             {loadingSlots ? (
               <div className="text-sm text-gray-500 py-2">Загружаем свободные слоты...</div>
             ) : availableSlots.length === 0 ? (
               <div className="text-sm text-gray-500 py-2">
-                На выбранную дату свободных слотов нет. Попробуйте другой день.
+                {selectedDoctor
+                  ? "У этого врача на выбранную дату свободных слотов нет. Попробуйте другой день или режим «подберите за меня»."
+                  : "На выбранную дату свободных слотов нет. Попробуйте другой день."}
               </div>
             ) : (
               <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-2">
                 {availableSlots.map((slot) => (
                   <button
-                    key={slot}
+                    key={slot.time}
                     type="button"
-                    onClick={() => setSelectedTime(slot)}
+                    onClick={() => setSelectedSlot(slot)}
+                    title={doctors.find((d) => d.id === slot.doctorId)?.name}
                     className={`p-2 text-sm border rounded-lg transition-colors font-medium ${
-                      selectedTime === slot
+                      selectedSlot?.time === slot.time
                         ? "bg-teal-600 text-white border-teal-600"
                         : "bg-white text-gray-700 border-gray-200 hover:border-teal-500 hover:text-teal-600"
                     }`}
                   >
-                    {format(new Date(slot), "HH:mm")}
+                    {format(new Date(slot.time), "HH:mm")}
                   </button>
                 ))}
               </div>
@@ -227,7 +239,7 @@ export default function BookingWidget({ services, doctors, initialDoctorId, init
         )}
 
         {/* Шаг 5: Данные и Оплата */}
-        {selectedTime && (
+        {selectedSlot && (
           <form onSubmit={handleSubmit} className="space-y-4 pt-4 border-t border-gray-100">
             <label className="block text-sm font-semibold text-gray-700">5. Ваши данные</label>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -242,6 +254,11 @@ export default function BookingWidget({ services, doctors, initialDoctorId, init
                 placeholder="Телефон *"
               />
             </div>
+            {!selectedDoctor && (
+              <p className="text-xs text-gray-500">
+                Врач будет назначен автоматически — свободный специалист на выбранное время.
+              </p>
+            )}
 
             {/* Выбор оплаты */}
             <div className="pt-4 border-t border-gray-100">
