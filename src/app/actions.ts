@@ -1,3 +1,4 @@
+// src/app/actions.ts
 "use server";
 
 import { prisma } from "@/lib/prisma";
@@ -28,6 +29,7 @@ export async function createDoctor(formData: FormData) {
     await prisma.doctor.create({ data: parsed.data });
     revalidatePath("/admin");
     revalidatePath("/book");
+    revalidatePath("/doctors");
   } catch (e) {
     console.error("Ошибка сохранения врача", e);
   }
@@ -57,6 +59,7 @@ export async function createService(formData: FormData) {
     await prisma.service.create({ data: parsed.data });
     revalidatePath("/admin");
     revalidatePath("/book");
+    revalidatePath("/services");
   } catch (e) {
     console.error("Ошибка сохранения услуги", e);
   }
@@ -154,17 +157,21 @@ export async function updateBookingStatus(formData: FormData) {
   }
 }
 
-export async function loginAction(formData: FormData) {
+// ИСПРАВЛЕНА ТИПИЗАЦИЯ
+export async function loginAction(formData: FormData): Promise<{ error: string } | void> {
   const password = formData.get("password") as string;
+  
   if (password === process.env.ADMIN_PASSWORD) {
     (await cookies()).set("admin_session", "true", {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
-      maxAge: 604800,
+      maxAge: 604800, // 7 дней
       path: "/",
     });
     redirect("/admin");
   }
+  
+  return { error: "Неверный пароль" };
 }
 
 export async function logoutAction() {
