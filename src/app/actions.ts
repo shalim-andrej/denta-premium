@@ -3,13 +3,18 @@
 
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
-import { cookies } from "next/headers";
+import { cookies, headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 import { timingSafeEqual, randomBytes } from "crypto";
+import { format } from "date-fns";
+import { ru } from "date-fns/locale";
 import { ADMIN_COOKIE, adminSessionValue } from "@/lib/auth";
 import { dayIntervals, coversInterval } from "@/lib/slots";
 import { bookingByToken } from "@/lib/tokens";
+import { notifyAdminTelegram, sendEmail, emailShell, siteUrl, isRealEmail } from "@/lib/notify";
+import { rateLimit } from "@/lib/ratelimit";
+import bcrypt from "bcryptjs";
 
 /** Сравнение строк за постоянное время — защита от timing-атак. */
 function safeEqual(a: string, b: string): boolean {
@@ -200,6 +205,32 @@ export async function createBooking(formData: FormData) {
     });
 
     revalidatePath("/admin");
+
+    // Уведомления: админу в Telegram, пациенту на email (если указан настоящая почта).
+    const when = format(startTime, "d MMMM, HH:mm", { locale: ru });
+    await notifyAdminTelegram(
+      `<b>Новая запись</b>\n` +
+        `👤 ${data.clientName}, +${data.clientPhone}\n` +
+        `🕐 ${when}\n` +
+        `${doctor?.name}: ${service.title} — ${service.price} ₽` +
+        (data.clientEmail ? `\n✉️ ${data.clientEmail}` : "")
+    );
+    if (data.clientEmail && isRealEmail(data.clientEmail)) {
+      const base = await siteUrl();
+      await sendEmail(
+        data.clientEmail,
+        `Вы записаны в клинику — ${when}`,
+        emailShell(
+          "Вы записаны в DentaPremium",
+          `<p>Здравствуйте, ${data.clientName}!</p>` +
+            `<p>Вы записаны на <b>${service.title}</b> (${service.price} руб.).</p>` +
+            `<p><b>Когда:</b> ${when}<br/><b>Врач:</b> ${doctor?.name}</p>` +
+            `<p>Управлять записью (отмена/перенос, добавить в календарь): ` +
+            `<a href="${base}/booking/${assigned.manageToken}">ссылка на запись</a></p>`
+        )
+      );
+    }
+
     return {
       success: true,
       bookingId: assigned.booking.id,
@@ -264,9 +295,23 @@ export async function rescheduleBookingByToken(formData: FormData) {
 
 export async function loginAction(formData: FormData): Promise<{ error: string } | void> {
   const password = formData.get("password") as string;
-  const expected = process.env.ADMIN_PASSWORD;
+  if (!password) return { error: "Введите пароль" };
 
-  if (expected && safeEqual(password, expected)) {
+  // Rate-limit по IP: 5 попыток за 15 минут — брутфорс не имеет смысла
+  const h = await headers();
+  const ip = h.get("x-forwarded-for")?.split(",")[0].trim() || h.get("x-real-ip") || "local";
+  if (!rateLimit(`login:${ip}`)) {
+    return { error: "Слишком много попыток входа. Попробуйте через 15 минут." };
+  }
+
+  // Поддерживаем оба варианта: открытый пароль и bcrypt-хеш (надёжнее).
+  const hash = process.env.ADMIN_PASSWORD_HASH;
+  const expected = process.env.ADMIN_PASSWORD;
+  let ok = false;
+  if (hash) ok = await bcrypt.compare(password, hash);
+  else if (expected) ok = safeEqual(password, expected);
+
+  if (ok) {
     const sessionValue = await adminSessionValue();
     (await cookies()).set(ADMIN_COOKIE, sessionValue ?? "invalid", {
       httpOnly: true,

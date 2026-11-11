@@ -22,9 +22,11 @@ export async function hmacSha256(secret: string, message: string): Promise<strin
 
 /** Ожидаемое значение cookie для валидной админ-сессии. */
 export async function adminSessionValue(): Promise<string | null> {
-  const password = process.env.ADMIN_PASSWORD;
-  if (!password) return null; // пароль не настроен — сессии невозможны
-  return hmacSha256(password, `admin:${password}`);
+  // Секрет сессии — либо ADMIN_PASSWORD, либо хеш из ADMIN_PASSWORD_HASH:
+  // работать должно в обоих вариантах конфигурации.
+  const secret = process.env.ADMIN_PASSWORD_HASH || process.env.ADMIN_PASSWORD;
+  if (!secret) return null; // пароль не настроен — сессии невозможны
+  return hmacSha256(secret, `admin:${secret}`);
 }
 
 /** Проверка значения cookie из запроса (используется в proxy.ts). */

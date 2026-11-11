@@ -1,6 +1,9 @@
 // src/app/api/webhooks/yookassa/route.ts
 import { NextResponse } from "next/server";
+import { format } from "date-fns";
+import { ru } from "date-fns/locale";
 import { prisma } from "@/lib/prisma";
+import { notifyAdminTelegram, sendEmail, emailShell, siteUrl, isRealEmail } from "@/lib/notify";
 
 // Официальные сети и адреса уведомлений ЮKassa
 // https://yookassa.ru/developers/using-api/webhooks
@@ -53,13 +56,62 @@ export async function POST(request: Request) {
   try {
     const event = await request.json();
 
+    // Идемпотентность: ЮKassa повторяет доставку, пока не получит 200.
+    // Ключ — событие + id платежа. Повтор того же события не обрабатываем.
+    const eventId = `${event.event ?? "unknown"}:${event.object?.id ?? ""}`;
+    try {
+      await prisma.processedEvent.create({ data: { id: eventId } });
+    } catch {
+      return NextResponse.json({ received: true, duplicate: true });
+    }
+
     if (event.event === "payment.succeeded") {
       const bookingId = event.object?.metadata?.bookingId;
+      const paymentId = event.object?.id;
       if (bookingId) {
+        // paymentId сохраняем — он понадобится для возврата через API ЮKassa
         await prisma.booking.update({
           where: { id: bookingId },
-          data: { paymentStatus: "PAID", status: "CONFIRMED" },
+          data: { paymentStatus: "PAID", status: "CONFIRMED", paymentId: paymentId ?? null },
         });
+
+        const b = await prisma.booking.findUnique({
+          where: { id: bookingId },
+          include: {
+            user: true,
+            service: true,
+            doctor: true,
+            manageTokens: { orderBy: { createdAt: "desc" }, take: 1 },
+          },
+        });
+        if (b) {
+          const when = format(b.startTime, "d MMMM, HH:mm", { locale: ru });
+          await notifyAdminTelegram(
+            `<b>Оплата получена</b>\n` +
+              `👤 ${b.user.name}, ${b.user.phone ?? ""}\n` +
+              `🕐 ${when} — ${b.service.title} (${b.service.price} ₽)\n` +
+              `💳 ${paymentId ?? "—"}`
+          );
+          if (isRealEmail(b.user.email)) {
+            const base = await siteUrl();
+            const manageToken = b.manageTokens[0]?.token;
+            await sendEmail(
+              b.user.email,
+              `Оплата прошла успешно — ждём вас ${when}`,
+              emailShell(
+                "Оплата прошла успешно",
+                `<p>Здравствуйте, ${b.user.name}!</p>` +
+                  `<p>Приём <b>${b.service.title}</b> оплачен (${b.service.price} руб.).</p>` +
+                  `<p><b>Когда:</b> ${when}<br/><b>Врач:</b> ${b.doctor.name}</p>` +
+                  (manageToken
+                    ? `<p>Управление записью (отмена/перенос, календарь): ` +
+                      `<a href="${base}/booking/${manageToken}">ссылка на запись</a></p>`
+                    : "") +
+                  `<p style="color:#64748b;font-size:12px;">Возьмите с собой паспорт и приходите за 10 минут до приёма.</p>`
+              )
+            );
+          }
+        }
       }
     }
 
@@ -71,6 +123,18 @@ export async function POST(request: Request) {
           where: { id: bookingId },
           data: { paymentStatus: "UNPAID", status: "PENDING" },
         });
+        const b = await prisma.booking.findUnique({
+          where: { id: bookingId },
+          include: { user: true, service: true },
+        });
+        if (b) {
+          const when = format(b.startTime, "d MMMM, HH:mm", { locale: ru });
+          await notifyAdminTelegram(
+            `<b>Платёж отменён</b>\n` +
+              `👤 ${b.user.name}, ${b.user.phone ?? ""}\n` +
+              `🕐 ${when} — ${b.service.title}. Запись не оплачена.`
+          );
+        }
       }
     }
   } catch (e) {
