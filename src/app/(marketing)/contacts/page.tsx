@@ -1,5 +1,16 @@
 // src/app/(marketing)/contacts/page.tsx
 import { MapPin, Phone, Mail, Clock, MessageCircle } from "lucide-react";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Контакты | DentaPremium",
+  description: "Адрес, телефон и режим работы стоматологической клиники DentaPremium в Москве. Запишитесь на прием или свяжитесь с нами.",
+  openGraph: {
+    title: "Контакты | DentaPremium",
+    description: "Мы всегда рады помочь. Свяжитесь с нами удобным способом.",
+    type: "website",
+  },
+};
 
 export default function ContactsPage() {
   return (

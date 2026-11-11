@@ -3,6 +3,17 @@ import { Suspense } from "react";
 import { prisma } from "@/lib/prisma";
 import { connection } from "next/server";
 import ServicesList from "./ServicesList";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Услуги и цены | DentaPremium",
+  description: "Полный спектр стоматологических услуг в Москве. Прозрачные цены, современное оборудование, врачи с опытом более 10 лет.",
+  openGraph: {
+    title: "Услуги и цены | DentaPremium",
+    description: "Лечение, имплантация, отбеливание. Прозрачные цены без скрытых платежей.",
+    type: "website",
+  },
+};
 
 async function ServicesData() {
   await connection();

@@ -4,7 +4,17 @@ import { prisma } from "@/lib/prisma";
 import BookingWidget from "./BookingWidget";
 import { connection } from "next/server";
 
-async function BookingData() {
+interface BookPageProps {
+  searchParams: Promise<{ doctor?: string; service?: string }>;
+}
+
+// Дочерний компонент, который принимает searchParams как промис
+async function BookingData({ searchParams }: { searchParams: Promise<{ doctor?: string; service?: string }> }) {
+  // Ждем searchParams ВНУТРИ этого компонента, который обернут в Suspense
+  const params = await searchParams;
+  const doctorId = params.doctor;
+  const serviceId = params.service;
+
   await connection();
   const services = await prisma.service.findMany({ orderBy: { title: "asc" } });
   const doctors = await prisma.doctor.findMany({ orderBy: { name: "asc" } });
@@ -17,10 +27,18 @@ async function BookingData() {
     );
   }
 
-  return <BookingWidget services={services} doctors={doctors} />;
+  return (
+    <BookingWidget 
+      services={services} 
+      doctors={doctors} 
+      initialDoctorId={doctorId} 
+      initialServiceId={serviceId} 
+    />
+  );
 }
 
-export default function BookPage() {
+// Сама страница НЕ ждет searchParams, а передает промис дальше
+export default function BookPage({ searchParams }: BookPageProps) {
   return (
     <div className="min-h-screen bg-gray-50 py-12 px-4">
       <div className="max-w-2xl mx-auto">
@@ -28,7 +46,7 @@ export default function BookPage() {
         <p className="text-center text-gray-600 mb-8">Выберите врача, услугу и удобное время</p>
         
         <Suspense fallback={<div className="text-center py-12 text-gray-500">Загрузка...</div>}>
-          <BookingData />
+          <BookingData searchParams={searchParams} />
         </Suspense>
       </div>
     </div>

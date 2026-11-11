@@ -3,6 +3,17 @@ import { Suspense } from "react";
 import { prisma } from "@/lib/prisma";
 import { connection } from "next/server";
 import DoctorsList from "./DoctorsList";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Наши врачи | DentaPremium",
+  description: "Познакомьтесь с нашими специалистами. Стоматологи-терапевты, хирурги, ортодонты с опытом работы более 10 лет.",
+  openGraph: {
+    title: "Наши врачи | DentaPremium",
+    description: "Врачи, которым доверяют тысячи пациентов.",
+    type: "website",
+  },
+};
 
 async function DoctorsData() {
   await connection();

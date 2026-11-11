@@ -11,7 +11,14 @@ import { createBooking } from "../actions";
 interface Service { id: string; title: string; duration: number; price: number; }
 interface Doctor { id: string; name: string; specialty: string; }
 
-export default function BookingWidget({ services, doctors }: { services: Service[], doctors: Doctor[] }) {
+interface BookingWidgetProps {
+  services: Service[];
+  doctors: Doctor[];
+  initialDoctorId?: string;
+  initialServiceId?: string;
+}
+
+export default function BookingWidget({ services, doctors, initialDoctorId, initialServiceId }: BookingWidgetProps) {
   const [selectedDoctor, setSelectedDoctor] = useState<Doctor | null>(null);
   const [selectedService, setSelectedService] = useState<Service | null>(null);
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
@@ -24,6 +31,18 @@ export default function BookingWidget({ services, doctors }: { services: Service
   const [isLoading, setIsLoading] = useState(false);
   const [message, setMessage] = useState<{ type: "error" | "success"; text: string } | null>(null);
   const [availableSlots, setAvailableSlots] = useState<string[]>([]);
+
+  // Устанавливаем начальные значения из URL при монтировании
+  useEffect(() => {
+    if (initialDoctorId) {
+      const doctor = doctors.find(d => d.id === initialDoctorId);
+      if (doctor) setSelectedDoctor(doctor);
+    }
+    if (initialServiceId) {
+      const service = services.find(s => s.id === initialServiceId);
+      if (service) setSelectedService(service);
+    }
+  }, [initialDoctorId, initialServiceId, doctors, services]);
 
   useEffect(() => {
     if (!selectedDate || !selectedService || !selectedDoctor) return;
@@ -46,6 +65,13 @@ export default function BookingWidget({ services, doctors }: { services: Service
       return;
     }
 
+    const cleanPhone = clientPhone.replace(/\D/g, "");
+    
+    if (cleanPhone.length < 10) {
+      setMessage({ type: "error", text: "Пожалуйста, введите корректный номер телефона (минимум 10 цифр)" });
+      return;
+    }
+
     setIsLoading(true);
     setMessage(null);
 
@@ -54,7 +80,7 @@ export default function BookingWidget({ services, doctors }: { services: Service
     formData.append("serviceId", selectedService.id);
     formData.append("startTime", selectedTime);
     formData.append("clientName", clientName);
-    formData.append("clientPhone", clientPhone);
+    formData.append("clientPhone", cleanPhone);
     formData.append("clientEmail", clientEmail || "no-email@clinic.ru");
 
     const result = await createBooking(formData);
@@ -84,7 +110,7 @@ export default function BookingWidget({ services, doctors }: { services: Service
         if (paymentData.confirmationUrl) {
           window.location.href = paymentData.confirmationUrl;
         } else {
-          setMessage({ type: "error", text: "Ошибка создания платежа. Попробуйте позже." });
+          setMessage({ type: "error", text: paymentData.error || "Ошибка создания платежа. Попробуйте позже." });
           setIsLoading(false);
         }
       } catch (err) {
