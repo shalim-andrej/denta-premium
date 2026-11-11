@@ -6,6 +6,16 @@ import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { z } from "zod";
+import { timingSafeEqual } from "crypto";
+import { ADMIN_COOKIE, adminSessionValue } from "@/lib/auth";
+
+/** Сравнение строк за постоянное время — защита от timing-атак. */
+function safeEqual(a: string, b: string): boolean {
+  const bufA = Buffer.from(a);
+  const bufB = Buffer.from(b);
+  if (bufA.length !== bufB.length) return false;
+  return timingSafeEqual(bufA, bufB);
+}
 
 const doctorSchema = z.object({
   name: z.string().min(2),
@@ -167,21 +177,24 @@ export async function updateBookingStatus(formData: FormData) {
 
 export async function loginAction(formData: FormData): Promise<{ error: string } | void> {
   const password = formData.get("password") as string;
-  
-  if (password === process.env.ADMIN_PASSWORD) {
-    (await cookies()).set("admin_session", "true", {
+  const expected = process.env.ADMIN_PASSWORD;
+
+  if (expected && safeEqual(password, expected)) {
+    const sessionValue = await adminSessionValue();
+    (await cookies()).set(ADMIN_COOKIE, sessionValue ?? "invalid", {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
       maxAge: 604800,
       path: "/",
     });
     redirect("/admin");
   }
-  
+
   return { error: "Неверный пароль" };
 }
 
 export async function logoutAction() {
-  (await cookies()).delete("admin_session");
+  (await cookies()).delete(ADMIN_COOKIE);
   redirect("/login");
 }

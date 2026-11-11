@@ -1,17 +1,20 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+import { ADMIN_COOKIE, isAdminRequest } from "@/lib/auth";
 
-export function proxy(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
-  const hasSession = request.cookies.has("admin_session");
+
+  // Подделать cookie нельзя: проверяем подписанное значение, а не сам факт наличия
+  const authorized = await isAdminRequest(request.cookies.get(ADMIN_COOKIE)?.value);
 
   // Защищаем все роуты, начинающиеся с /admin
-  if (pathname.startsWith("/admin") && !hasSession) {
+  if (pathname.startsWith("/admin") && !authorized) {
     return NextResponse.redirect(new URL("/login", request.url));
   }
 
   // Если админ уже залогинен и идет на /login, редиректим в админку
-  if (pathname === "/login" && hasSession) {
+  if (pathname === "/login" && authorized) {
     return NextResponse.redirect(new URL("/admin", request.url));
   }
 
