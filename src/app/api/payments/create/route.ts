@@ -41,7 +41,7 @@ export async function POST(request: Request) {
     const amount = booking.service.price;
 
     // Формируем данные для сессии
-    const sessionData: any = {
+    const sessionData: Record<string, unknown> = {
       integration: "smart", // Умный платеж (редирект)
       amount: amount.toFixed(2),
       returnUrl: validated.returnUrl,

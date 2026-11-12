@@ -7,6 +7,11 @@ import { updateBookingStatus, updatePaymentStatus } from "../actions";
 import { format, startOfWeek, addDays } from "date-fns";
 import { ru } from "date-fns/locale";
 import { connection } from "next/server";
+import type { Booking, Doctor, Service, User } from "@prisma/client";
+
+// Типы записей с подгруженными связями (include в запросах ниже)
+type UpcomingBooking = Booking & { user: User; service: Service; doctor: Doctor };
+type WeekBooking = Booking & { user: User; service: Service };
 
 function sameDay(a: Date, b: Date): boolean {
   return (
@@ -91,7 +96,7 @@ async function AdminData() {
           <p className="text-gray-500 text-sm">Ближайших записей нет.</p>
         ) : (
           <div className="space-y-3">
-            {upcoming.map((b: any) => (
+            {upcoming.map((b: UpcomingBooking) => (
               <div
                 key={b.id}
                 className="p-4 border rounded-xl flex flex-col sm:flex-row justify-between items-start gap-3 hover:border-teal-200 transition-colors"
@@ -192,11 +197,11 @@ async function AdminData() {
                   </td>
                   {days.map((day) => {
                     const cell = weekBookings.filter(
-                      (b: any) => b.doctorId === doc.id && sameDay(b.startTime, day)
+                      (b: WeekBooking) => b.doctorId === doc.id && sameDay(b.startTime, day)
                     );
                     return (
                       <td key={day.toISOString()} className="align-top py-2 px-2">
-                        {cell.map((b: any) => (
+                        {cell.map((b: WeekBooking) => (
                           <div
                             key={b.id}
                             className="text-xs bg-teal-50 text-teal-800 border border-teal-100 rounded-lg p-1.5 mb-1"

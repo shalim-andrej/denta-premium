@@ -239,7 +239,7 @@ export async function createBooking(formData: FormData) {
       doctorName: doctor?.name,
       manageToken: assigned.manageToken,
     };
-  } catch (e: any) {
+  } catch (e) {
     console.error("PRISMA ERROR IN createBooking:", e);
     return { error: "Ошибка базы данных при бронировании." };
   }
@@ -517,7 +517,7 @@ export async function adminCreateBooking(formData: FormData) {
     }
 
     return { success: true, manageToken };
-  } catch (e: any) {
+  } catch (e) {
     console.error("adminCreateBooking failed:", e);
     return { error: "Ошибка базы данных" };
   }

@@ -21,8 +21,14 @@ interface BookingWidgetProps {
 }
 
 export default function BookingWidget({ services, doctors, initialDoctorId, initialServiceId }: BookingWidgetProps) {
-  const [selectedDoctor, setSelectedDoctor] = useState<Doctor | null>(null);
-  const [selectedService, setSelectedService] = useState<Service | null>(null);
+  // Начальные значения из URL берём лениво в инициализаторе useState:
+  // пропсы приходят готовыми с сервера, эффект не нужен.
+  const [selectedDoctor, setSelectedDoctor] = useState<Doctor | null>(() =>
+    initialDoctorId ? doctors.find((d) => d.id === initialDoctorId) ?? null : null
+  );
+  const [selectedService, setSelectedService] = useState<Service | null>(() =>
+    initialServiceId ? services.find((s) => s.id === initialServiceId) ?? null : null
+  );
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
   const [selectedSlot, setSelectedSlot] = useState<Slot | null>(null);
   const [clientName, setClientName] = useState("");
@@ -36,28 +42,20 @@ export default function BookingWidget({ services, doctors, initialDoctorId, init
   const [message, setMessage] = useState<{ type: "error" | "success"; text: string } | null>(null);
   const [availableSlots, setAvailableSlots] = useState<Slot[]>([]);
 
-  // Устанавливаем начальные значения из URL при монтировании
-  useEffect(() => {
-    if (initialDoctorId) {
-      const doctor = doctors.find(d => d.id === initialDoctorId);
-      if (doctor) setSelectedDoctor(doctor);
-    }
-    if (initialServiceId) {
-      const service = services.find(s => s.id === initialServiceId);
-      if (service) setSelectedService(service);
-    }
-  }, [initialDoctorId, initialServiceId, doctors, services]);
+  // Устанавливаем начальные значения из URL при монтировании — см. ленивые
+  // инициализаторы useState выше (props приходят с сервера и не меняются).
 
   // Слоты считает СЕРВЕР: график врача (или всех врачей — «подберите за меня»),
   // занятые записи, длительность услуги. Клиент только показывает ответ /api/slots.
   useEffect(() => {
     if (!selectedDate || !selectedService) {
-      setAvailableSlots([]);
+      // Отложенный вызов: сам эффект синхронно состояние не меняет
+      queueMicrotask(() => setAvailableSlots([]));
       return;
     }
 
     const controller = new AbortController();
-    setLoadingSlots(true);
+    queueMicrotask(() => setLoadingSlots(true));
     const dateStr = format(selectedDate, "yyyy-MM-dd");
     const doctorParam = selectedDoctor ? `&doctorId=${selectedDoctor.id}` : "";
 

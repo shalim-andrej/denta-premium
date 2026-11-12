@@ -8,7 +8,8 @@ export default function CookieBanner() {
 
   useEffect(() => {
     const consent = localStorage.getItem("cookie-consent");
-    if (!consent) setIsVisible(true);
+    // Отложенный вызов: сначала отрисовка, затем показ баннера
+    if (!consent) queueMicrotask(() => setIsVisible(true));
   }, []);
 
   const handleAccept = () => {

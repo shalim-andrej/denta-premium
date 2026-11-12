@@ -42,11 +42,12 @@ export default function AdminBookingForm({
 
   useEffect(() => {
     if (!date || !serviceId || !doctorId) {
-      setSlots([]);
+      // Отложенный вызов: сам эффект синхронно состояние не меняет
+      queueMicrotask(() => setSlots([]));
       return;
     }
     const controller = new AbortController();
-    setLoadingSlots(true);
+    queueMicrotask(() => setLoadingSlots(true));
     fetch(`/api/slots?doctorId=${doctorId}&serviceId=${serviceId}&date=${format(date, "yyyy-MM-dd")}`, {
       signal: controller.signal,
     })
