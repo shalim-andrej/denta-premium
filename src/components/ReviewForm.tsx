@@ -3,6 +3,7 @@
 // Форма отзыва: публикуется только после модерации администратором.
 import { useState } from "react";
 import { submitReview } from "@/app/actions";
+import { PenLine } from "lucide-react";
 
 export default function ReviewForm() {
   const [open, setOpen] = useState(false);
@@ -38,21 +39,17 @@ export default function ReviewForm() {
   if (!open) {
     return (
       <div className="text-center">
-        <button
-          onClick={() => setOpen(true)}
-          className="text-sm text-teal-400 hover:text-teal-300 font-medium transition-colors underline underline-offset-4"
-        >
+        <button onClick={() => setOpen(true)} className="btn-ghost px-7 py-3.5 text-sm">
+          <PenLine className="w-4 h-4 text-mint" />
           Оставить свой отзыв
         </button>
       </div>
     );
   }
 
-  const inputCls =
-    "w-full p-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-slate-500 text-sm focus:ring-2 focus:ring-teal-500 outline-none";
-
   return (
-    <form onSubmit={onSubmit} className="max-w-md mx-auto space-y-3">
+    <form onSubmit={onSubmit} className="card max-w-xl mx-auto p-7 md:p-9 space-y-4">
+      <h3 className="font-display text-lg text-ink">Ваш отзыв</h3>
       <input
         type="text"
         required
@@ -61,17 +58,18 @@ export default function ReviewForm() {
         value={name}
         onChange={(e) => setName(e.target.value)}
         placeholder="Ваше имя"
-        className={inputCls}
+        className="field"
       />
-      <div className="flex gap-1.5 justify-center">
+      <div className="flex items-center gap-2">
+        <span className="text-sm text-fog mr-2">Оценка:</span>
         {[1, 2, 3, 4, 5].map((n) => (
           <button
             key={n}
             type="button"
             onClick={() => setRating(n)}
             aria-label={`Оценка ${n}`}
-            className={`text-2xl leading-none transition-colors ${
-              n <= rating ? "text-amber-400" : "text-slate-600 hover:text-slate-400"
+            className={`text-2xl leading-none transition-all hover:scale-110 ${
+              n <= rating ? "text-gold fill-gold" : "text-white/20 hover:text-gold/60"
             }`}
           >
             ★
@@ -86,26 +84,24 @@ export default function ReviewForm() {
         value={text}
         onChange={(e) => setText(e.target.value)}
         placeholder="Расскажите о своём приёме (минимум 10 символов)"
-        className={inputCls}
+        className="field resize-none"
       />
-      <div className="flex gap-2 justify-center">
-        <button
-          type="submit"
-          disabled={loading}
-          className="px-6 py-2.5 bg-teal-600 hover:bg-teal-500 text-white text-sm font-bold rounded-xl transition-colors disabled:opacity-50"
-        >
-          {loading ? "Отправляем..." : "Отправить отзыв"}
+      <div className="flex gap-3 pt-1">
+        <button type="submit" disabled={loading} className="btn-primary px-7 py-3 text-sm">
+          {loading ? "Отправляем…" : "Отправить отзыв"}
         </button>
         <button
           type="button"
           onClick={() => setOpen(false)}
-          className="px-6 py-2.5 bg-white/5 hover:bg-white/10 text-slate-300 text-sm font-medium rounded-xl border border-white/10 transition-colors"
+          className="btn-ghost px-7 py-3 text-sm"
         >
           Отмена
         </button>
       </div>
       {status && (
-        <p className={`text-sm text-center ${status.ok ? "text-teal-400" : "text-rose-400"}`}>{status.text}</p>
+        <p className={`text-sm text-center pt-1 ${status.ok ? "text-mint" : "text-rose-400"}`}>
+          {status.text}
+        </p>
       )}
     </form>
   );
