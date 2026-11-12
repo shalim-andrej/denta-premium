@@ -147,9 +147,9 @@ export default function BookingWidget({ services, doctors, initialDoctorId, init
   };
 
   /* ---------- Оформление шагов ---------- */
-  const stepCls = "flex gap-4 md:gap-5";
+  const stepCls = "flex gap-4 md:gap-6";
   const numCls =
-    "w-10 h-10 rounded-full border border-mint/25 bg-mint/[0.08] flex items-center justify-center font-display text-sm text-mint shrink-0";
+    "font-display italic text-xl text-terra/80 w-9 shrink-0 pt-0.5";
   const labelCls = "block text-sm font-semibold text-ink mb-2.5";
 
   const payOptions = [
@@ -158,16 +158,14 @@ export default function BookingWidget({ services, doctors, initialDoctorId, init
   ];
 
   return (
-    <div className="card p-7 md:p-10 relative overflow-hidden" style={{ boxShadow: "0 40px 90px -30px rgba(0,0,0,.75)" }}>
-      <div className="glow w-72 h-72 bg-mint/[0.06] -top-20 -right-24" aria-hidden="true" />
-
-      <div className="relative z-10 space-y-9">
+    <div className="bg-white border border-ink/10 rounded-3xl p-7 md:p-10 relative overflow-hidden">
+      <div className="space-y-9">
         {/* Шаг 1: Врач (опционально) */}
         <div className={stepCls}>
-          <span className={numCls} aria-hidden="true">1</span>
+          <span className={numCls} aria-hidden="true">01</span>
           <div className="flex-1 min-w-0">
             <label htmlFor="doctor-select" className={labelCls}>
-              Врач <span className="font-normal text-fog">— можно не выбирать</span>
+              Врач <span className="font-normal text-ink-soft">— можно не выбирать</span>
             </label>
             <select
               id="doctor-select"
@@ -184,8 +182,8 @@ export default function BookingWidget({ services, doctors, initialDoctorId, init
               ))}
             </select>
             {!selectedDoctor && (
-              <p className="mt-2.5 text-xs text-fog flex items-center gap-1.5">
-                <Info className="w-3.5 h-3.5 text-mint/70 shrink-0" />
+              <p className="mt-2.5 text-xs text-ink-soft flex items-center gap-1.5">
+                <Info className="w-3.5 h-3.5 text-terra/70 shrink-0" />
                 Врач будет назначен автоматически — свободный специалист на выбранное время.
               </p>
             )}
@@ -194,7 +192,7 @@ export default function BookingWidget({ services, doctors, initialDoctorId, init
 
         {/* Шаг 2: Услуга */}
         <div className={stepCls}>
-          <span className={numCls} aria-hidden="true">2</span>
+          <span className={numCls} aria-hidden="true">02</span>
           <div className="flex-1 min-w-0">
             <label htmlFor="service-select" className={labelCls}>Услуга</label>
             <select
@@ -217,10 +215,10 @@ export default function BookingWidget({ services, doctors, initialDoctorId, init
         {/* Шаг 3: Дата */}
         {selectedService && (
           <div className={stepCls}>
-            <span className={numCls} aria-hidden="true">3</span>
+            <span className={numCls} aria-hidden="true">03</span>
             <div className="flex-1 min-w-0">
               <span className={labelCls}>Дата</span>
-              <div className="inline-block bg-white/[0.03] border border-white/10 rounded-2xl p-4 md:p-5">
+              <div className="inline-block bg-paper border border-ink/10 rounded-2xl p-4 md:p-5">
                 <DayPicker
                   mode="single"
                   selected={selectedDate}
@@ -236,16 +234,16 @@ export default function BookingWidget({ services, doctors, initialDoctorId, init
         {/* Шаг 4: Время */}
         {selectedService && (
           <div className={stepCls}>
-            <span className={numCls} aria-hidden="true">4</span>
+            <span className={numCls} aria-hidden="true">04</span>
             <div className="flex-1 min-w-0">
               <span className={labelCls}>Время</span>
               {loadingSlots ? (
-                <div className="text-sm text-fog flex items-center gap-2 py-2">
-                  <Loader2 className="w-4 h-4 animate-spin text-mint" />
+                <div className="text-sm text-ink-soft flex items-center gap-2 py-2">
+                  <Loader2 className="w-4 h-4 animate-spin text-terra" />
                   Загружаем свободные слоты…
                 </div>
               ) : availableSlots.length === 0 ? (
-                <div className="text-sm text-fog py-2">
+                <div className="text-sm text-ink-soft py-2">
                   {selectedDoctor
                     ? "У этого врача на выбранную дату свободных слотов нет. Попробуйте другой день или режим «подберите за меня»."
                     : "На выбранную дату свободных слотов нет. Попробуйте другой день."}
@@ -262,13 +260,9 @@ export default function BookingWidget({ services, doctors, initialDoctorId, init
                         title={doctors.find((d) => d.id === slot.doctorId)?.name}
                         className={`py-2.5 text-sm font-semibold rounded-xl border transition-all duration-200 ${
                           active
-                            ? "text-[#04120e] border-transparent"
-                            : "text-ink/85 border-white/10 bg-white/[0.03] hover:border-mint/50 hover:text-ink"
+                            ? "text-[#faf7f2] border-transparent bg-ink"
+                            : "text-ink border-ink/15 bg-white hover:border-terra hover:text-terra"
                         }`}
-                        style={active ? {
-                          background: "linear-gradient(135deg, #4bf0c8 0%, #2bd4a6 100%)",
-                          boxShadow: "0 6px 18px -4px rgba(60,230,189,.5)",
-                        } : undefined}
                       >
                         {format(new Date(slot.time), "HH:mm")}
                       </button>
@@ -283,7 +277,7 @@ export default function BookingWidget({ services, doctors, initialDoctorId, init
         {/* Шаг 5: Данные и оплата */}
         {selectedSlot && (
           <form onSubmit={handleSubmit} className={stepCls}>
-            <span className={numCls} aria-hidden="true">5</span>
+            <span className={numCls} aria-hidden="true">05</span>
             <div className="flex-1 min-w-0 space-y-5">
               <span className={labelCls}>Ваши данные</span>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
@@ -321,22 +315,22 @@ export default function BookingWidget({ services, doctors, initialDoctorId, init
                         aria-pressed={active}
                         className={`p-4 rounded-2xl border text-left transition-all duration-300 ${
                           active
-                            ? "border-mint/60 bg-mint/[0.08]"
-                            : "border-white/10 bg-white/[0.03] hover:border-white/25"
+                            ? "border-terra/60 bg-terra/[0.06]"
+                            : "border-ink/15 bg-white hover:border-ink/35"
                         }`}
                       >
                         <div className="flex items-center justify-between gap-2">
                           <span className="font-bold text-sm text-ink">{opt.title}</span>
                           <span
                             className={`w-4.5 h-4.5 rounded-full border-2 flex items-center justify-center ${
-                              active ? "border-mint" : "border-white/25"
+                              active ? "border-terra" : "border-ink/25"
                             }`}
                             aria-hidden="true"
                           >
-                            {active && <span className="w-2 h-2 rounded-full bg-mint" />}
+                            {active && <span className="w-2 h-2 rounded-full bg-terra" />}
                           </span>
                         </div>
-                        <div className="text-xs text-fog mt-1.5">{opt.sub}</div>
+                        <div className="text-xs text-ink-soft mt-1.5">{opt.sub}</div>
                       </button>
                     );
                   })}
@@ -358,8 +352,8 @@ export default function BookingWidget({ services, doctors, initialDoctorId, init
                 )}
               </button>
 
-              <p className="text-xs text-fog flex items-center justify-center gap-1.5">
-                <ShieldCheck className="w-3.5 h-3.5 text-mint/70" />
+              <p className="text-xs text-ink-soft flex items-center justify-center gap-1.5">
+                <ShieldCheck className="w-3.5 h-3.5 text-terra/70" />
                 Платёж защищён. Возврат при отмене — по правилам клиники.
               </p>
             </div>
@@ -371,8 +365,8 @@ export default function BookingWidget({ services, doctors, initialDoctorId, init
             role="status"
             className={`p-4 rounded-2xl border text-sm font-medium ${
               message.type === "error"
-                ? "bg-rose-500/10 border-rose-500/25 text-rose-300"
-                : "bg-emerald-500/10 border-emerald-500/25 text-emerald-300"
+                ? "bg-rose-50 border-rose-200 text-rose-700"
+                : "bg-emerald-50 border-emerald-200 text-emerald-700"
             }`}
           >
             {message.text}

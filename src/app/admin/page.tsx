@@ -66,7 +66,7 @@ async function AdminData() {
         </div>
         <div className="bg-white p-5 rounded-xl shadow-sm border border-gray-100">
           <div className="text-sm text-gray-500">Оплачено за месяц</div>
-          <div className="text-3xl font-bold text-teal-600 mt-1">
+          <div className="text-3xl font-bold text-[#9d3b20] mt-1">
             {revenue.toLocaleString("ru-RU")} ₽
           </div>
         </div>
@@ -75,7 +75,7 @@ async function AdminData() {
           <div className="flex gap-2 flex-wrap mt-2">
             <Link
               href="/admin/book"
-              className="text-sm bg-teal-600 text-white px-3 py-2 rounded-lg font-medium hover:bg-teal-700 transition-colors"
+              className="text-sm bg-[#9d3b20] text-white px-3 py-2 rounded-lg font-medium hover:bg-[#7d2c15] transition-colors"
             >
               Записать пациента
             </Link>
@@ -99,7 +99,7 @@ async function AdminData() {
             {upcoming.map((b: UpcomingBooking) => (
               <div
                 key={b.id}
-                className="p-4 border rounded-xl flex flex-col sm:flex-row justify-between items-start gap-3 hover:border-teal-200 transition-colors"
+                className="p-4 border rounded-xl flex flex-col sm:flex-row justify-between items-start gap-3 hover:border-[#9d3b20]/30 transition-colors"
               >
                 <div>
                   <div className="font-bold text-gray-900">
@@ -108,7 +108,7 @@ async function AdminData() {
                   <div className="text-sm text-gray-700 mt-1">
                     <span className="font-medium">{b.user.name}</span> • {b.user.phone}
                   </div>
-                  <div className="text-xs text-teal-600 font-medium mt-1">
+                  <div className="text-xs text-[#9d3b20] font-medium mt-1">
                     {b.doctor.name} — {b.service.title} ({b.service.price} ₽)
                   </div>
                 </div>
@@ -126,7 +126,7 @@ async function AdminData() {
                     <span
                       className={`text-[10px] uppercase font-bold px-2 py-1 rounded ${
                         b.paymentStatus === "PAID"
-                          ? "bg-teal-100 text-teal-700"
+                          ? "bg-[#9d3b20]/[0.08] text-[#9d3b20]"
                           : "bg-gray-100 text-gray-600"
                       }`}
                     >
@@ -204,7 +204,7 @@ async function AdminData() {
                         {cell.map((b: WeekBooking) => (
                           <div
                             key={b.id}
-                            className="text-xs bg-teal-50 text-teal-800 border border-teal-100 rounded-lg p-1.5 mb-1"
+                            className="text-xs bg-[#9d3b20]/[0.05] text-[#9d3b20] border border-[#9d3b20]/15 rounded-lg p-1.5 mb-1"
                             title={b.service.title}
                           >
                             <span className="font-bold">{format(b.startTime, "HH:mm")}</span>{" "}
@@ -213,7 +213,7 @@ async function AdminData() {
                         ))}
                         <Link
                           href={`/admin/book?doctor=${doc.id}&date=${format(day, "yyyy-MM-dd")}`}
-                          className="inline-block text-gray-300 hover:text-teal-500 font-bold leading-none px-1"
+                          className="inline-block text-gray-300 hover:text-[#9d3b20] font-bold leading-none px-1"
                           title="Записать пациента"
                         >
                           +

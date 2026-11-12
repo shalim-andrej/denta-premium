@@ -21,7 +21,7 @@ async function BookingData({ searchParams }: { searchParams: Promise<{ doctor?: 
 
   if (services.length === 0 || doctors.length === 0) {
     return (
-      <div className="card p-10 text-center text-fog">
+      <div className="bg-white border border-ink/10 rounded-3xl p-10 text-center text-ink-soft">
         Пока нет доступных услуг или врачей. Пожалуйста, добавьте их в админ-панели.
       </div>
     );
@@ -40,22 +40,20 @@ async function BookingData({ searchParams }: { searchParams: Promise<{ doctor?: 
 // Сама страница НЕ ждет searchParams, а передает промис дальше
 export default function BookPage({ searchParams }: BookPageProps) {
   return (
-    <main className="px-4 sm:px-6 py-14 md:py-20 relative overflow-hidden">
-      <div className="glow w-[560px] h-[380px] bg-mint/[0.07] -top-24 left-1/2 -translate-x-1/2" aria-hidden="true" />
-
-      <div className="max-w-2xl mx-auto relative z-10">
-        <div className="max-w-xl mb-10 md:mb-12 animate-fade-up">
-          <span className="chip-mint mb-5">Оплата онлайн</span>
-          <h1 className="font-display text-[2rem] sm:text-4xl md:text-[2.8rem] leading-[1.12] text-ink">
-            Запись <span className="accent-word">на приём</span>
+    <main className="px-5 sm:px-8 lg:px-12 pt-[110px] md:pt-[150px] pb-24 md:pb-32">
+      <div className="max-w-2xl mx-auto">
+        <div className="max-w-xl mb-12 animate-fade-up">
+          <span className="eyebrow">Оплата онлайн</span>
+          <h1 className="mt-6 font-display font-medium text-[2.2rem] sm:text-5xl leading-[1.1] text-ink uppercase">
+            Запись <span className="serif-italic normal-case text-terra">на приём</span>
           </h1>
-          <p className="mt-5 text-fog text-base md:text-lg leading-relaxed">
+          <p className="mt-5 text-ink-soft text-base md:text-lg leading-relaxed">
             Врача можно не выбирать — подберём свободного специалиста.
             Оплата СБП или картой закрепляет время за вами.
           </p>
         </div>
 
-        <Suspense fallback={<div className="card p-10 text-center text-fog">Загрузка формы…</div>}>
+        <Suspense fallback={<div className="bg-white border border-ink/10 rounded-3xl p-10 text-center text-ink-soft">Загрузка формы…</div>}>
           <BookingData searchParams={searchParams} />
         </Suspense>
       </div>

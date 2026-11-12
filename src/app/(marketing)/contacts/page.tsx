@@ -17,6 +17,7 @@ const CONTACTS = [
     icon: MapPin,
     title: "Адрес",
     main: "г. Москва, ул. Примерная, д. 1",
+    href: null as string | null,
     sub: "м. Тверская, 5 минут пешком",
   },
   {
@@ -37,97 +38,98 @@ const CONTACTS = [
     icon: Clock,
     title: "Режим работы",
     main: "9:00 — 21:00",
+    href: null as string | null,
     sub: "Без выходных",
   },
 ];
 
 export default function ContactsPage() {
   return (
-    <main className="px-4 sm:px-6 py-14 md:py-20">
-      <div className="max-w-7xl mx-auto">
-        <div className="max-w-2xl mb-12 md:mb-16 animate-fade-up">
-          <span className="chip-mint mb-5">Связаться с нами</span>
-          <h1 className="font-display text-[2rem] sm:text-4xl md:text-[3rem] leading-[1.12] text-ink">
+    <main className="px-5 sm:px-8 lg:px-12 pt-[110px] md:pt-[150px] pb-24 md:pb-32">
+      <div className="max-w-[1400px] mx-auto">
+        <div className="max-w-3xl mb-14 md:mb-20 animate-fade-up">
+          <span className="eyebrow">Связаться с нами</span>
+          <h1 className="mt-7 font-display font-medium text-[2.3rem] sm:text-5xl md:text-[3.4rem] leading-[1.1] text-ink uppercase">
             Контакты{" "}
-            <span className="accent-word">клиники</span>
+            <span className="serif-italic normal-case text-terra">клиники</span>
           </h1>
-          <p className="mt-5 text-fog text-base md:text-lg leading-relaxed">
+          <p className="mt-6 text-ink-soft text-base md:text-lg leading-relaxed">
             Позвоните, напишите или приезжайте — мы всегда рады помочь
-            и подскажут удобное время приёма.
+            и подскажем удобное время приёма.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
-          {/* Левая колонка: информация */}
-          <div className="flex flex-col gap-5">
-            <div className="card p-8 md:p-9">
-              <div className="grid sm:grid-cols-2 gap-x-8 gap-y-8">
-                {CONTACTS.map((c) => (
-                  <div key={c.title} className="flex items-start gap-4">
-                    <span className="w-12 h-12 rounded-2xl bg-mint/[0.08] border border-mint/20 flex items-center justify-center shrink-0">
-                      <c.icon className="w-5 h-5 text-mint" />
-                    </span>
-                    <div className="min-w-0">
-                      <h2 className="text-xs font-bold uppercase tracking-[0.12em] text-fog mb-1.5">
-                        {c.title}
-                      </h2>
-                      {c.href ? (
-                        <a
-                          href={c.href}
-                          className="font-semibold text-ink hover:text-mint transition-colors break-words"
-                        >
-                          {c.main}
-                        </a>
-                      ) : (
-                        <p className="font-semibold text-ink">{c.main}</p>
-                      )}
-                      <p className="text-xs text-fog mt-1">{c.sub}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-              <div className="mt-9 pt-7 border-t border-white/[0.06] flex flex-col sm:flex-row gap-3">
-                <a
-                  href="https://wa.me/79990000000"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="btn-ghost px-6 py-3 text-sm flex-1 !text-emerald-300 hover:!border-emerald-400/40"
+        <div className="grid lg:grid-cols-2 gap-14 lg:gap-20 items-start">
+          {/* Левая колонка: редакционная таблица контактов */}
+          <div>
+            <div>
+              {CONTACTS.map((c, i) => (
+                <div
+                  key={c.title}
+                  className={`grid sm:grid-cols-[1fr_1.1fr] gap-x-8 gap-y-1.5 py-7 border-t border-ink/10 ${i === CONTACTS.length - 1 ? "border-b" : ""}`}
                 >
-                  <MessageCircle className="w-4 h-4" />
-                  Написать в WhatsApp
-                </a>
-                <a href="tel:+79990000000" className="btn-primary px-6 py-3 text-sm flex-1">
-                  <Phone className="w-4 h-4" />
-                  Позвонить
-                </a>
-              </div>
+                  <div className="flex items-center gap-3 text-[12px] uppercase tracking-[0.16em] text-ink-soft">
+                    <c.icon className="w-4 h-4 text-terra" strokeWidth={1.5} />
+                    {c.title}
+                  </div>
+                  <div>
+                    {c.href ? (
+                      <a
+                        href={c.href}
+                        className="font-display text-lg md:text-xl text-ink hover:text-terra transition-colors break-words"
+                      >
+                        {c.main}
+                      </a>
+                    ) : (
+                      <p className="font-display text-lg md:text-xl text-ink">{c.main}</p>
+                    )}
+                    <p className="text-[13px] text-ink-soft mt-1">{c.sub}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Действия */}
+            <div className="mt-10 flex flex-col sm:flex-row gap-3">
+              <a
+                href="https://wa.me/79990000000"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn-ghost px-6 py-3.5 text-sm flex-1"
+              >
+                <MessageCircle className="w-4 h-4 text-terra" />
+                Написать в WhatsApp
+              </a>
+              <a href="tel:+79990000000" className="btn-primary px-6 py-3.5 text-sm flex-1">
+                <Phone className="w-4 h-4" />
+                Позвонить
+              </a>
             </div>
 
             {/* Как добраться */}
-            <div className="card p-8 md:p-9 flex-1">
-              <h2 className="font-display text-lg text-ink mb-4">Как добраться</h2>
-              <ul className="space-y-3 text-sm text-fog leading-relaxed">
+            <div className="mt-12">
+              <h2 className="font-display text-xl text-ink mb-5">Как добраться</h2>
+              <ul className="space-y-4 text-[15px] text-ink-soft leading-relaxed">
                 <li className="flex gap-3">
-                  <Navigation className="w-4 h-4 text-mint shrink-0 mt-0.5" />
+                  <Navigation className="w-4 h-4 text-terra shrink-0 mt-1" strokeWidth={1.5} />
                   Метро «Тверская» — выход №4, далее 5 минут пешком по Тверской улице.
                 </li>
                 <li className="flex gap-3">
-                  <Navigation className="w-4 h-4 text-mint shrink-0 mt-0.5" />
+                  <Navigation className="w-4 h-4 text-terra shrink-0 mt-1" strokeWidth={1.5} />
                   Парковка для пациентов — бесплатная, 2 часа, по записи.
                 </li>
               </ul>
             </div>
           </div>
 
-          {/* Правая колонка: карта (тёмная через CSS-фильтр) */}
-          <div className="card p-2 min-h-[420px] overflow-hidden relative">
+          {/* Правая колонка: карта в тёплой тонировке */}
+          <div className="photo relative min-h-[480px] bg-sand overflow-hidden">
             <iframe
               src="https://yandex.ru/map-widget/v1/?um=constructor%3Ae5d9e5d2c2f1a5b4e8f9c1d2e3f4a5b6&amp;source=constructor"
               width="100%"
               height="100%"
               frameBorder="0"
-              className="w-full h-full min-h-[400px] rounded-[1.35rem] grayscale-[0.4] invert-[0.92] hue-rotate-[180deg] saturate-[0.7] contrast-[0.95]"
+              className="absolute inset-0 w-full h-full sepia-[0.25] saturate-[0.85]"
               title="Карта клиники"
               loading="lazy"
             />
