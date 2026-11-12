@@ -5,6 +5,7 @@ import { useState } from "react";
 import { loginAction } from "@/app/actions";
 import { Lock, ArrowRight, ShieldCheck } from "lucide-react";
 import Link from "next/link";
+import { Logo } from "@/components/Header";
 
 export default function LoginPage() {
   const [error, setError] = useState<string | null>(null);
@@ -16,11 +17,11 @@ export default function LoginPage() {
     setError(null);
 
     const formData = new FormData(e.currentTarget);
-    
-    // loginAction делает redirect("/admin") при успехе, 
+
+    // loginAction делает redirect("/admin") при успехе,
     // поэтому если мы вернулись сюда, значит пароль неверный
     const result = await loginAction(formData);
-    
+
     if (result?.error) {
       setError(result.error);
       setIsLoading(false);
@@ -28,48 +29,51 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-slate-950 px-4 relative overflow-hidden">
-      {/* Фоновые градиенты */}
-      <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-teal-500/10 blur-[120px] rounded-full pointer-events-none" />
-      <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-blue-600/10 blur-[120px] rounded-full pointer-events-none" />
+    <div className="min-h-screen flex items-center justify-center px-4 relative overflow-hidden">
+      {/* Фоновые свечения */}
+      <div className="glow w-[480px] h-[380px] bg-mint/[0.08] top-[12%] left-[8%]" aria-hidden="true" />
+      <div className="glow w-[420px] h-[340px] bg-[#1d5c4d]/25 bottom-[10%] right-[6%]" aria-hidden="true" />
 
-      <div className="relative z-10 w-full max-w-md">
-        <div className="bg-slate-900/80 backdrop-blur-xl border border-white/10 rounded-3xl p-8 shadow-2xl">
+      <div className="relative z-10 w-full max-w-md animate-fade-up">
+        <div className="card p-8 md:p-10" style={{ boxShadow: "0 40px 90px -30px rgba(0,0,0,.8)" }}>
           {/* Логотип */}
           <div className="flex justify-center mb-8">
-            <Link href="/" className="flex items-center gap-2">
-              <div className="w-12 h-12 rounded-2xl bg-teal-500 flex items-center justify-center text-white font-bold text-2xl shadow-lg shadow-teal-500/25">
-                D
-              </div>
-            </Link>
+            <Logo size="lg" />
           </div>
 
           <div className="text-center mb-8">
-            <h1 className="text-2xl font-bold text-white mb-2">Вход в панель</h1>
-            <p className="text-sm text-slate-400">Управление клиникой DentaPremium</p>
+            <h1 className="font-display text-xl text-ink mb-2">
+              Панель <span className="accent-word">управления</span>
+            </h1>
+            <p className="text-sm text-fog">Вход для сотрудников клиники</p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-5">
             <div>
-              <label className="block text-sm font-medium text-slate-300 mb-2">
+              <label htmlFor="password" className="block text-sm font-medium text-ink/80 mb-2.5">
                 Пароль администратора
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                  <Lock className="w-5 h-5 text-slate-500" />
+                  <Lock className="w-4.5 h-4.5 text-fog" />
                 </div>
                 <input
+                  id="password"
                   type="password"
                   name="password"
                   required
-                  className="w-full pl-12 pr-4 py-3 bg-slate-950 border border-white/10 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all"
-                  placeholder="••••••••"
+                  autoComplete="current-password"
+                  className="field !pl-12"
+                  placeholder="••••••••••••"
                 />
               </div>
             </div>
 
             {error && (
-              <div className="p-3 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 text-sm text-center">
+              <div
+                role="alert"
+                className="p-3.5 rounded-2xl bg-rose-500/10 border border-rose-500/25 text-rose-300 text-sm text-center"
+              >
                 {error}
               </div>
             )}
@@ -77,18 +81,24 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full flex items-center justify-center gap-2 py-3 px-4 bg-teal-600 hover:bg-teal-500 disabled:opacity-50 disabled:cursor-not-allowed text-white font-bold rounded-xl transition-all shadow-lg shadow-teal-600/25"
+              className="btn-primary w-full py-3.5 text-[15px]"
             >
-              {isLoading ? "Проверка..." : "Войти в систему"}
-              {!isLoading && <ArrowRight className="w-5 h-5" />}
+              {isLoading ? "Проверка…" : "Войти в систему"}
+              {!isLoading && <ArrowRight className="w-4.5 h-4.5" />}
             </button>
           </form>
 
-          <div className="mt-8 pt-6 border-t border-white/5 flex items-center justify-center gap-2 text-xs text-slate-500">
-            <ShieldCheck className="w-4 h-4" />
-            <span>Защищенная зона. Только для сотрудников.</span>
+          <div className="mt-8 pt-6 border-t border-white/[0.06] flex items-center justify-center gap-2 text-xs text-fog">
+            <ShieldCheck className="w-4 h-4 text-mint/70" />
+            <span>Защищённая зона. Только для сотрудников.</span>
           </div>
         </div>
+
+        <p className="text-center mt-6">
+          <Link href="/" className="text-sm text-fog hover:text-mint transition-colors">
+            ← Вернуться на сайт
+          </Link>
+        </p>
       </div>
     </div>
   );

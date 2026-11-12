@@ -23,7 +23,7 @@ async function ServicesData() {
 
   if (services.length === 0) {
     return (
-      <div className="text-center text-slate-500 py-12">
+      <div className="card p-10 text-center text-fog">
         Пока нет доступных услуг. Пожалуйста, добавьте их в админ-панели.
       </div>
     );
@@ -34,16 +34,21 @@ async function ServicesData() {
 
 export default function ServicesPage() {
   return (
-    <main className="min-h-screen bg-slate-950 pt-12 pb-24 px-6">
-      <div className="max-w-6xl mx-auto">
-        <div className="text-center mb-12">
-          <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">Услуги и цены</h1>
-          <p className="text-lg text-slate-400 max-w-2xl mx-auto">
-            Прозрачные цены без скрытых платежей. Современные материалы и оборудование.
+    <main className="px-4 sm:px-6 py-14 md:py-20">
+      <div className="max-w-7xl mx-auto">
+        <div className="max-w-2xl mb-12 md:mb-16 animate-fade-up">
+          <span className="chip-mint mb-5">Прайс-лист</span>
+          <h1 className="font-display text-[2rem] sm:text-4xl md:text-[3rem] leading-[1.12] text-ink">
+            Услуги и цены{" "}
+            <span className="accent-word">без сюрпризов</span>
+          </h1>
+          <p className="mt-5 text-fog text-base md:text-lg leading-relaxed">
+            Стоимость на сайте равна цене в договоре. Выберите услугу — и запишитесь
+            на удобное время в пару кликов.
           </p>
         </div>
 
-        <Suspense fallback={<div className="text-center text-slate-500 py-12">Загрузка прайс-листа...</div>}>
+        <Suspense fallback={<div className="py-24 text-center text-fog">Загрузка услуг…</div>}>
           <ServicesData />
         </Suspense>
       </div>
