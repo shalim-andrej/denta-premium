@@ -1,26 +1,283 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+/* ============================================================
+   DentaPremium — дизайн-система «Мята на графите»
+   Тёмная премиум-тема: глубокий графит с зелёным подтоном,
+   мятный акцент, шампанское золото для рейтингов,
+   дисплейная кириллическая типографика Unbounded + Cormorant.
+   ============================================================ */
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-unbounded), var(--font-manrope), ui-sans-serif, sans-serif;
+  --font-accent: var(--font-cormorant), Georgia, serif;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@theme {
+  /* Палитра */
+  --color-night: #05090b;        /* фон страницы — почти чёрный, зелёный подтон */
+  --color-panel: #0a1214;        /* приподнятые панели */
+  --color-ink: #eef6f2;          /* основной текст — мятно-белый */
+  --color-fog: #8ca29b;          /* приглушённый текст */
+  --color-mint: #3ce6bd;         /* главный акцент */
+  --color-mint-deep: #14b391;    /* заливка кнопок */
+  --color-gold: #e9c98d;         /* шампанское золото — звёзды, рейтинг */
+
+  /* Анимации */
+  --animate-marquee: marquee 36s linear infinite;
+  --animate-float: float 7s ease-in-out infinite;
+  --animate-float-late: float 9s ease-in-out 1.2s infinite;
+  --animate-spin-slower: spin 26s linear infinite;
+  --animate-fade-up: fade-up 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+
+  @keyframes marquee {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-12px); }
+  }
+  @keyframes fade-up {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
   }
 }
 
+/* ---------- Базовые стили ---------- */
+
+html {
+  scroll-behavior: smooth;
+}
+
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--color-night);
+  color: var(--color-ink);
+  font-family: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Зерно поверх всего сайта — эффект плёночной текстуры */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0.035;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+::selection {
+  background: rgba(60, 230, 189, 0.28);
+  color: #eef6f2;
+}
+
+/* Тонкий скроллбар в стиле темы */
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: #05090b; }
+::-webkit-scrollbar-thumb {
+  background: #1c2b28;
+  border-radius: 999px;
+  border: 2px solid #05090b;
+}
+::-webkit-scrollbar-thumb:hover { background: #2a403b; }
+
+/* ---------- Переиспользуемые компоненты ---------- */
+
+@layer components {
+  /* Кнопки */
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-full font-semibold text-[#04120e] transition-all duration-300;
+    background: linear-gradient(135deg, #4bf0c8 0%, #2bd4a6 100%);
+    box-shadow: 0 8px 32px -8px rgba(60, 230, 189, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.35);
+  }
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 14px 44px -8px rgba(60, 230, 189, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.35);
+  }
+  .btn-primary:active { transform: translateY(0); }
+  .btn-primary:disabled {
+    @apply opacity-50 cursor-not-allowed pointer-events-none;
+  }
+
+  .btn-ghost {
+    @apply inline-flex items-center justify-center gap-2 rounded-full font-medium text-ink transition-all duration-300;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(12px);
+  }
+  .btn-ghost:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(60, 230, 189, 0.35);
+    transform: translateY(-2px);
+  }
+
+  /* Стеклянная карточка */
+  .card {
+    @apply relative rounded-3xl;
+    background: linear-gradient(160deg, rgba(255, 255, 255, 0.055) 0%, rgba(255, 255, 255, 0.02) 100%);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(12px);
+  }
+  .card-hover {
+    @apply transition-all duration-500;
+  }
+  .card-hover:hover {
+    transform: translateY(-4px);
+    border-color: rgba(60, 230, 189, 0.3);
+    background: linear-gradient(160deg, rgba(60, 230, 189, 0.07) 0%, rgba(255, 255, 255, 0.03) 100%);
+    box-shadow: 0 24px 48px -20px rgba(0, 0, 0, 0.6);
+  }
+
+  /* Плашка-чип */
+  .chip {
+    @apply inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-[13px] font-medium;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: var(--color-fog);
+    backdrop-filter: blur(8px);
+  }
+  .chip-mint {
+    @apply inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-[13px] font-semibold;
+    background: rgba(60, 230, 189, 0.1);
+    border: 1px solid rgba(60, 230, 189, 0.25);
+    color: var(--color-mint);
+  }
+
+  /* Акцентное слово в заголовках — курсивный Cormorant */
+  .accent-word {
+    font-family: var(--font-cormorant), Georgia, serif;
+    font-style: italic;
+    font-weight: 500;
+    font-size: 1.12em;
+    letter-spacing: 0;
+    color: var(--color-mint);
+  }
+
+  /* Свечение-орб для фона секций */
+  .glow {
+    position: absolute;
+    border-radius: 9999px;
+    pointer-events: none;
+    filter: blur(110px);
+  }
+
+  /* Поля ввода */
+  .field {
+    @apply w-full rounded-2xl px-4 py-3.5 text-[15px] text-ink placeholder-[#5d716b] outline-none transition-all duration-300;
+    background: rgba(255, 255, 255, 0.045);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  .field:focus {
+    border-color: rgba(60, 230, 189, 0.55);
+    box-shadow: 0 0 0 4px rgba(60, 230, 189, 0.12);
+    background: rgba(255, 255, 255, 0.06);
+  }
+
+  select.field {
+    @apply appearance-none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%238ca29b' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 1.1rem center;
+    padding-right: 2.75rem;
+  }
+  select.field option {
+    background-color: #0a1214;
+    color: #eef6f2;
+  }
+}
+
+/* ---------- react-day-picker в тёмной теме ---------- */
+
+.rdp-root {
+  --rdp-accent-color: #3ce6bd;
+  --rdp-accent-background-color: rgba(60, 230, 189, 0.14);
+  --rdp-day-height: 2.6rem;
+  --rdp-day-width: 2.6rem;
+  --rdp-day_button-border-radius: 9999px;
+  --rdp-day_button-border: 1px solid transparent;
+  --rdp-day_button-height: 2.6rem;
+  --rdp-day_button-width: 2.6rem;
+  --rdp-day_button-font-size: 0.85rem;
+  --rdp-outside-opacity: 0.35;
+  --rdp-today-color: #3ce6bd;
+  --rdp-font-family: var(--font-manrope), sans-serif;
+  --rdp-month_caption-font-size: 0.95rem;
+  margin: 0;
+}
+
+.rdp-root,
+.rdp-root * {
+  color: #c8d6d1;
+}
+
+.rdp-month_caption,
+.rdp-month_caption * {
+  color: #eef6f2;
+  font-weight: 700;
+}
+
+.rdp-weekdays,
+.rdp-weekday {
+  color: #637871;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-weight: 600;
+}
+
+.rdp-day_button:hover {
+  border-color: rgba(60, 230, 189, 0.45);
+  color: #eef6f2;
+  background: rgba(60, 230, 189, 0.06);
+}
+
+.rdp-selected .rdp-day_button {
+  background: linear-gradient(135deg, #4bf0c8, #2bd4a6);
+  color: #04120e;
+  font-weight: 800;
+  border-color: transparent;
+  box-shadow: 0 6px 18px -4px rgba(60, 230, 189, 0.5);
+}
+
+.rdp-nav_button {
+  color: #8ca29b;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 9999px;
+}
+.rdp-nav_button:hover {
+  color: #3ce6bd;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.rdp-disabled .rdp-day_button {
+  opacity: 0.25;
+  text-decoration: none;
+}
+
+/* ---------- Доступность: видимый фокус ---------- */
+
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+summary:focus-visible {
+  outline: 2px solid rgba(60, 230, 189, 0.7);
+  outline-offset: 3px;
+  border-radius: 8px;
+}
+
+/* Уважение к reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  html { scroll-behavior: auto; }
 }

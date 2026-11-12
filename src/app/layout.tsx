@@ -1,11 +1,31 @@
 // src/app/layout.tsx
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Unbounded, Cormorant, Manrope } from "next/font/google";
 import "./globals.css";
+import ChromeGate from "@/components/ChromeGate";
 import Header from "@/components/Header";
-import Footer from "@/components/Footer";
 
-const inter = Inter({ subsets: ["latin", "cyrillic"] });
+// Дисплейный шрифт — геометричный Unbounded с кириллицей
+const unbounded = Unbounded({
+  subsets: ["latin", "cyrillic"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-unbounded",
+});
+
+// Акцентный курсив для ключевых слов в заголовках
+const cormorant = Cormorant({
+  subsets: ["latin", "cyrillic"],
+  weight: ["500", "600"],
+  style: ["normal", "italic"],
+  variable: "--font-cormorant",
+});
+
+// Основной текст
+const manrope = Manrope({
+  subsets: ["latin", "cyrillic"],
+  weight: ["400", "500", "600", "700", "800"],
+  variable: "--font-manrope",
+});
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"),
@@ -28,13 +48,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="ru">
-      <body className={`${inter.className} bg-slate-950 text-slate-200 antialiased`}>
-        <Header />
-        {/* pt-20 отступает контент под фиксированный Header */}
-        <main className="pt-20 min-h-screen">
-          {children}
-        </main>
-        <Footer />
+      <body
+        className={`${manrope.variable} ${unbounded.variable} ${cormorant.variable} bg-night text-ink antialiased`}
+      >
+        <ChromeGate header={<Header />}>{children}</ChromeGate>
       </body>
     </html>
   );
