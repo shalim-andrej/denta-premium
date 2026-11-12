@@ -3,7 +3,6 @@
 // Форма отзыва: публикуется только после модерации администратором.
 import { useState } from "react";
 import { submitReview } from "@/app/actions";
-import { PenLine } from "lucide-react";
 
 export default function ReviewForm() {
   const [open, setOpen] = useState(false);
@@ -40,7 +39,6 @@ export default function ReviewForm() {
     return (
       <div className="text-center">
         <button onClick={() => setOpen(true)} className="btn-ghost px-7 py-3.5 text-sm">
-          <PenLine className="w-4 h-4 text-mint" />
           Оставить свой отзыв
         </button>
       </div>
@@ -48,8 +46,8 @@ export default function ReviewForm() {
   }
 
   return (
-    <form onSubmit={onSubmit} className="card max-w-xl mx-auto p-7 md:p-9 space-y-4">
-      <h3 className="font-display text-lg text-ink">Ваш отзыв</h3>
+    <form onSubmit={onSubmit} className="max-w-xl mx-auto bg-white border border-ink/10 rounded-2xl p-7 md:p-9 space-y-4">
+      <h3 className="font-display text-xl text-ink">Ваш отзыв</h3>
       <input
         type="text"
         required
@@ -61,7 +59,7 @@ export default function ReviewForm() {
         className="field"
       />
       <div className="flex items-center gap-2">
-        <span className="text-sm text-fog mr-2">Оценка:</span>
+        <span className="text-sm text-ink-soft mr-2">Оценка:</span>
         {[1, 2, 3, 4, 5].map((n) => (
           <button
             key={n}
@@ -69,7 +67,7 @@ export default function ReviewForm() {
             onClick={() => setRating(n)}
             aria-label={`Оценка ${n}`}
             className={`text-2xl leading-none transition-all hover:scale-110 ${
-              n <= rating ? "text-gold fill-gold" : "text-white/20 hover:text-gold/60"
+              n <= rating ? "text-gold fill-gold" : "text-ink/20 hover:text-gold/60"
             }`}
           >
             ★
@@ -99,7 +97,7 @@ export default function ReviewForm() {
         </button>
       </div>
       {status && (
-        <p className={`text-sm text-center pt-1 ${status.ok ? "text-mint" : "text-rose-400"}`}>
+        <p className={`text-sm text-center pt-1 ${status.ok ? "text-terra" : "text-rose-600"}`}>
           {status.text}
         </p>
       )}

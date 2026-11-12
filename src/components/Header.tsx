@@ -4,7 +4,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
-import { Phone, Calendar, X } from "lucide-react";
+import { Phone, X } from "lucide-react";
 
 const NAV_LINKS = [
   { href: "/", label: "Главная" },
@@ -19,24 +19,12 @@ function isActive(pathname: string, href: string) {
 }
 
 export function Logo({ size = "md" }: { size?: "md" | "lg" }) {
-  const box = size === "lg" ? "w-12 h-12 rounded-2xl" : "w-10 h-10 rounded-xl";
-  const word = size === "lg" ? "text-[26px]" : "text-xl";
+  const word = size === "lg" ? "text-[30px]" : "text-[22px]";
   return (
-    <Link href="/" className="flex items-center gap-2.5 group" aria-label="DentaPremium — на главную">
-      <span
-        className={`${box} flex items-center justify-center transition-transform duration-500 group-hover:rotate-[10deg]`}
-        style={{
-          background: "linear-gradient(135deg, #4bf0c8 0%, #2bd4a6 100%)",
-          boxShadow: "0 6px 20px -4px rgba(60,230,189,.45), inset 0 1px 0 rgba(255,255,255,.4)",
-        }}
-      >
-        <svg viewBox="0 0 24 24" className="w-[55%] h-[55%]" fill="#04120e" aria-hidden="true">
-          <path d="M12 2.2c-3.9 0-6.9 2.6-6.9 6 0 2 .9 3.5 1.5 5 .6 1.8.9 4 1.3 6.2.2 1.3.5 2.4 1.7 2.4 1.5 0 1.3-2.2 1.6-4.2.2-1.3.7-2.3 1.8-2.3s1.6 1 1.8 2.3c.3 2 .1 4.2 1.6 4.2 1.2 0 1.5-1.1 1.7-2.4.4-2.2.7-4.4 1.3-6.2.6-1.5 1.5-3 1.5-5 0-3.4-3-6-6.9-6z" />
-        </svg>
-      </span>
-      <span className={`${word} leading-none whitespace-nowrap`}>
-        <span className="font-display font-semibold text-ink">Denta</span>
-        <span className="font-accent italic font-medium text-mint">Premium</span>
+    <Link href="/" className="group inline-flex items-baseline" aria-label="DentaPremium — на главную">
+      <span className={`${word} leading-none whitespace-nowrap font-display font-medium tracking-tight text-ink`}>
+        Denta
+        <span className="serif-italic text-terra">Premium</span>
       </span>
     </Link>
   );
@@ -66,19 +54,19 @@ export default function Header() {
   return (
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
-        scrolled
-          ? "bg-[#05090b]/85 backdrop-blur-xl border-b border-white/[0.07] shadow-[0_12px_40px_-20px_rgba(0,0,0,.8)]"
+        scrolled || isOpen
+          ? "bg-paper/95 backdrop-blur-md border-b border-ink/10"
           : "bg-transparent border-b border-transparent"
       }`}
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-[72px]">
+      <div className="max-w-[1400px] mx-auto px-5 sm:px-8 lg:px-12">
+        <div className="flex items-center justify-between h-[76px]">
           <Logo />
 
-          {/* Центральная навигация-пилюля */}
+          {/* Навигация — тихий текст, точка у активной страницы */}
           <nav
             aria-label="Основная навигация"
-            className="hidden lg:flex items-center gap-1 rounded-full p-1.5 border border-white/[0.07] bg-white/[0.04] backdrop-blur-md"
+            className="hidden lg:flex items-center gap-9"
           >
             {NAV_LINKS.map((link) => {
               const active = isActive(pathname, link.href);
@@ -87,12 +75,11 @@ export default function Header() {
                   key={link.href}
                   href={link.href}
                   aria-current={active ? "page" : undefined}
-                  className={`px-4 py-2 rounded-full text-sm transition-all duration-300 ${
-                    active
-                      ? "bg-white/10 text-ink font-semibold"
-                      : "text-fog hover:text-ink hover:bg-white/[0.06] font-medium"
+                  className={`text-[13.5px] uppercase tracking-[0.14em] transition-colors duration-300 flex items-center gap-2 ${
+                    active ? "text-ink font-semibold" : "text-ink-soft hover:text-ink font-medium"
                   }`}
                 >
+                  {active && <span className="w-1 h-1 rounded-full bg-terra" aria-hidden="true" />}
                   {link.label}
                 </Link>
               );
@@ -100,16 +87,15 @@ export default function Header() {
           </nav>
 
           {/* Действия */}
-          <div className="hidden lg:flex items-center gap-5">
+          <div className="hidden lg:flex items-center gap-6">
             <a
               href="tel:+79990000000"
-              className="flex items-center gap-2 text-sm font-medium text-fog hover:text-ink transition-colors"
+              className="flex items-center gap-2 text-[14px] font-medium text-ink-soft hover:text-terra transition-colors"
             >
-              <Phone className="w-4 h-4 text-mint" />
+              <Phone className="w-3.5 h-3.5" />
               +7 (999) 000-00-00
             </a>
-            <Link href="/book" className="btn-primary px-5 py-2.5 text-sm">
-              <Calendar className="w-4 h-4" />
+            <Link href="/book" className="btn-primary px-6 py-2.5 text-[13.5px]">
               Записаться
             </Link>
           </div>
@@ -119,44 +105,44 @@ export default function Header() {
             onClick={() => setIsOpen(true)}
             aria-label="Открыть меню"
             aria-expanded={isOpen}
-            className="lg:hidden w-11 h-11 flex items-center justify-center rounded-full border border-white/10 bg-white/[0.04] text-ink"
+            className="lg:hidden w-11 h-11 flex flex-col items-center justify-center gap-[7px] text-ink"
           >
-            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
-              <path d="M3 5.5h14M3 10h14M3 14.5h9" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
-            </svg>
+            <span className="block w-6 h-px bg-ink" aria-hidden="true" />
+            <span className="block w-6 h-px bg-ink" aria-hidden="true" />
+            <span className="block w-4 h-px bg-ink self-center" aria-hidden="true" />
           </button>
         </div>
       </div>
 
-      {/* Мобильное полноэкранное меню */}
+      {/* Мобильное полноэкранное меню — молочная бумага */}
       {isOpen && (
-        <div className="fixed inset-0 z-[60] bg-[#05090b]/97 backdrop-blur-2xl flex flex-col animate-fade-up">
-          <div className="max-w-7xl w-full mx-auto px-4 sm:px-6">
-            <div className="flex items-center justify-between h-[72px]">
+        <div className="fixed inset-0 z-[60] bg-paper flex flex-col animate-fade-up">
+          <div className="max-w-[1400px] w-full mx-auto px-5 sm:px-8">
+            <div className="flex items-center justify-between h-[76px]">
               <Logo />
               <button
                 onClick={() => setIsOpen(false)}
                 aria-label="Закрыть меню"
-                className="w-11 h-11 flex items-center justify-center rounded-full border border-white/10 bg-white/[0.04] text-ink"
+                className="w-11 h-11 flex items-center justify-center text-ink"
               >
-                <X className="w-5 h-5" />
+                <X className="w-6 h-6" strokeWidth={1.5} />
               </button>
             </div>
           </div>
 
           <nav aria-label="Мобильная навигация" className="flex-1 flex flex-col justify-center px-8">
-            <ul className="space-y-2">
+            <ul>
               {NAV_LINKS.map((link, i) => (
-                <li key={link.href}>
+                <li key={link.href} className="border-b border-ink/10">
                   <Link
                     href={link.href}
                     onClick={() => setIsOpen(false)}
-                    className="group flex items-baseline gap-4 py-3"
+                    className="group flex items-baseline gap-5 py-5"
                   >
-                    <span className="font-accent italic text-mint/70 text-xl w-8">
+                    <span className="font-display italic text-terra/70 text-lg w-8">
                       0{i + 1}
                     </span>
-                    <span className="font-display text-3xl sm:text-4xl text-ink group-hover:text-mint transition-colors">
+                    <span className="font-display text-4xl text-ink group-hover:text-terra transition-colors">
                       {link.label}
                     </span>
                   </Link>
@@ -165,11 +151,9 @@ export default function Header() {
             </ul>
           </nav>
 
-          <div className="px-8 pb-10 space-y-4">
-            <a href="tel:+79990000000" className="flex items-center gap-3 text-fog">
-              <span className="w-10 h-10 rounded-full border border-white/10 bg-white/[0.04] flex items-center justify-center">
-                <Phone className="w-4 h-4 text-mint" />
-              </span>
+          <div className="px-8 pb-12 space-y-5">
+            <a href="tel:+79990000000" className="flex items-center gap-3 text-ink-soft">
+              <Phone className="w-4 h-4 text-terra" />
               +7 (999) 000-00-00
             </a>
             <Link
@@ -177,7 +161,6 @@ export default function Header() {
               onClick={() => setIsOpen(false)}
               className="btn-primary w-full py-4"
             >
-              <Calendar className="w-5 h-5" />
               Записаться на приём
             </Link>
           </div>

@@ -1,6 +1,6 @@
 // src/components/Footer.tsx
 import Link from "next/link";
-import { MapPin, Phone, Mail, Clock, ArrowUpRight } from "lucide-react";
+import { Phone, Mail, ArrowUpRight } from "lucide-react";
 import { Logo } from "./Header";
 
 // Вычисляем год один раз при загрузке модуля (на сервере)
@@ -28,57 +28,63 @@ const COLUMNS = [
 
 export default function Footer() {
   return (
-    <footer className="relative mt-auto border-t border-white/[0.06] overflow-hidden">
-      {/* Свечение у нижней границы */}
-      <div className="glow w-[720px] h-[280px] bg-mint/[0.05] -top-40 left-1/2 -translate-x-1/2" />
-
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+    <footer className="relative bg-wine text-[#efe6da] overflow-hidden">
+      <div className="max-w-[1400px] mx-auto px-5 sm:px-8 lg:px-12">
         {/* CTA-строка */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 py-12 border-b border-white/[0.06]">
-          <h2 className="font-display text-xl sm:text-2xl leading-snug max-w-md">
-            Остались вопросы?{" "}
-            <span className="accent-word">Поможем выбрать врача</span>
-          </h2>
-          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+        <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8 py-16 lg:py-20 border-b border-[#efe6da]/15">
+          <div className="max-w-xl">
+            <span className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#c99b7d]">
+              Остались вопросы
+            </span>
+            <h2 className="mt-5 font-display text-3xl sm:text-4xl lg:text-[2.75rem] leading-[1.12] text-[#f5efe6]">
+              Поможем подобрать врача{" "}
+              <span className="serif-italic">и время визита</span>
+            </h2>
+          </div>
+          <div className="flex flex-col sm:flex-row lg:flex-col xl:flex-row items-start sm:items-center gap-4">
             <a
               href="tel:+79990000000"
-              className="font-display text-lg text-ink hover:text-mint transition-colors"
+              className="font-display text-2xl text-[#f5efe6] hover:text-[#c99b7d] transition-colors"
             >
               +7 (999) 000-00-00
             </a>
-            <Link href="/book" className="btn-primary px-6 py-3 text-sm">
+            <Link
+              href="/book"
+              className="btn-light px-7 py-3 text-sm group"
+            >
               Записаться
-              <ArrowUpRight className="w-4 h-4" />
+              <ArrowUpRight className="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
             </Link>
           </div>
         </div>
 
         {/* Колонки */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 py-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 py-14">
           {/* Бренд */}
-          <div className="space-y-5">
+          <div className="space-y-6">
             <Logo />
-            <p className="text-sm text-fog leading-relaxed max-w-xs">
-              Премиальная стоматология в Москве. Современное оборудование и врачи с опытом более 10 лет.
+            <p className="text-[13.5px] leading-relaxed text-[#efe6da]/65 max-w-xs">
+              Премиальная стоматология в центре Москвы. Оборудование
+              экспертного класса, врачи с опытом более 10 лет.
             </p>
-            <div className="flex gap-2">
-              <span className="chip !text-[12px]">Онлайн-оплата</span>
-              <span className="chip !text-[12px]">Гарантия по договору</span>
-            </div>
+            <p className="text-[12px] leading-relaxed text-[#efe6da]/45">
+              Ежедневно 9:00–21:00<br />
+              без выходных
+            </p>
           </div>
 
           {/* Навигация и документы */}
           {COLUMNS.map((col) => (
             <div key={col.title}>
-              <h3 className="text-[13px] font-bold uppercase tracking-[0.14em] text-fog mb-5">
+              <h3 className="text-[11px] font-semibold uppercase tracking-[0.22em] text-[#c99b7d] mb-6">
                 {col.title}
               </h3>
-              <ul className="space-y-3 text-sm">
+              <ul className="space-y-3.5 text-[14px]">
                 {col.links.map((link) => (
                   <li key={link.href}>
                     <Link
                       href={link.href}
-                      className="text-ink/80 hover:text-mint transition-colors"
+                      className="text-[#efe6da]/80 hover:text-[#f5efe6] transition-colors"
                     >
                       {link.label}
                     </Link>
@@ -90,43 +96,37 @@ export default function Footer() {
 
           {/* Контакты */}
           <div>
-            <h3 className="text-[13px] font-bold uppercase tracking-[0.14em] text-fog mb-5">
+            <h3 className="text-[11px] font-semibold uppercase tracking-[0.22em] text-[#c99b7d] mb-6">
               Контакты
             </h3>
-            <ul className="space-y-4 text-sm text-ink/80">
-              <li className="flex items-start gap-3">
-                <MapPin className="w-4.5 h-4.5 text-mint shrink-0 mt-0.5" />
-                <span>
-                  г. Москва, ул. Примерная, д. 1
-                  <span className="block text-fog text-xs mt-1">м. Тверская, 5 минут пешком</span>
+            <ul className="space-y-4 text-[14px] text-[#efe6da]/80">
+              <li>
+                г. Москва, ул. Примерная, д. 1
+                <span className="block text-[12.5px] text-[#efe6da]/45 mt-1">
+                  м. Тверская, 5 минут пешком
                 </span>
               </li>
-              <li className="flex items-center gap-3">
-                <Phone className="w-4.5 h-4.5 text-mint shrink-0" />
-                <a href="tel:+79990000000" className="hover:text-mint transition-colors">
+              <li className="flex items-center gap-2.5">
+                <Phone className="w-3.5 h-3.5 text-[#c99b7d] shrink-0" />
+                <a href="tel:+79990000000" className="hover:text-[#f5efe6] transition-colors">
                   +7 (999) 000-00-00
                 </a>
               </li>
-              <li className="flex items-center gap-3">
-                <Mail className="w-4.5 h-4.5 text-mint shrink-0" />
-                <a href="mailto:info@dentapremium.ru" className="hover:text-mint transition-colors">
+              <li className="flex items-center gap-2.5">
+                <Mail className="w-3.5 h-3.5 text-[#c99b7d] shrink-0" />
+                <a href="mailto:info@dentapremium.ru" className="hover:text-[#f5efe6] transition-colors">
                   info@dentapremium.ru
                 </a>
-              </li>
-              <li className="flex items-center gap-3">
-                <Clock className="w-4.5 h-4.5 text-mint shrink-0" />
-                <span>Ежедневно с 9:00 до 21:00</span>
               </li>
             </ul>
           </div>
         </div>
 
         {/* Нижняя строка */}
-        <div className="py-7 border-t border-white/[0.06] flex flex-col md:flex-row items-center justify-between gap-3 text-xs text-fog">
+        <div className="py-7 border-t border-[#efe6da]/15 flex flex-col md:flex-row items-center justify-between gap-3 text-[12px] text-[#efe6da]/45">
           <p>© {CURRENT_YEAR} DentaPremium. Все права защищены.</p>
           <p className="flex items-center gap-5">
             <span>Лицензия ЛО-77-01-000000 от 01.01.2024</span>
-            <span className="hidden md:inline text-fog/50">•</span>
             <span className="hidden md:inline">Оплата через ЮKassa</span>
           </p>
         </div>

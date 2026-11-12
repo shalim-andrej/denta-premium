@@ -16,53 +16,41 @@ export default async function ReviewsSection() {
   });
 
   return (
-    <section className="px-4 sm:px-6 pb-20 md:pb-28">
-      <div className="max-w-7xl mx-auto">
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
+    <section className="px-5 sm:px-8 lg:px-12 pb-24 md:pb-32">
+      <div className="max-w-[1400px] mx-auto">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-14">
           <div className="max-w-2xl">
-            <span className="chip-mint mb-5">Отзывы</span>
-            <h2 className="font-display text-[1.7rem] sm:text-3xl md:text-[2.5rem] leading-[1.16] text-ink">
-              Пациенты <span className="accent-word">о клинике</span>
+            <span className="eyebrow">Отзывы</span>
+            <h2 className="mt-6 font-display font-medium text-[1.9rem] sm:text-4xl md:text-[2.75rem] leading-[1.14] text-ink">
+              Пациенты <span className="serif-italic text-terra">о клинике</span>
             </h2>
-            <p className="mt-4 text-fog text-base md:text-lg leading-relaxed">
+            <p className="mt-5 text-ink-soft text-[15px] md:text-base leading-relaxed">
               Реальные впечатления о приёмах. Каждый отзыв проходит модерацию.
             </p>
           </div>
         </div>
 
         {reviews.length > 0 && (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 mb-10">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-10 gap-y-0 mb-16">
             {reviews.map((r) => (
-              <figure key={r.id} className="card card-hover p-7 flex flex-col">
-                <div className="flex items-center justify-between mb-4">
-                  <div className="flex gap-1">
-                    {Array.from({ length: 5 }, (_, i) => (
-                      <Star
-                        key={i}
-                        className={`w-4 h-4 ${
-                          i < r.rating ? "text-gold fill-gold" : "text-white/15"
-                        }`}
-                      />
-                    ))}
-                  </div>
-                  <span className="font-accent italic text-5xl leading-none text-mint/20 select-none" aria-hidden="true">
-                    ”
-                  </span>
+              <figure key={r.id} className="border-t border-ink/10 py-9 flex flex-col">
+                <div className="flex gap-1 mb-5">
+                  {Array.from({ length: 5 }, (_, i) => (
+                    <Star
+                      key={i}
+                      className={`w-3.5 h-3.5 ${
+                        i < r.rating ? "text-gold fill-gold" : "text-ink/15"
+                      }`}
+                    />
+                  ))}
                 </div>
-                <blockquote className="text-sm text-ink/85 leading-relaxed flex-1">{r.text}</blockquote>
-                <figcaption className="mt-5 pt-5 border-t border-white/[0.06] flex items-center gap-3">
-                  <span
-                    className="w-9 h-9 rounded-full flex items-center justify-center text-[#04120e] font-bold text-sm shrink-0"
-                    style={{ background: "linear-gradient(135deg, #4bf0c8 0%, #2bd4a6 100%)" }}
-                    aria-hidden="true"
-                  >
-                    {r.name[0]}
-                  </span>
-                  <span>
-                    <span className="block text-ink font-semibold text-sm">{r.name}</span>
-                    <span className="block text-xs text-fog">
-                      {format(r.createdAt, "d MMMM yyyy", { locale: ru })}
-                    </span>
+                <blockquote className="font-display text-[17px] leading-relaxed text-ink/90 flex-1">
+                  {r.text}
+                </blockquote>
+                <figcaption className="mt-6 text-[13px]">
+                  <span className="block text-ink font-semibold">{r.name}</span>
+                  <span className="block text-ink-soft mt-0.5">
+                    {format(r.createdAt, "d MMMM yyyy", { locale: ru })}
                   </span>
                 </figcaption>
               </figure>
