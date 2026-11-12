@@ -27,106 +27,118 @@ export default async function ManageBookingPage({
 
   const statusLabel =
     booking.status === "CONFIRMED"
-      ? { text: "Подтверждена", cls: "bg-emerald-500/15 text-emerald-400 border-emerald-500/30" }
+      ? { text: "Подтверждена", cls: "bg-emerald-500/12 text-emerald-300 border-emerald-500/30" }
       : cancelled
-        ? { text: "Отменена", cls: "bg-rose-500/15 text-rose-400 border-rose-500/30" }
-        : { text: "Ожидает подтверждения клиники", cls: "bg-amber-500/15 text-amber-400 border-amber-500/30" };
+        ? { text: "Отменена", cls: "bg-rose-500/12 text-rose-300 border-rose-500/30" }
+        : { text: "Ожидает подтверждения клиники", cls: "bg-amber-500/12 text-amber-300 border-amber-500/30" };
 
   return (
-    <main className="min-h-screen bg-slate-950 px-6 py-16">
-      <div className="max-w-lg mx-auto bg-slate-900 border border-white/10 rounded-3xl p-8 shadow-2xl relative overflow-hidden">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-64 h-64 bg-teal-500/10 blur-[80px] rounded-full pointer-events-none" />
+    <main className="px-4 sm:px-6 py-14 md:py-20 relative overflow-hidden">
+      <div className="glow w-[480px] h-[320px] bg-mint/[0.07] -top-20 left-1/2 -translate-x-1/2" aria-hidden="true" />
 
-        <div className="relative z-10">
-          <h1 className="text-2xl font-bold text-white mb-1">Ваша запись</h1>
-          <p className="text-slate-500 text-sm mb-6">Управление записью без звонка в клинику</p>
+      <div className="max-w-lg mx-auto relative z-10 animate-fade-up">
+        <div className="card p-8 md:p-10 relative overflow-hidden" style={{ boxShadow: "0 40px 90px -30px rgba(0,0,0,.75)" }}>
+          <div className="glow w-64 h-64 bg-mint/[0.07] -top-24 left-1/2 -translate-x-1/2" aria-hidden="true" />
 
-          <span className={`inline-block text-xs font-semibold px-3 py-1.5 rounded-full border mb-6 ${statusLabel.cls}`}>
-            {statusLabel.text}
-          </span>
+          <div className="relative z-10">
+            <h1 className="font-display text-2xl text-ink mb-1.5">
+              Ваша <span className="accent-word">запись</span>
+            </h1>
+            <p className="text-fog text-sm mb-7">Управление записью без звонка в клинику</p>
 
-          <dl className="space-y-3 text-sm mb-8">
-            <div className="flex justify-between gap-4 border-b border-white/5 pb-3">
-              <dt className="text-slate-500">Дата и время</dt>
-              <dd className="text-white font-medium text-right">
-                {format(booking.startTime, "d MMMM yyyy, HH:mm", { locale: ru })}
-              </dd>
-            </div>
-            <div className="flex justify-between gap-4 border-b border-white/5 pb-3">
-              <dt className="text-slate-500">Услуга</dt>
-              <dd className="text-white font-medium text-right">{booking.service.title}</dd>
-            </div>
-            <div className="flex justify-between gap-4 border-b border-white/5 pb-3">
-              <dt className="text-slate-500">Врач</dt>
-              <dd className="text-white font-medium text-right">
-                {booking.doctor.name}
-                <span className="block text-xs text-slate-500">{booking.doctor.specialty}</span>
-              </dd>
-            </div>
-            <div className="flex justify-between gap-4 border-b border-white/5 pb-3">
-              <dt className="text-slate-500">Пациент</dt>
-              <dd className="text-white font-medium text-right">
-                {booking.user.name}
-                <span className="block text-xs text-slate-500">{booking.user.phone}</span>
-              </dd>
-            </div>
-            <div className="flex justify-between gap-4">
-              <dt className="text-slate-500">Оплата</dt>
-              <dd className={paid ? "text-emerald-400 font-medium" : "text-amber-400 font-medium"}>
-                {paid ? `Оплачено · ${booking.service.price} ₽` : `Не оплачено · ${booking.service.price} ₽`}
-              </dd>
-            </div>
-          </dl>
+            <span className={`inline-flex text-xs font-semibold px-3.5 py-1.5 rounded-full border mb-7 ${statusLabel.cls}`}>
+              {statusLabel.text}
+            </span>
 
-          {!cancelled && (
-            <div className="space-y-3 mb-6">
-              <a
-                href={`/api/bookings/${token}/ics`}
-                className="flex items-center justify-center gap-2 w-full py-3 bg-white/5 hover:bg-white/10 text-white font-medium rounded-xl transition-colors border border-white/10"
-              >
-                <Download className="w-5 h-5" />
-                Добавить в календарь
-              </a>
-              <form action={rescheduleBookingByToken}>
-                <input type="hidden" name="token" value={token} />
-                <button
-                  type="submit"
-                  className="flex items-center justify-center gap-2 w-full py-3 bg-teal-500/15 hover:bg-teal-500/25 text-teal-400 font-medium rounded-xl transition-colors border border-teal-500/30"
+            <dl className="space-y-0 text-sm mb-8">
+              {[
+                {
+                  dt: "Дата и время",
+                  dd: format(booking.startTime, "d MMMM yyyy, HH:mm", { locale: ru }),
+                },
+                { dt: "Услуга", dd: booking.service.title },
+                {
+                  dt: "Врач",
+                  dd: booking.doctor.name,
+                  sub: booking.doctor.specialty,
+                },
+                {
+                  dt: "Пациент",
+                  dd: booking.user.name,
+                  sub: booking.user.phone,
+                },
+              ].map((row) => (
+                <div
+                  key={row.dt}
+                  className="flex justify-between gap-4 py-3.5 border-b border-white/[0.06]"
                 >
-                  <CalendarClock className="w-5 h-5" />
-                  Перенести запись
-                </button>
-              </form>
-              <form action={cancelBookingByToken}>
-                <input type="hidden" name="token" value={token} />
-                <button
-                  type="submit"
-                  className="flex items-center justify-center gap-2 w-full py-3 bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 font-medium rounded-xl transition-colors border border-rose-500/30"
-                >
-                  <CalendarX2 className="w-5 h-5" />
-                  Отменить запись
-                </button>
-              </form>
-              {paid && (
-                <p className="text-xs text-slate-500 text-center">
-                  При отмене оплаченной записи возврат средств выполняет администратор — свяжемся с вами по телефону.
-                </p>
-              )}
-            </div>
-          )}
+                  <dt className="text-fog shrink-0">{row.dt}</dt>
+                  <dd className="text-ink font-medium text-right">
+                    {row.dd}
+                    {row.sub && <span className="block text-xs text-fog mt-0.5">{row.sub}</span>}
+                  </dd>
+                </div>
+              ))}
+              <div className="flex justify-between gap-4 py-3.5">
+                <dt className="text-fog">Оплата</dt>
+                <dd className={paid ? "text-emerald-300 font-semibold" : "text-amber-300 font-semibold"}>
+                  {paid ? `Оплачено · ${booking.service.price.toLocaleString("ru-RU")} ₽` : `Не оплачено · ${booking.service.price.toLocaleString("ru-RU")} ₽`}
+                </dd>
+              </div>
+            </dl>
 
-          {cancelled && (
-            <div className="rounded-xl bg-white/5 border border-white/10 p-4 text-sm text-slate-400 mb-6">
-              <p className="flex items-start gap-2">
-                <Stethoscope className="w-4 h-4 mt-0.5 shrink-0 text-teal-400" />
-                Запись отменена, время освобождено. Хотите записаться снова —{" "}
-                <a href="/book" className="text-teal-400 underline underline-offset-2">
-                  форма онлайн-записи
+            {!cancelled && (
+              <div className="space-y-3">
+                <a
+                  href={`/api/bookings/${token}/ics`}
+                  className="btn-ghost w-full py-3.5 text-sm"
+                >
+                  <Download className="w-4.5 h-4.5" />
+                  Добавить в календарь
                 </a>
-                .
-              </p>
-            </div>
-          )}
+                <form action={rescheduleBookingByToken}>
+                  <input type="hidden" name="token" value={token} />
+                  <button
+                    type="submit"
+                    className="w-full py-3.5 rounded-full text-sm font-semibold text-mint bg-mint/[0.1] border border-mint/30 hover:bg-mint/[0.18] transition-all duration-300 inline-flex items-center justify-center gap-2"
+                  >
+                    <CalendarClock className="w-4.5 h-4.5" />
+                    Перенести запись
+                  </button>
+                </form>
+                <form action={cancelBookingByToken}>
+                  <input type="hidden" name="token" value={token} />
+                  <button
+                    type="submit"
+                    className="w-full py-3.5 rounded-full text-sm font-semibold text-rose-300 bg-rose-500/[0.08] border border-rose-500/25 hover:bg-rose-500/[0.16] transition-all duration-300 inline-flex items-center justify-center gap-2"
+                  >
+                    <CalendarX2 className="w-4.5 h-4.5" />
+                    Отменить запись
+                  </button>
+                </form>
+                {paid && (
+                  <p className="text-xs text-fog text-center pt-1">
+                    При отмене оплаченной записи возврат средств выполняет администратор — свяжемся с вами по телефону.
+                  </p>
+                )}
+              </div>
+            )}
+
+            {cancelled && (
+              <div className="card p-5 text-sm">
+                <p className="text-fog flex items-start gap-2.5 leading-relaxed">
+                  <Stethoscope className="w-4 h-4 mt-0.5 shrink-0 text-mint" />
+                  <span>
+                    Запись отменена, время освобождено. Хотите записаться снова —{" "}
+                    <a href="/book" className="text-mint underline underline-offset-2 hover:text-ink transition-colors">
+                      форма онлайн-записи
+                    </a>
+                    .
+                  </span>
+                </p>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </main>

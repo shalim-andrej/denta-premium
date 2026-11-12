@@ -190,7 +190,11 @@ body::before {
 
 /* ---------- react-day-picker в тёмной теме ---------- */
 
-.rdp-root {
+/* Двойная специфичность .rdp-root.rdp-root — чтобы перебить
+   одноимённые правила из style.css самого react-day-picker,
+   который подключается позже (CSS клиентского компонента). */
+
+.rdp-root.rdp-root {
   --rdp-accent-color: #3ce6bd;
   --rdp-accent-background-color: rgba(60, 230, 189, 0.14);
   --rdp-day-height: 2.6rem;
@@ -202,24 +206,25 @@ body::before {
   --rdp-day_button-font-size: 0.85rem;
   --rdp-outside-opacity: 0.35;
   --rdp-today-color: #3ce6bd;
+  --rdp-selected-border: 1px solid transparent;
+  --rdp-disabled-opacity: 0.3;
   --rdp-font-family: var(--font-manrope), sans-serif;
-  --rdp-month_caption-font-size: 0.95rem;
   margin: 0;
 }
 
-.rdp-root,
-.rdp-root * {
+.rdp-root.rdp-root,
+.rdp-root.rdp-root * {
   color: #c8d6d1;
 }
 
-.rdp-month_caption,
-.rdp-month_caption * {
+.rdp-root.rdp-root .rdp-month_caption,
+.rdp-root.rdp-root .rdp-month_caption * {
   color: #eef6f2;
   font-weight: 700;
 }
 
-.rdp-weekdays,
-.rdp-weekday {
+.rdp-root.rdp-root .rdp-weekdays,
+.rdp-root.rdp-root .rdp-weekday {
   color: #637871;
   font-size: 0.7rem;
   text-transform: uppercase;
@@ -227,13 +232,13 @@ body::before {
   font-weight: 600;
 }
 
-.rdp-day_button:hover {
+.rdp-root.rdp-root .rdp-day_button:hover {
   border-color: rgba(60, 230, 189, 0.45);
   color: #eef6f2;
   background: rgba(60, 230, 189, 0.06);
 }
 
-.rdp-selected .rdp-day_button {
+.rdp-root.rdp-root .rdp-selected .rdp-day_button {
   background: linear-gradient(135deg, #4bf0c8, #2bd4a6);
   color: #04120e;
   font-weight: 800;
@@ -241,18 +246,18 @@ body::before {
   box-shadow: 0 6px 18px -4px rgba(60, 230, 189, 0.5);
 }
 
-.rdp-nav_button {
+.rdp-root.rdp-root .rdp-nav_button {
   color: #8ca29b;
   width: 2rem;
   height: 2rem;
   border-radius: 9999px;
 }
-.rdp-nav_button:hover {
+.rdp-root.rdp-root .rdp-nav_button:hover {
   color: #3ce6bd;
   background: rgba(255, 255, 255, 0.06);
 }
 
-.rdp-disabled .rdp-day_button {
+.rdp-root.rdp-root .rdp-disabled .rdp-day_button {
   opacity: 0.25;
   text-decoration: none;
 }

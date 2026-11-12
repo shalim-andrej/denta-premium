@@ -173,7 +173,7 @@ function Hero() {
             {STATS.map((s) => (
               <div key={s.label}>
                 <dt className="sr-only">{s.label}</dt>
-                <dd className="font-display text-2xl md:text-[1.7rem] text-ink flex items-center gap-1.5">
+                <dd className="font-display text-2xl md:text-[1.7rem] text-ink flex items-center gap-1.5 whitespace-nowrap">
                   {s.value}
                   {s.gold && <Star className="w-4 h-4 text-gold fill-gold" />}
                 </dd>
@@ -245,6 +245,12 @@ async function ServicesBento() {
               </h3>
               {featured.description && (
                 <p className="mt-4 text-fog leading-relaxed max-w-md">{featured.description}</p>
+              )}
+              {!featured.description && (
+                <p className="mt-4 text-fog leading-relaxed max-w-md">
+                  В стоимость включены все этапы — от диагностики и 3D-планирования
+                  до установки импланта и контрольного осмотра.
+                </p>
               )}
               <div className="mt-auto pt-8 flex flex-wrap items-end justify-between gap-6">
                 <div>

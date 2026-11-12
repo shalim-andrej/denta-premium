@@ -7,6 +7,7 @@ import "react-day-picker/dist/style.css";
 import { format } from "date-fns";
 import { ru } from "date-fns/locale";
 import { createBooking } from "../actions";
+import { Loader2, Info, ShieldCheck } from "lucide-react";
 
 interface Service { id: string; title: string; duration: number; price: number; }
 interface Doctor { id: string; name: string; specialty: string; }
@@ -147,163 +148,235 @@ export default function BookingWidget({ services, doctors, initialDoctorId, init
     }
   };
 
-  return (
-    <div className="bg-white p-6 rounded-2xl shadow-xl border border-gray-100">
-      <h2 className="text-2xl font-bold mb-6 text-gray-900">Запись на прием</h2>
+  /* ---------- Оформление шагов ---------- */
+  const stepCls = "flex gap-4 md:gap-5";
+  const numCls =
+    "w-10 h-10 rounded-full border border-mint/25 bg-mint/[0.08] flex items-center justify-center font-display text-sm text-mint shrink-0";
+  const labelCls = "block text-sm font-semibold text-ink mb-2.5";
 
-      <div className="space-y-6">
+  const payOptions = [
+    { id: "sbp" as const, title: "СБП", sub: "По QR-коду" },
+    { id: "card" as const, title: "Банковская карта", sub: "Visa, Mastercard, МИР" },
+  ];
+
+  return (
+    <div className="card p-7 md:p-10 relative overflow-hidden" style={{ boxShadow: "0 40px 90px -30px rgba(0,0,0,.75)" }}>
+      <div className="glow w-72 h-72 bg-mint/[0.06] -top-20 -right-24" aria-hidden="true" />
+
+      <div className="relative z-10 space-y-9">
         {/* Шаг 1: Врач (опционально) */}
-        <div>
-          <label className="block text-sm font-semibold text-gray-700 mb-2">1. Врач — можно не выбирать</label>
-          <select
-            className="w-full p-3 border rounded-xl bg-gray-50 focus:ring-2 focus:ring-teal-500 outline-none"
-            onChange={(e) => {
-              const doc = doctors.find((d) => d.id === e.target.value);
-              setSelectedDoctor(doc || null);
-            }}
-            value={selectedDoctor?.id || ""}
-          >
-            <option value="">— Подберите за меня (любой свободный специалист) —</option>
-            {doctors.map((doc) => (
-              <option key={doc.id} value={doc.id}>{doc.name} — {doc.specialty}</option>
-            ))}
-          </select>
+        <div className={stepCls}>
+          <span className={numCls} aria-hidden="true">1</span>
+          <div className="flex-1 min-w-0">
+            <label htmlFor="doctor-select" className={labelCls}>
+              Врач <span className="font-normal text-fog">— можно не выбирать</span>
+            </label>
+            <select
+              id="doctor-select"
+              className="field"
+              onChange={(e) => {
+                const doc = doctors.find((d) => d.id === e.target.value);
+                setSelectedDoctor(doc || null);
+              }}
+              value={selectedDoctor?.id || ""}
+            >
+              <option value="">Подберите за меня — любой свободный специалист</option>
+              {doctors.map((doc) => (
+                <option key={doc.id} value={doc.id}>{doc.name} — {doc.specialty}</option>
+              ))}
+            </select>
+            {!selectedDoctor && (
+              <p className="mt-2.5 text-xs text-fog flex items-center gap-1.5">
+                <Info className="w-3.5 h-3.5 text-mint/70 shrink-0" />
+                Врач будет назначен автоматически — свободный специалист на выбранное время.
+              </p>
+            )}
+          </div>
         </div>
 
         {/* Шаг 2: Услуга */}
-        <div>
-          <label className="block text-sm font-semibold text-gray-700 mb-2">2. Выберите услугу</label>
-          <select
-            className="w-full p-3 border rounded-xl bg-gray-50 focus:ring-2 focus:ring-teal-500 outline-none"
-            onChange={(e) => {
-              const srv = services.find((s) => s.id === e.target.value);
-              setSelectedService(srv || null);
-            }}
-            value={selectedService?.id || ""}
-          >
-            <option value="">-- Выберите услугу --</option>
-            {services.map((srv) => (
-              <option key={srv.id} value={srv.id}>{srv.title} ({srv.duration} мин.) — {srv.price} ₽</option>
-            ))}
-          </select>
+        <div className={stepCls}>
+          <span className={numCls} aria-hidden="true">2</span>
+          <div className="flex-1 min-w-0">
+            <label htmlFor="service-select" className={labelCls}>Услуга</label>
+            <select
+              id="service-select"
+              className="field"
+              onChange={(e) => {
+                const srv = services.find((s) => s.id === e.target.value);
+                setSelectedService(srv || null);
+              }}
+              value={selectedService?.id || ""}
+            >
+              <option value="">Выберите услугу</option>
+              {services.map((srv) => (
+                <option key={srv.id} value={srv.id}>{srv.title} ({srv.duration} мин.) — {srv.price} ₽</option>
+              ))}
+            </select>
+          </div>
         </div>
 
         {/* Шаг 3: Дата */}
         {selectedService && (
-          <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-2">3. Выберите дату</label>
-            <div className="border rounded-xl p-2 inline-block">
-              <DayPicker
-                mode="single"
-                selected={selectedDate}
-                onSelect={setSelectedDate}
-                locale={ru}
-                disabled={{ before: new Date() }}
-              />
+          <div className={stepCls}>
+            <span className={numCls} aria-hidden="true">3</span>
+            <div className="flex-1 min-w-0">
+              <span className={labelCls}>Дата</span>
+              <div className="inline-block bg-white/[0.03] border border-white/10 rounded-2xl p-4 md:p-5">
+                <DayPicker
+                  mode="single"
+                  selected={selectedDate}
+                  onSelect={setSelectedDate}
+                  locale={ru}
+                  disabled={{ before: new Date() }}
+                />
+              </div>
             </div>
           </div>
         )}
 
         {/* Шаг 4: Время */}
         {selectedService && (
-          <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-2">4. Выберите время</label>
-            {loadingSlots ? (
-              <div className="text-sm text-gray-500 py-2">Загружаем свободные слоты...</div>
-            ) : availableSlots.length === 0 ? (
-              <div className="text-sm text-gray-500 py-2">
-                {selectedDoctor
-                  ? "У этого врача на выбранную дату свободных слотов нет. Попробуйте другой день или режим «подберите за меня»."
-                  : "На выбранную дату свободных слотов нет. Попробуйте другой день."}
-              </div>
-            ) : (
-              <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-2">
-                {availableSlots.map((slot) => (
-                  <button
-                    key={slot.time}
-                    type="button"
-                    onClick={() => setSelectedSlot(slot)}
-                    title={doctors.find((d) => d.id === slot.doctorId)?.name}
-                    className={`p-2 text-sm border rounded-lg transition-colors font-medium ${
-                      selectedSlot?.time === slot.time
-                        ? "bg-teal-600 text-white border-teal-600"
-                        : "bg-white text-gray-700 border-gray-200 hover:border-teal-500 hover:text-teal-600"
-                    }`}
-                  >
-                    {format(new Date(slot.time), "HH:mm")}
-                  </button>
-                ))}
-              </div>
-            )}
+          <div className={stepCls}>
+            <span className={numCls} aria-hidden="true">4</span>
+            <div className="flex-1 min-w-0">
+              <span className={labelCls}>Время</span>
+              {loadingSlots ? (
+                <div className="text-sm text-fog flex items-center gap-2 py-2">
+                  <Loader2 className="w-4 h-4 animate-spin text-mint" />
+                  Загружаем свободные слоты…
+                </div>
+              ) : availableSlots.length === 0 ? (
+                <div className="text-sm text-fog py-2">
+                  {selectedDoctor
+                    ? "У этого врача на выбранную дату свободных слотов нет. Попробуйте другой день или режим «подберите за меня»."
+                    : "На выбранную дату свободных слотов нет. Попробуйте другой день."}
+                </div>
+              ) : (
+                <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-2.5">
+                  {availableSlots.map((slot) => {
+                    const active = selectedSlot?.time === slot.time;
+                    return (
+                      <button
+                        key={slot.time}
+                        type="button"
+                        onClick={() => setSelectedSlot(slot)}
+                        title={doctors.find((d) => d.id === slot.doctorId)?.name}
+                        className={`py-2.5 text-sm font-semibold rounded-xl border transition-all duration-200 ${
+                          active
+                            ? "text-[#04120e] border-transparent"
+                            : "text-ink/85 border-white/10 bg-white/[0.03] hover:border-mint/50 hover:text-ink"
+                        }`}
+                        style={active ? {
+                          background: "linear-gradient(135deg, #4bf0c8 0%, #2bd4a6 100%)",
+                          boxShadow: "0 6px 18px -4px rgba(60,230,189,.5)",
+                        } : undefined}
+                      >
+                        {format(new Date(slot.time), "HH:mm")}
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
           </div>
         )}
 
-        {/* Шаг 5: Данные и Оплата */}
+        {/* Шаг 5: Данные и оплата */}
         {selectedSlot && (
-          <form onSubmit={handleSubmit} className="space-y-4 pt-4 border-t border-gray-100">
-            <label className="block text-sm font-semibold text-gray-700">5. Ваши данные</label>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <input
-                type="text" required value={clientName} onChange={(e) => setClientName(e.target.value)}
-                className="w-full p-3 border rounded-xl bg-gray-50 focus:ring-2 focus:ring-teal-500 outline-none"
-                placeholder="Ваше имя *"
-              />
-              <input
-                type="tel" required value={clientPhone} onChange={(e) => setClientPhone(e.target.value)}
-                className="w-full p-3 border rounded-xl bg-gray-50 focus:ring-2 focus:ring-teal-500 outline-none"
-                placeholder="Телефон *"
-              />
-            </div>
-            <input
-              type="email" value={clientEmail} onChange={(e) => setClientEmail(e.target.value)}
-              className="w-full p-3 border rounded-xl bg-gray-50 focus:ring-2 focus:ring-teal-500 outline-none"
-              placeholder="Email (необязательно — пришлём подтверждение и напоминание)"
-            />
-            {!selectedDoctor && (
-              <p className="text-xs text-gray-500">
-                Врач будет назначен автоматически — свободный специалист на выбранное время.
-              </p>
-            )}
-
-            {/* Выбор оплаты */}
-            <div className="pt-4 border-t border-gray-100">
-              <label className="block text-sm font-semibold text-gray-700 mb-3">Способ оплаты</label>
-              <div className="grid grid-cols-2 gap-3">
-                <button
-                  type="button"
-                  onClick={() => setPaymentMethod("sbp")}
-                  className={`p-4 rounded-xl border-2 text-left transition-all ${
-                    paymentMethod === "sbp" ? "border-teal-500 bg-teal-50" : "border-gray-200 hover:border-gray-300"
-                  }`}
-                >
-                  <div className="font-bold text-sm text-gray-900">СБП</div>
-                  <div className="text-xs text-gray-500 mt-1">По QR-коду</div>
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setPaymentMethod("card")}
-                  className={`p-4 rounded-xl border-2 text-left transition-all ${
-                    paymentMethod === "card" ? "border-teal-500 bg-teal-50" : "border-gray-200 hover:border-gray-300"
-                  }`}
-                >
-                  <div className="font-bold text-sm text-gray-900">Банковская карта</div>
-                  <div className="text-xs text-gray-500 mt-1">Visa, Mastercard, МИР</div>
-                </button>
+          <form onSubmit={handleSubmit} className={stepCls}>
+            <span className={numCls} aria-hidden="true">5</span>
+            <div className="flex-1 min-w-0 space-y-5">
+              <span className={labelCls}>Ваши данные</span>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                <input
+                  type="text" required value={clientName} onChange={(e) => setClientName(e.target.value)}
+                  className="field"
+                  placeholder="Ваше имя *"
+                  autoComplete="name"
+                />
+                <input
+                  type="tel" required value={clientPhone} onChange={(e) => setClientPhone(e.target.value)}
+                  className="field"
+                  placeholder="Телефон *"
+                  autoComplete="tel"
+                />
               </div>
-            </div>
+              <input
+                type="email" value={clientEmail} onChange={(e) => setClientEmail(e.target.value)}
+                className="field"
+                placeholder="Email — необязательно, но пришлём подтверждение и напоминание"
+                autoComplete="email"
+              />
 
-            <button
-              type="submit"
-              disabled={isLoading}
-              className="w-full bg-teal-600 text-white font-bold py-3 px-4 rounded-xl hover:bg-teal-700 transition-colors shadow-lg shadow-teal-600/20 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-            >
-              {isLoading ? "Переход к оплате..." : `Перейти к оплате (${selectedService?.price ?? 0} ₽)`}
-            </button>
+              {/* Выбор оплаты */}
+              <fieldset>
+                <legend className="text-sm font-semibold text-ink mb-3">Способ оплаты</legend>
+                <div className="grid grid-cols-2 gap-3">
+                  {payOptions.map((opt) => {
+                    const active = paymentMethod === opt.id;
+                    return (
+                      <button
+                        key={opt.id}
+                        type="button"
+                        onClick={() => setPaymentMethod(opt.id)}
+                        aria-pressed={active}
+                        className={`p-4 rounded-2xl border text-left transition-all duration-300 ${
+                          active
+                            ? "border-mint/60 bg-mint/[0.08]"
+                            : "border-white/10 bg-white/[0.03] hover:border-white/25"
+                        }`}
+                      >
+                        <div className="flex items-center justify-between gap-2">
+                          <span className="font-bold text-sm text-ink">{opt.title}</span>
+                          <span
+                            className={`w-4.5 h-4.5 rounded-full border-2 flex items-center justify-center ${
+                              active ? "border-mint" : "border-white/25"
+                            }`}
+                            aria-hidden="true"
+                          >
+                            {active && <span className="w-2 h-2 rounded-full bg-mint" />}
+                          </span>
+                        </div>
+                        <div className="text-xs text-fog mt-1.5">{opt.sub}</div>
+                      </button>
+                    );
+                  })}
+                </div>
+              </fieldset>
+
+              <button
+                type="submit"
+                disabled={isLoading}
+                className="btn-primary w-full py-4 text-base"
+              >
+                {isLoading ? (
+                  <>
+                    <Loader2 className="w-5 h-5 animate-spin" />
+                    Переходим к оплате…
+                  </>
+                ) : (
+                  `Перейти к оплате — ${(selectedService?.price ?? 0).toLocaleString("ru-RU")} ₽`
+                )}
+              </button>
+
+              <p className="text-xs text-fog flex items-center justify-center gap-1.5">
+                <ShieldCheck className="w-3.5 h-3.5 text-mint/70" />
+                Платёж защищён. Возврат при отмене — по правилам клиники.
+              </p>
+            </div>
           </form>
         )}
 
         {message && (
-          <div className={`p-4 rounded-xl text-sm font-medium ${message.type === "error" ? "bg-red-50 text-red-700" : "bg-green-50 text-green-700"}`}>
+          <div
+            role="status"
+            className={`p-4 rounded-2xl border text-sm font-medium ${
+              message.type === "error"
+                ? "bg-rose-500/10 border-rose-500/25 text-rose-300"
+                : "bg-emerald-500/10 border-emerald-500/25 text-emerald-300"
+            }`}
+          >
             {message.text}
           </div>
         )}
