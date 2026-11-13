@@ -27,7 +27,7 @@ export default function ServicesList({ services }: { services: Service[] }) {
   return (
     <div>
       {/* Фильтры — тихий текст с точкой у активного */}
-      <div className="flex flex-wrap gap-x-8 gap-y-3 mb-12" role="tablist" aria-label="Категории услуг">
+      <div data-reveal className="flex flex-wrap gap-x-8 gap-y-3 mb-12" role="tablist" aria-label="Категории услуг">
         {categories.map((cat) => {
           const active = activeCategory === cat;
           return (
@@ -53,6 +53,8 @@ export default function ServicesList({ services }: { services: Service[] }) {
           <Link
             key={service.id}
             href={`/book?service=${service.id}`}
+            data-reveal
+            style={{ transitionDelay: `${Math.min(i, 8) * 0.05}s` }}
             className={`group grid md:grid-cols-[auto_1fr_auto] gap-x-8 gap-y-2 items-baseline py-7 border-t border-ink/10 hover:border-fern/40 transition-colors ${
               i === filteredServices.length - 1 ? "border-b" : ""
             }`}

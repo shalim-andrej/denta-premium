@@ -34,10 +34,10 @@ export default function DoctorsList({ doctors }: { doctors: Doctor[] }) {
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-14">
-      {doctors.map((doctor) => {
+      {doctors.map((doctor, i) => {
         const photo = doctor.imageUrl || LOCAL_PHOTOS[doctor.name];
         return (
-          <div key={doctor.id} className="group">
+          <div key={doctor.id} data-reveal style={{ transitionDelay: `${(i % 4) * 0.08}s` }} className="group">
             {/* Арочный портрет */}
             <div className="arch-sm relative aspect-[3/4] bg-sand">
               {photo ? (

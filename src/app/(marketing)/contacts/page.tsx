@@ -66,6 +66,8 @@ export default function ContactsPage() {
               {CONTACTS.map((c, i) => (
                 <div
                   key={c.title}
+                  data-reveal
+                  style={{ transitionDelay: `${i * 0.06}s` }}
                   className={`grid sm:grid-cols-[1fr_1.1fr] gap-x-8 gap-y-1.5 py-7 border-t border-ink/10 ${i === CONTACTS.length - 1 ? "border-b" : ""}`}
                 >
                   <div className="flex items-center gap-3 text-[12px] uppercase tracking-[0.16em] text-ink-soft">
@@ -90,7 +92,7 @@ export default function ContactsPage() {
             </div>
 
             {/* Действия */}
-            <div className="mt-10 flex flex-col sm:flex-row gap-3">
+            <div data-reveal style={{ transitionDelay: "0.1s" }} className="mt-10 flex flex-col sm:flex-row gap-3">
               <a
                 href="https://wa.me/79990000000"
                 target="_blank"
@@ -107,7 +109,7 @@ export default function ContactsPage() {
             </div>
 
             {/* Как добраться */}
-            <div className="mt-12">
+            <div data-reveal style={{ transitionDelay: "0.15s" }} className="mt-12">
               <h2 className="font-display text-xl text-ink mb-5">Как добраться</h2>
               <ul className="space-y-4 text-[15px] text-ink-soft leading-relaxed">
                 <li className="flex gap-3">
@@ -123,7 +125,7 @@ export default function ContactsPage() {
           </div>
 
           {/* Правая колонка: карта в тёплой тонировке */}
-          <div className="photo relative min-h-[480px] bg-sand overflow-hidden">
+          <div data-reveal style={{ transitionDelay: "0.2s" }} className="photo relative min-h-[480px] bg-sand overflow-hidden">
             <iframe
               src="https://yandex.ru/map-widget/v1/?um=constructor%3Ae5d9e5d2c2f1a5b4e8f9c1d2e3f4a5b6&amp;source=constructor"
               width="100%"
