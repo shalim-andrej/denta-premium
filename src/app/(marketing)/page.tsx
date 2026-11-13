@@ -8,6 +8,7 @@ import { connection } from "next/server";
 import ReviewsSection from "@/components/ReviewsSection";
 import StructuredData from "@/components/StructuredData";
 import HeroVideo from "@/components/HeroVideo";
+import Parallax from "@/components/Parallax";
 
 const priceFmt = (p: number) => p.toLocaleString("ru-RU");
 
@@ -26,7 +27,7 @@ function SectionHead({
   linkLabel?: string;
 }) {
   return (
-    <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-14">
+    <div data-reveal className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-14">
       <div className="max-w-2xl">
         <span className="eyebrow">{chip}</span>
         <h2 className="mt-6 font-display font-normal text-[1.5rem] sm:text-[1.9rem] md:text-[2.1rem] leading-[1.18] uppercase text-ink">
@@ -197,7 +198,7 @@ async function ServicesMenu() {
     <section id="services" className="px-5 sm:px-8 lg:px-12 py-24 md:py-32">
       <div className="max-w-[1400px] mx-auto">
         {/* Центрированный заголовок в духе референсов */}
-        <div className="text-center max-w-2xl mx-auto mb-16">
+        <div data-reveal className="text-center max-w-2xl mx-auto mb-16">
           <span className="eyebrow eyebrow-center justify-center">Услуги и цены</span>
           <h2 className="mt-6 font-display font-normal text-[1.5rem] sm:text-[1.9rem] md:text-[2.1rem] leading-[1.18] text-ink uppercase">
             Всё для здоровья улыбки{" "}
@@ -210,8 +211,9 @@ async function ServicesMenu() {
 
         <div className="grid lg:grid-cols-[0.85fr_1.15fr] gap-12 lg:gap-20 items-start">
           {/* Левая колонка — арка и featured-услуга */}
-          <div>
-            <div className="arch relative aspect-[4/5] max-w-[420px]">
+          <div data-reveal>
+            <Parallax speed={0.05}>
+              <div className="arch relative aspect-[4/5] max-w-[420px]">
               <Image
                 src="/images/interior-2.jpg"
                 alt="Ресепшн клиники DentaPremium — тёплый премиальный интерьер"
@@ -220,6 +222,7 @@ async function ServicesMenu() {
                 className="object-cover"
               />
             </div>
+            </Parallax>
 
             <div className="mt-10 pt-8 border-t border-ink/10 max-w-[420px]">
               <span className="eyebrow">{featured.category}</span>
@@ -295,7 +298,8 @@ function About() {
     <section className="bg-cream/60 border-y border-ink/10 px-5 sm:px-8 lg:px-12 py-24 md:py-32">
       <div className="max-w-[1400px] mx-auto grid lg:grid-cols-[0.95fr_1.05fr] gap-14 lg:gap-24 items-center">
         {/* Фотографии со смещением */}
-        <div className="relative pb-14 pr-10 sm:pr-16">
+        <div className="relative pb-14 pr-10 sm:pr-16" data-reveal>
+          <Parallax speed={0.07}>
           <div className="photo relative aspect-[4/5]">
             <Image
               src="/images/smile.jpg"
@@ -305,6 +309,7 @@ function About() {
               className="object-cover"
             />
           </div>
+          </Parallax>
           <div className="photo absolute bottom-0 right-0 w-[38%] aspect-square border-[6px] border-paper shadow-[0_24px_60px_-24px_rgba(33,26,19,0.4)]">
             <Image
               src="/images/interior-1.jpg"
@@ -317,7 +322,7 @@ function About() {
         </div>
 
         {/* Текст */}
-        <div>
+        <div data-reveal style={{ transitionDelay: "0.12s" }}>
           <span className="eyebrow">О клинике</span>
           <h2 className="mt-6 font-display font-normal text-[1.5rem] sm:text-[1.9rem] md:text-[2.1rem] leading-[1.18] uppercase text-ink">
             Лечим бережно{" "}
@@ -392,6 +397,8 @@ function Advantages() {
           {ADVANTAGES.map((a, i) => (
             <div
               key={a.title}
+              data-reveal
+              style={{ transitionDelay: `${i * 0.06}s` }}
               className={`grid md:grid-cols-[auto_1fr_1.2fr] gap-x-10 gap-y-3 items-baseline py-8 border-t border-ink/10 group ${i === ADVANTAGES.length - 1 ? "border-b" : ""}`}
             >
               <span className="font-display italic text-xl text-fern/80 w-12" aria-hidden="true">
@@ -438,8 +445,8 @@ async function TopDoctors() {
         />
 
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
-          {doctors.map((doctor) => (
-            <div key={doctor.id} className="group">
+          {doctors.map((doctor, i) => (
+            <div key={doctor.id} data-reveal style={{ transitionDelay: `${(i % 4) * 0.08}s` }} className="group">
               <div className="arch-sm relative aspect-[3/4] bg-sand">
                 {photos[doctor.name] ? (
                   <Image
@@ -515,7 +522,7 @@ function Steps() {
         />
         <div className="grid grid-cols-1 md:grid-cols-4 gap-x-10 gap-y-10">
           {STEPS.map((s, i) => (
-            <div key={s.title} className="border-t border-ink/10 pt-7">
+            <div key={s.title} data-reveal style={{ transitionDelay: `${i * 0.08}s` }} className="border-t border-ink/10 pt-7">
               <div className="flex items-baseline justify-between">
                 <span className="font-display italic text-2xl text-fern/80" aria-hidden="true">
                   0{i + 1}
@@ -562,7 +569,7 @@ function Faq() {
             Частые <span className="serif-italic normal-case text-fern">вопросы</span>
           </h2>
         </div>
-        <div>
+        <div data-reveal>
           {FAQ_ITEMS.map((item, i) => (
             <details key={i} className={`group border-t border-ink/10 ${i === FAQ_ITEMS.length - 1 ? "border-b" : ""}`}>
               <summary className="cursor-pointer list-none px-2 md:px-4 py-6 flex items-center gap-5 select-none">
@@ -592,7 +599,7 @@ function Faq() {
 function Cta() {
   return (
     <section className="bg-forest text-[#f2efe7]">
-      <div className="max-w-[1400px] mx-auto px-5 sm:px-8 lg:px-12 py-24 md:py-32 text-center">
+      <div data-reveal className="max-w-[1400px] mx-auto px-5 sm:px-8 lg:px-12 py-24 md:py-32 text-center">
         <span className="eyebrow eyebrow-center justify-center text-[#c4a15a]">
           Первый шаг — проще, чем кажется
         </span>

@@ -5,6 +5,7 @@
 
 import { usePathname } from "next/navigation";
 import Footer from "./Footer";
+import ScrollReveal from "./ScrollReveal";
 
 export default function ChromeGate({
   header,
@@ -27,6 +28,7 @@ export default function ChromeGate({
       {header}
       <main className={isHome ? "flex-1" : "flex-1 pt-[72px]"}>{children}</main>
       <Footer />
+      <ScrollReveal />
     </div>
   );
 }
