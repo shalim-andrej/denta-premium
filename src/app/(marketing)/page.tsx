@@ -2,7 +2,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { prisma } from "@/lib/prisma";
-import { ArrowRight, ArrowUpRight, Star, ShieldCheck, Clock, Sparkles, Microscope, FileCheck, CreditCard, Baby, CalendarCheck, Wallet, MailCheck, CalendarClock } from "lucide-react";
+import { ArrowRight, ArrowUpRight, Star, Clock, Microscope, FileCheck, CreditCard, Baby, CalendarCheck, Wallet, MailCheck, CalendarClock } from "lucide-react";
 import { Suspense } from "react";
 import { connection } from "next/server";
 import ReviewsSection from "@/components/ReviewsSection";
@@ -29,7 +29,7 @@ function SectionHead({
     <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-14">
       <div className="max-w-2xl">
         <span className="eyebrow">{chip}</span>
-        <h2 className="mt-6 font-display text-[1.9rem] sm:text-4xl md:text-[2.75rem] leading-[1.14] text-ink">
+        <h2 className="mt-6 font-display font-normal text-[1.5rem] sm:text-[1.9rem] md:text-[2.1rem] leading-[1.18] uppercase text-ink">
           {title}
         </h2>
         {sub && <p className="mt-5 text-ink-soft text-[15px] md:text-base leading-relaxed max-w-xl">{sub}</p>}
@@ -72,12 +72,12 @@ function Hero() {
       />
 
       {/* Контент — построчное появление */}
-      <div className="relative mx-auto flex w-full max-w-[1400px] flex-1 flex-col justify-center px-5 pt-[104px] pb-8 sm:px-8 lg:px-12">
+      <div className="relative mx-auto flex w-full max-w-[1400px] flex-1 flex-col justify-center px-5 pt-[84px] pb-4 sm:px-8 lg:px-12">
         <span className="eyebrow animate-fade-up" style={{ animationDelay: "0.15s" }}>
           Премиальная стоматология · Москва
         </span>
 
-        <h1 className="mt-6 max-w-4xl font-display font-medium uppercase leading-[1.05] tracking-tight text-ink text-[2.6rem] sm:text-[3.8rem] xl:text-[4.5rem]">
+        <h1 className="mt-5 max-w-4xl font-display font-medium uppercase leading-[1.08] text-ink text-[1.95rem] sm:text-[3.4rem] xl:text-[4.15rem]">
           <span className="block overflow-hidden pb-1">
             <span className="block line-reveal" style={{ animationDelay: "0.25s" }}>
               Стоматология
@@ -85,7 +85,7 @@ function Hero() {
           </span>
           <span className="block overflow-hidden pb-1">
             <span
-              className="block line-reveal serif-italic normal-case text-terra"
+              className="block line-reveal serif-italic normal-case text-fern"
               style={{ animationDelay: "0.4s" }}
             >
               премиум-класса
@@ -99,7 +99,7 @@ function Hero() {
         </h1>
 
         <p
-          className="mt-5 max-w-lg text-ink-soft text-base md:text-lg leading-relaxed animate-fade-up"
+          className="mt-4 max-w-lg text-ink-soft text-[15px] md:text-[17px] leading-relaxed animate-fade-up"
           style={{ animationDelay: "0.7s" }}
         >
           Диагностика на оборудовании экспертного класса, врачи с опытом от 10 лет
@@ -108,7 +108,7 @@ function Hero() {
         </p>
 
         <div
-          className="mt-8 flex flex-col sm:flex-row sm:items-center gap-4 animate-fade-up"
+          className="mt-7 flex flex-col sm:flex-row sm:items-center gap-4 animate-fade-up"
           style={{ animationDelay: "0.85s" }}
         >
           <Link href="/book" className="btn-primary px-8 py-4 text-[15px] group">
@@ -128,15 +128,8 @@ function Hero() {
         </div>
       </div>
 
-      {/* Скролл-подсказка */}
-      <div className="relative pb-3" aria-hidden="true">
-        <div className="mx-auto hidden h-10 w-px overflow-hidden bg-ink/20 md:block">
-          <span className="animate-scroll-line block h-5 w-px bg-ink/70" />
-        </div>
-      </div>
-
       {/* Статистика — полоса на hairline внизу обложки */}
-      <div className="relative mx-auto w-full max-w-[1400px] px-5 pb-7 sm:px-8 lg:px-12">
+      <div className="relative mx-auto w-full max-w-[1400px] px-5 pb-5 sm:px-8 lg:px-12">
         <dl
           className="grid grid-cols-2 md:grid-cols-4 gap-y-6 border-t border-ink/15 animate-fade-up"
           style={{ animationDelay: "1s" }}
@@ -181,7 +174,7 @@ function Marquee() {
         {row.map((item, i) => (
           <span key={i} className="flex items-center gap-12 whitespace-nowrap">
             <span className="font-display text-[15px] uppercase tracking-[0.2em] text-ink/75">{item}</span>
-            <span className="w-1.5 h-1.5 rounded-full bg-terra/60" />
+            <span className="w-1.5 h-1.5 rounded-full bg-fern/60" />
           </span>
         ))}
       </div>
@@ -206,9 +199,9 @@ async function ServicesMenu() {
         {/* Центрированный заголовок в духе референсов */}
         <div className="text-center max-w-2xl mx-auto mb-16">
           <span className="eyebrow eyebrow-center justify-center">Услуги и цены</span>
-          <h2 className="mt-6 font-display font-medium text-[1.9rem] sm:text-4xl md:text-[2.75rem] leading-[1.14] text-ink uppercase">
+          <h2 className="mt-6 font-display font-normal text-[1.5rem] sm:text-[1.9rem] md:text-[2.1rem] leading-[1.18] text-ink uppercase">
             Всё для здоровья улыбки{" "}
-            <span className="serif-italic normal-case text-terra">в одном месте</span>
+            <span className="serif-italic normal-case text-fern">в одном месте</span>
           </h2>
           <p className="mt-5 text-ink-soft text-[15px] md:text-base leading-relaxed">
             Цена на сайте равна цене в договоре — без скрытых доплат на месте.
@@ -239,7 +232,7 @@ async function ServicesMenu() {
               </p>
               <div className="mt-6 flex items-end justify-between gap-4">
                 <div>
-                  <div className="font-display text-[2rem] leading-none text-terra">
+                  <div className="font-display text-[2rem] leading-none text-fern">
                     {priceFmt(featured.price)} ₽
                   </div>
                   <div className="mt-2 text-[12px] text-ink-soft">
@@ -260,14 +253,14 @@ async function ServicesMenu() {
               <Link
                 key={s.id}
                 href={`/book?service=${s.id}`}
-                className={`group flex items-baseline justify-between gap-6 py-7 border-t border-ink/10 hover:border-terra/40 transition-colors ${i === rest.length - 1 ? "border-b" : ""}`}
+                className={`group flex items-baseline justify-between gap-6 py-7 border-t border-ink/10 hover:border-fern/40 transition-colors ${i === rest.length - 1 ? "border-b" : ""}`}
               >
                 <div className="flex items-baseline gap-5">
-                  <span className="font-display italic text-[15px] text-terra/70 w-8 shrink-0" aria-hidden="true">
+                  <span className="font-display italic text-[15px] text-fern/70 w-8 shrink-0" aria-hidden="true">
                     {String(i + 2).padStart(2, "0")}
                   </span>
                   <div>
-                    <h3 className="font-display text-xl md:text-[1.45rem] text-ink group-hover:text-terra transition-colors leading-snug">
+                    <h3 className="font-display text-xl md:text-[1.45rem] text-ink group-hover:text-fern transition-colors leading-snug">
                       {s.title}
                     </h3>
                     <span className="mt-1.5 block text-[12px] uppercase tracking-[0.14em] text-ink-soft">
@@ -278,13 +271,13 @@ async function ServicesMenu() {
                 <div className="text-right shrink-0 flex items-baseline gap-4">
                   <span className="font-display text-xl text-ink">{priceFmt(s.price)} ₽</span>
                   <span className="hidden sm:block text-[12px] text-ink-soft whitespace-nowrap">{s.duration} мин</span>
-                  <ArrowUpRight className="w-4 h-4 text-ink-soft group-hover:text-terra group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all hidden md:block" />
+                  <ArrowUpRight className="w-4 h-4 text-ink-soft group-hover:text-fern group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all hidden md:block" />
                 </div>
               </Link>
             ))}
             <Link
               href="/services"
-              className="mt-10 inline-flex items-center gap-2 text-sm font-semibold text-ink border-b border-ink/30 pb-1 hover:text-terra hover:border-terra transition-colors group"
+              className="mt-10 inline-flex items-center gap-2 text-sm font-semibold text-ink border-b border-ink/30 pb-1 hover:text-fern hover:border-fern transition-colors group"
             >
               Смотреть все услуги
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
@@ -326,9 +319,9 @@ function About() {
         {/* Текст */}
         <div>
           <span className="eyebrow">О клинике</span>
-          <h2 className="mt-6 font-display font-medium text-[1.9rem] sm:text-4xl md:text-[2.75rem] leading-[1.14] text-ink">
+          <h2 className="mt-6 font-display font-normal text-[1.5rem] sm:text-[1.9rem] md:text-[2.1rem] leading-[1.18] uppercase text-ink">
             Лечим бережно{" "}
-            <span className="serif-italic text-terra">и не считаем минуты</span>
+            <span className="serif-italic normal-case text-fern">и не считаем минуты</span>
           </h2>
           <p className="mt-6 text-ink-soft text-[15px] md:text-base leading-relaxed max-w-xl">
             DentaPremium — клиника полного цикла: от гигиены и лечения каналов
@@ -393,7 +386,7 @@ function Advantages() {
         <SectionHead
           chip="Почему мы"
           title={<>Стоматология, в которую{" "}
-            <span className="serif-italic text-terra">не страшно</span> идти</>}
+            <span className="serif-italic text-fern">не страшно</span> идти</>}
         />
         <div>
           {ADVANTAGES.map((a, i) => (
@@ -401,10 +394,10 @@ function Advantages() {
               key={a.title}
               className={`grid md:grid-cols-[auto_1fr_1.2fr] gap-x-10 gap-y-3 items-baseline py-8 border-t border-ink/10 group ${i === ADVANTAGES.length - 1 ? "border-b" : ""}`}
             >
-              <span className="font-display italic text-xl text-terra/80 w-12" aria-hidden="true">
+              <span className="font-display italic text-xl text-fern/80 w-12" aria-hidden="true">
                 0{i + 1}
               </span>
-              <h3 className="font-display text-xl md:text-2xl text-ink leading-snug group-hover:text-terra transition-colors">
+              <h3 className="font-display text-xl md:text-2xl text-ink leading-snug group-hover:text-fern transition-colors">
                 {a.title}
               </h3>
               <p className="text-sm md:text-[15px] text-ink-soft leading-relaxed md:max-w-lg">{a.desc}</p>
@@ -438,7 +431,7 @@ async function TopDoctors() {
         <SectionHead
           chip="Команда"
           title={<>Врачи, которым{" "}
-            <span className="serif-italic text-terra">доверяют улыбки</span></>}
+            <span className="serif-italic text-fern">доверяют улыбки</span></>}
           sub="Каждый специалист — узкий эксперт в своём направлении с подтверждённой квалификацией."
           href="/doctors"
           linkLabel="Все врачи"
@@ -465,15 +458,15 @@ async function TopDoctors() {
                 )}
               </div>
               <h3 className="mt-5 font-display text-lg md:text-xl text-ink leading-snug">{doctor.name}</h3>
-              <p className="mt-1 serif-italic text-[15px] text-terra">{doctor.specialty}</p>
+              <p className="mt-1 serif-italic text-[15px] text-fern">{doctor.specialty}</p>
               <div className="mt-4 flex items-center justify-between text-[13px] text-ink-soft">
                 <span className="flex items-center gap-1.5">
-                  <CalendarCheck className="w-3.5 h-3.5 text-terra" />
+                  <CalendarCheck className="w-3.5 h-3.5 text-fern" />
                   Опыт {doctor.experience} лет
                 </span>
                 <Link
                   href={`/book?doctor=${doctor.id}`}
-                  className="font-semibold text-ink hover:text-terra transition-colors inline-flex items-center gap-1 group/link"
+                  className="font-semibold text-ink hover:text-fern transition-colors inline-flex items-center gap-1 group/link"
                 >
                   Записаться
                   <ArrowRight className="w-3.5 h-3.5 group-hover/link:translate-x-0.5 transition-transform" />
@@ -518,13 +511,13 @@ function Steps() {
         <SectionHead
           chip="Как это работает"
           title={<>Запись{" "}
-            <span className="serif-italic text-terra">за четыре шага</span></>}
+            <span className="serif-italic text-fern">за четыре шага</span></>}
         />
         <div className="grid grid-cols-1 md:grid-cols-4 gap-x-10 gap-y-10">
           {STEPS.map((s, i) => (
             <div key={s.title} className="border-t border-ink/10 pt-7">
               <div className="flex items-baseline justify-between">
-                <span className="font-display italic text-2xl text-terra/80" aria-hidden="true">
+                <span className="font-display italic text-2xl text-fern/80" aria-hidden="true">
                   0{i + 1}
                 </span>
                 <s.icon className="w-4.5 h-4.5 text-ink-soft" strokeWidth={1.5} />
@@ -565,15 +558,15 @@ function Faq() {
       <div className="max-w-[900px] mx-auto">
         <div className="text-center mb-14">
           <span className="eyebrow eyebrow-center justify-center">Вопросы и ответы</span>
-          <h2 className="mt-6 font-display font-medium text-[1.9rem] sm:text-4xl md:text-[2.5rem] leading-[1.14] text-ink">
-            Частые <span className="serif-italic text-terra">вопросы</span>
+          <h2 className="mt-6 font-display font-normal text-[1.5rem] sm:text-[1.9rem] md:text-[2.1rem] leading-[1.18] text-ink uppercase">
+            Частые <span className="serif-italic normal-case text-fern">вопросы</span>
           </h2>
         </div>
         <div>
           {FAQ_ITEMS.map((item, i) => (
             <details key={i} className={`group border-t border-ink/10 ${i === FAQ_ITEMS.length - 1 ? "border-b" : ""}`}>
               <summary className="cursor-pointer list-none px-2 md:px-4 py-6 flex items-center gap-5 select-none">
-                <span className="font-display italic text-lg text-terra/70 w-8 shrink-0" aria-hidden="true">
+                <span className="font-display italic text-lg text-fern/70 w-8 shrink-0" aria-hidden="true">
                   0{i + 1}
                 </span>
                 <span className="font-display text-lg md:text-xl text-ink flex-1">{item.q}</span>
@@ -595,19 +588,19 @@ function Faq() {
   );
 }
 
-/* ---------- Финальный CTA: тёмный шоколад, гигантская антиква ---------- */
+/* ---------- Финальный CTA: глубокий ель, золото, широкая антиква ---------- */
 function Cta() {
   return (
-    <section className="bg-wine text-[#f5efe6]">
+    <section className="bg-forest text-[#f2efe7]">
       <div className="max-w-[1400px] mx-auto px-5 sm:px-8 lg:px-12 py-24 md:py-32 text-center">
-        <span className="eyebrow eyebrow-center justify-center !text-[#c99b7d]">
+        <span className="eyebrow eyebrow-center justify-center text-[#c4a15a]">
           Первый шаг — проще, чем кажется
         </span>
-        <h2 className="mt-8 font-display font-medium text-[2.2rem] sm:text-5xl md:text-[4rem] leading-[1.08] text-[#f5efe6] uppercase max-w-4xl mx-auto">
+        <h2 className="mt-8 font-display font-normal text-[1.9rem] sm:text-[2.8rem] md:text-[3.4rem] leading-[1.12] text-[#f2efe7] uppercase max-w-4xl mx-auto">
           Запишитесь на{" "}
-          <span className="serif-italic normal-case text-[#c99b7d]">первый визит</span>
+          <span className="serif-italic normal-case text-[#c4a15a]">первый визит</span>
         </h2>
-        <p className="mt-7 text-[#efe6da]/70 text-base md:text-lg max-w-xl mx-auto leading-relaxed">
+        <p className="mt-7 text-[#f2efe7]/70 text-base md:text-lg max-w-xl mx-auto leading-relaxed">
           Первичная консультация с планом лечения. Оплата после записи —
           СБП или банковской картой.
         </p>

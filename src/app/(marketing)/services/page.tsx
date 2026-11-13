@@ -40,7 +40,7 @@ export default function ServicesPage() {
           <span className="eyebrow">Прайс-лист</span>
           <h1 className="mt-7 font-display font-medium text-[2.3rem] sm:text-5xl md:text-[3.4rem] leading-[1.1] text-ink uppercase">
             Услуги и цены{" "}
-            <span className="serif-italic normal-case text-terra">без сюрпризов</span>
+            <span className="serif-italic normal-case text-fern">без сюрпризов</span>
           </h1>
           <p className="mt-6 text-ink-soft text-base md:text-lg leading-relaxed">
             Стоимость на сайте равна цене в договоре. Выберите услугу — и запишитесь

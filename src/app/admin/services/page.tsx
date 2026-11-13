@@ -58,7 +58,7 @@ async function ServicesData() {
               <input name="price" type="number" defaultValue={s.price} required min="1" className="p-1.5 border rounded-lg text-sm bg-gray-50" />
               <div className="flex gap-2">
                 <input name="duration" type="number" defaultValue={s.duration} required min="15" step="15" className="w-full p-1.5 border rounded-lg text-sm bg-gray-50" />
-                <button className="shrink-0 text-xs bg-[#9d3b20] text-white px-3 rounded-lg font-medium hover:bg-[#7d2c15] transition-colors">
+                <button className="shrink-0 text-xs bg-[#0e7c57] text-white px-3 rounded-lg font-medium hover:bg-[#0a5e40] transition-colors">
                   Сохранить
                 </button>
               </div>

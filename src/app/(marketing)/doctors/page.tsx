@@ -40,7 +40,7 @@ export default function DoctorsPage() {
           <span className="eyebrow">Команда</span>
           <h1 className="mt-7 font-display font-medium text-[2.3rem] sm:text-5xl md:text-[3.4rem] leading-[1.1] text-ink uppercase">
             Врачи, которым{" "}
-            <span className="serif-italic normal-case text-terra">доверяют улыбки</span>
+            <span className="serif-italic normal-case text-fern">доверяют улыбки</span>
           </h1>
           <p className="mt-6 text-ink-soft text-base md:text-lg leading-relaxed">
             Узкие специалисты с подтверждённой квалификацией. Выберите врача —

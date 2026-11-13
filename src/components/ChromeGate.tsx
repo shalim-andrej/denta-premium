@@ -15,6 +15,8 @@ export default function ChromeGate({
 }) {
   const pathname = usePathname() || "/";
   const isConsole = pathname.startsWith("/admin") || pathname.startsWith("/login");
+  // На главной видео-обложка занимает весь первый экран — отступ под шапку не нужен
+  const isHome = pathname === "/";
 
   if (isConsole) {
     return <>{children}</>;
@@ -23,7 +25,7 @@ export default function ChromeGate({
   return (
     <div className="min-h-screen flex flex-col">
       {header}
-      <main className="flex-1 pt-[72px]">{children}</main>
+      <main className={isHome ? "flex-1" : "flex-1 pt-[72px]"}>{children}</main>
       <Footer />
     </div>
   );

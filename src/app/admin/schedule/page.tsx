@@ -46,7 +46,7 @@ async function ScheduleData() {
             <label className="block text-xs font-semibold text-gray-500 mb-1">Конец</label>
             <input type="time" name="endTime" required defaultValue="18:00" className="w-full p-2 border rounded-lg text-sm bg-gray-50" />
           </div>
-          <button className="bg-[#9d3b20] text-white py-2 px-4 rounded-lg text-sm font-medium hover:bg-[#7d2c15] transition-colors">
+          <button className="bg-[#0e7c57] text-white py-2 px-4 rounded-lg text-sm font-medium hover:bg-[#0a5e40] transition-colors">
             Добавить
           </button>
         </form>
@@ -68,7 +68,7 @@ async function ScheduleData() {
                 {doc.schedules.map((s) => (
                   <li key={s.id} className="flex items-center justify-between text-sm border-b border-gray-50 pb-2">
                     <span className="text-gray-700">
-                      <span className="inline-block w-8 font-semibold text-[#9d3b20]">{DAYS[s.dayOfWeek]}</span>
+                      <span className="inline-block w-8 font-semibold text-[#0e7c57]">{DAYS[s.dayOfWeek]}</span>
                       {s.startTime} — {s.endTime}
                     </span>
                     <form action={deleteSchedule}>

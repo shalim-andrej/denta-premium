@@ -1,23 +1,30 @@
 // src/app/layout.tsx
 import type { Metadata } from "next";
-import { Playfair_Display, Manrope } from "next/font/google";
+import { Unbounded, Cormorant_Garamond, Golos_Text } from "next/font/google";
 import "./globals.css";
 import ChromeGate from "@/components/ChromeGate";
 import Header from "@/components/Header";
 
-// Дисплейная антиква с кириллицей — заголовки и курсивные подзаголовки
-const playfair = Playfair_Display({
+// Дисплейный широкий гротеск (подача ЗАРЯ) — капс-заголовки, числа, навигация
+const unbounded = Unbounded({
+  subsets: ["latin", "cyrillic"],
+  weight: ["300", "400", "500"],
+  variable: "--font-unbounded",
+});
+
+// Тонкая антиква-курсив — акцентные слова в заголовках
+const cormorant = Cormorant_Garamond({
   subsets: ["latin", "cyrillic"],
   weight: ["400", "500", "600"],
   style: ["normal", "italic"],
-  variable: "--font-playfair",
+  variable: "--font-cormorant",
 });
 
-// Основной текст
-const manrope = Manrope({
+// Основной текст — аккуратный русский гротеск
+const golos = Golos_Text({
   subsets: ["latin", "cyrillic"],
-  weight: ["400", "500", "600", "700", "800"],
-  variable: "--font-manrope",
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-golos",
 });
 
 export const metadata: Metadata = {
@@ -42,7 +49,7 @@ export default function RootLayout({
   return (
     <html lang="ru">
       <body
-        className={`${manrope.variable} ${playfair.variable} bg-paper text-ink antialiased`}
+        className={`${golos.variable} ${unbounded.variable} ${cormorant.variable} bg-paper text-ink antialiased`}
       >
         <ChromeGate header={<Header />}>{children}</ChromeGate>
       </body>

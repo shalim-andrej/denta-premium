@@ -39,7 +39,7 @@ export default function LoginPage() {
 
           <div className="text-center mb-8">
             <h1 className="font-display text-2xl text-ink mb-2">
-              Панель <span className="serif-italic text-terra">управления</span>
+              Панель <span className="serif-italic text-fern">управления</span>
             </h1>
             <p className="text-sm text-ink-soft">Вход для сотрудников клиники</p>
           </div>
@@ -85,13 +85,13 @@ export default function LoginPage() {
           </form>
 
           <div className="mt-8 pt-6 border-t border-ink/10 flex items-center justify-center gap-2 text-xs text-ink-soft">
-            <ShieldCheck className="w-4 h-4 text-terra/70" />
+            <ShieldCheck className="w-4 h-4 text-fern/70" />
             <span>Защищённая зона. Только для сотрудников.</span>
           </div>
         </div>
 
         <p className="text-center mt-6">
-          <Link href="/" className="text-sm text-ink-soft hover:text-terra transition-colors">
+          <Link href="/" className="text-sm text-ink-soft hover:text-fern transition-colors">
             ← Вернуться на сайт
           </Link>
         </p>

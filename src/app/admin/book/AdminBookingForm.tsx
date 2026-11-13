@@ -97,7 +97,7 @@ export default function AdminBookingForm({
   };
 
   const inputCls =
-    "w-full p-2.5 border rounded-lg text-sm bg-gray-50 focus:ring-2 focus:ring-[#9d3b20]/30 outline-none";
+    "w-full p-2.5 border rounded-lg text-sm bg-gray-50 focus:ring-2 focus:ring-[#0e7c57]/30 outline-none";
 
   return (
     <form onSubmit={handleSubmit} className="bg-white p-5 rounded-xl shadow-sm border border-gray-100 max-w-2xl space-y-4">
@@ -146,8 +146,8 @@ export default function AdminBookingForm({
                 onClick={() => setSelectedTime(s.time)}
                 className={`p-2 text-sm border rounded-lg font-medium transition-colors ${
                   selectedTime === s.time
-                    ? "bg-[#9d3b20] text-white border-[#9d3b20]"
-                    : "bg-white text-gray-700 border-gray-200 hover:border-[#9d3b20]"
+                    ? "bg-[#0e7c57] text-white border-[#0e7c57]"
+                    : "bg-white text-gray-700 border-gray-200 hover:border-[#0e7c57]"
                 }`}
               >
                 {format(new Date(s.time), "HH:mm")}
@@ -166,7 +166,7 @@ export default function AdminBookingForm({
       <button
         type="submit"
         disabled={loading}
-        className="w-full bg-[#9d3b20] text-white py-2.5 rounded-xl text-sm font-bold hover:bg-[#7d2c15] transition-colors disabled:opacity-50"
+        className="w-full bg-[#0e7c57] text-white py-2.5 rounded-xl text-sm font-bold hover:bg-[#0a5e40] transition-colors disabled:opacity-50"
       >
         {loading ? "Сохраняем..." : "Создать запись (подтверждена)"}
       </button>

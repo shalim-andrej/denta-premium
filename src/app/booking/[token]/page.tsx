@@ -37,11 +37,11 @@ export default async function ManageBookingPage({
       <div className="max-w-lg mx-auto animate-fade-up">
         <div className="bg-white border border-ink/10 rounded-3xl p-8 md:p-10">
           <h1 className="font-display text-3xl text-ink mb-1.5">
-            Ваша <span className="serif-italic text-terra">запись</span>
+            Ваша <span className="serif-italic text-fern">запись</span>
           </h1>
           <p className="text-ink-soft text-sm mb-7">Управление записью без звонка в клинику</p>
 
-          <span className={`inline-flex text-xs font-semibold px-3.5 py-1.5 rounded-full border mb-8 ${statusLabel.cls}`}>
+          <span className={`inline-flex text-xs font-semibold px-3.5 py-1.5 rounded-[2px] border mb-8 ${statusLabel.cls}`}>
             {statusLabel.text}
           </span>
 
@@ -105,7 +105,7 @@ export default async function ManageBookingPage({
                 <input type="hidden" name="token" value={token} />
                 <button
                   type="submit"
-                  className="w-full py-3.5 rounded-full text-sm font-semibold text-rose-700 border border-rose-300 hover:bg-rose-50 transition-all duration-300 inline-flex items-center justify-center gap-2"
+                  className="w-full py-3.5 rounded-[2px] text-sm font-semibold text-rose-700 border border-rose-300 hover:bg-rose-50 transition-all duration-300 inline-flex items-center justify-center gap-2"
                 >
                   <CalendarX2 className="w-4.5 h-4.5" />
                   Отменить запись
@@ -122,10 +122,10 @@ export default async function ManageBookingPage({
           {cancelled && (
             <div className="bg-paper border border-ink/10 rounded-2xl p-5 text-sm">
               <p className="text-ink-soft flex items-start gap-2.5 leading-relaxed">
-                <Stethoscope className="w-4 h-4 mt-0.5 shrink-0 text-terra" />
+                <Stethoscope className="w-4 h-4 mt-0.5 shrink-0 text-fern" />
                 <span>
                   Запись отменена, время освобождено. Хотите записаться снова —{" "}
-                  <a href="/book" className="text-terra underline underline-offset-2 hover:text-ink transition-colors">
+                  <a href="/book" className="text-fern underline underline-offset-2 hover:text-ink transition-colors">
                     форма онлайн-записи
                   </a>
                   .

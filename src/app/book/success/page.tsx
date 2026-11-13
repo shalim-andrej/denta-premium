@@ -65,13 +65,13 @@ export default function SuccessPage({
     <main className="flex items-center justify-center px-5 sm:px-8 py-24 md:py-32">
       <div className="max-w-md w-full bg-white border border-ink/10 rounded-3xl p-8 md:p-10 text-center animate-fade-up">
         <div
-          className="w-20 h-20 rounded-full border border-terra/30 bg-terra/[0.06] flex items-center justify-center mx-auto mb-7"
+          className="w-20 h-20 rounded-full border border-fern/30 bg-fern/[0.06] flex items-center justify-center mx-auto mb-7"
         >
-          <CheckCircle2 className="w-9 h-9 text-terra" strokeWidth={1.5} />
+          <CheckCircle2 className="w-9 h-9 text-fern" strokeWidth={1.5} />
         </div>
 
         <h1 className="font-display text-[1.7rem] leading-snug text-ink mb-2.5">
-          Оплата прошла <span className="serif-italic text-terra">успешно</span>
+          Оплата прошла <span className="serif-italic text-fern">успешно</span>
         </h1>
         <p className="text-ink-soft mb-8 leading-relaxed">
           Ваша запись подтверждена. Ждём вас в клинике!
@@ -90,7 +90,7 @@ export default function SuccessPage({
           </Link>
           <a
             href="tel:+79990000000"
-            className="w-full py-3 text-sm text-ink-soft hover:text-terra font-medium transition-colors inline-flex items-center justify-center gap-2"
+            className="w-full py-3 text-sm text-ink-soft hover:text-fern font-medium transition-colors inline-flex items-center justify-center gap-2"
           >
             <Phone className="w-4 h-4" />
             Связаться с клиникой

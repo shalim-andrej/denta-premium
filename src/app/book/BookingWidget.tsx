@@ -149,7 +149,7 @@ export default function BookingWidget({ services, doctors, initialDoctorId, init
   /* ---------- Оформление шагов ---------- */
   const stepCls = "flex gap-4 md:gap-6";
   const numCls =
-    "font-display italic text-xl text-terra/80 w-9 shrink-0 pt-0.5";
+    "font-display italic text-xl text-fern/80 w-9 shrink-0 pt-0.5";
   const labelCls = "block text-sm font-semibold text-ink mb-2.5";
 
   const payOptions = [
@@ -183,7 +183,7 @@ export default function BookingWidget({ services, doctors, initialDoctorId, init
             </select>
             {!selectedDoctor && (
               <p className="mt-2.5 text-xs text-ink-soft flex items-center gap-1.5">
-                <Info className="w-3.5 h-3.5 text-terra/70 shrink-0" />
+                <Info className="w-3.5 h-3.5 text-fern/70 shrink-0" />
                 Врач будет назначен автоматически — свободный специалист на выбранное время.
               </p>
             )}
@@ -239,7 +239,7 @@ export default function BookingWidget({ services, doctors, initialDoctorId, init
               <span className={labelCls}>Время</span>
               {loadingSlots ? (
                 <div className="text-sm text-ink-soft flex items-center gap-2 py-2">
-                  <Loader2 className="w-4 h-4 animate-spin text-terra" />
+                  <Loader2 className="w-4 h-4 animate-spin text-fern" />
                   Загружаем свободные слоты…
                 </div>
               ) : availableSlots.length === 0 ? (
@@ -260,8 +260,8 @@ export default function BookingWidget({ services, doctors, initialDoctorId, init
                         title={doctors.find((d) => d.id === slot.doctorId)?.name}
                         className={`py-2.5 text-sm font-semibold rounded-xl border transition-all duration-200 ${
                           active
-                            ? "text-[#faf7f2] border-transparent bg-ink"
-                            : "text-ink border-ink/15 bg-white hover:border-terra hover:text-terra"
+                            ? "text-[#f6f4ee] border-transparent bg-ink"
+                            : "text-ink border-ink/15 bg-white hover:border-fern hover:text-fern"
                         }`}
                       >
                         {format(new Date(slot.time), "HH:mm")}
@@ -315,7 +315,7 @@ export default function BookingWidget({ services, doctors, initialDoctorId, init
                         aria-pressed={active}
                         className={`p-4 rounded-2xl border text-left transition-all duration-300 ${
                           active
-                            ? "border-terra/60 bg-terra/[0.06]"
+                            ? "border-fern/60 bg-fern/[0.06]"
                             : "border-ink/15 bg-white hover:border-ink/35"
                         }`}
                       >
@@ -323,11 +323,11 @@ export default function BookingWidget({ services, doctors, initialDoctorId, init
                           <span className="font-bold text-sm text-ink">{opt.title}</span>
                           <span
                             className={`w-4.5 h-4.5 rounded-full border-2 flex items-center justify-center ${
-                              active ? "border-terra" : "border-ink/25"
+                              active ? "border-fern" : "border-ink/25"
                             }`}
                             aria-hidden="true"
                           >
-                            {active && <span className="w-2 h-2 rounded-full bg-terra" />}
+                            {active && <span className="w-2 h-2 rounded-full bg-fern" />}
                           </span>
                         </div>
                         <div className="text-xs text-ink-soft mt-1.5">{opt.sub}</div>
@@ -353,7 +353,7 @@ export default function BookingWidget({ services, doctors, initialDoctorId, init
               </button>
 
               <p className="text-xs text-ink-soft flex items-center justify-center gap-1.5">
-                <ShieldCheck className="w-3.5 h-3.5 text-terra/70" />
+                <ShieldCheck className="w-3.5 h-3.5 text-fern/70" />
                 Платёж защищён. Возврат при отмене — по правилам клиники.
               </p>
             </div>

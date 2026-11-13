@@ -40,7 +40,7 @@ export default function ServicesList({ services }: { services: Service[] }) {
                 active ? "text-ink font-semibold" : "text-ink-soft hover:text-ink font-medium"
               }`}
             >
-              {active && <span className="w-1 h-1 rounded-full bg-terra" aria-hidden="true" />}
+              {active && <span className="w-1 h-1 rounded-full bg-fern" aria-hidden="true" />}
               {cat}
             </button>
           );
@@ -53,15 +53,15 @@ export default function ServicesList({ services }: { services: Service[] }) {
           <Link
             key={service.id}
             href={`/book?service=${service.id}`}
-            className={`group grid md:grid-cols-[auto_1fr_auto] gap-x-8 gap-y-2 items-baseline py-7 border-t border-ink/10 hover:border-terra/40 transition-colors ${
+            className={`group grid md:grid-cols-[auto_1fr_auto] gap-x-8 gap-y-2 items-baseline py-7 border-t border-ink/10 hover:border-fern/40 transition-colors ${
               i === filteredServices.length - 1 ? "border-b" : ""
             }`}
           >
-            <span className="hidden md:block font-display italic text-[15px] text-terra/70 w-10" aria-hidden="true">
+            <span className="hidden md:block font-display italic text-[15px] text-fern/70 w-10" aria-hidden="true">
               {String(i + 1).padStart(2, "0")}
             </span>
             <div>
-              <h2 className="font-display text-xl md:text-2xl text-ink group-hover:text-terra transition-colors leading-snug">
+              <h2 className="font-display text-xl md:text-2xl text-ink group-hover:text-fern transition-colors leading-snug">
                 {service.title}
               </h2>
               <span className="mt-1.5 block text-[11.5px] uppercase tracking-[0.14em] text-ink-soft">
@@ -81,7 +81,7 @@ export default function ServicesList({ services }: { services: Service[] }) {
               <span className="font-display text-2xl text-ink whitespace-nowrap">
                 {service.price.toLocaleString("ru-RU")} ₽
               </span>
-              <ArrowUpRight className="w-4.5 h-4.5 text-ink-soft group-hover:text-terra group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all hidden md:block" />
+              <ArrowUpRight className="w-4.5 h-4.5 text-ink-soft group-hover:text-fern group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all hidden md:block" />
             </div>
           </Link>
         ))}

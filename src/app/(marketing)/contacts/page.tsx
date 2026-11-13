@@ -51,7 +51,7 @@ export default function ContactsPage() {
           <span className="eyebrow">Связаться с нами</span>
           <h1 className="mt-7 font-display font-medium text-[2.3rem] sm:text-5xl md:text-[3.4rem] leading-[1.1] text-ink uppercase">
             Контакты{" "}
-            <span className="serif-italic normal-case text-terra">клиники</span>
+            <span className="serif-italic normal-case text-fern">клиники</span>
           </h1>
           <p className="mt-6 text-ink-soft text-base md:text-lg leading-relaxed">
             Позвоните, напишите или приезжайте — мы всегда рады помочь
@@ -69,14 +69,14 @@ export default function ContactsPage() {
                   className={`grid sm:grid-cols-[1fr_1.1fr] gap-x-8 gap-y-1.5 py-7 border-t border-ink/10 ${i === CONTACTS.length - 1 ? "border-b" : ""}`}
                 >
                   <div className="flex items-center gap-3 text-[12px] uppercase tracking-[0.16em] text-ink-soft">
-                    <c.icon className="w-4 h-4 text-terra" strokeWidth={1.5} />
+                    <c.icon className="w-4 h-4 text-fern" strokeWidth={1.5} />
                     {c.title}
                   </div>
                   <div>
                     {c.href ? (
                       <a
                         href={c.href}
-                        className="font-display text-lg md:text-xl text-ink hover:text-terra transition-colors break-words"
+                        className="font-display text-lg md:text-xl text-ink hover:text-fern transition-colors break-words"
                       >
                         {c.main}
                       </a>
@@ -97,7 +97,7 @@ export default function ContactsPage() {
                 rel="noopener noreferrer"
                 className="btn-ghost px-6 py-3.5 text-sm flex-1"
               >
-                <MessageCircle className="w-4 h-4 text-terra" />
+                <MessageCircle className="w-4 h-4 text-fern" />
                 Написать в WhatsApp
               </a>
               <a href="tel:+79990000000" className="btn-primary px-6 py-3.5 text-sm flex-1">
@@ -111,11 +111,11 @@ export default function ContactsPage() {
               <h2 className="font-display text-xl text-ink mb-5">Как добраться</h2>
               <ul className="space-y-4 text-[15px] text-ink-soft leading-relaxed">
                 <li className="flex gap-3">
-                  <Navigation className="w-4 h-4 text-terra shrink-0 mt-1" strokeWidth={1.5} />
+                  <Navigation className="w-4 h-4 text-fern shrink-0 mt-1" strokeWidth={1.5} />
                   Метро «Тверская» — выход №4, далее 5 минут пешком по Тверской улице.
                 </li>
                 <li className="flex gap-3">
-                  <Navigation className="w-4 h-4 text-terra shrink-0 mt-1" strokeWidth={1.5} />
+                  <Navigation className="w-4 h-4 text-fern shrink-0 mt-1" strokeWidth={1.5} />
                   Парковка для пациентов — бесплатная, 2 часа, по записи.
                 </li>
               </ul>

@@ -97,7 +97,7 @@ export default function ReviewForm() {
         </button>
       </div>
       {status && (
-        <p className={`text-sm text-center pt-1 ${status.ok ? "text-terra" : "text-rose-600"}`}>
+        <p className={`text-sm text-center pt-1 ${status.ok ? "text-fern" : "text-rose-600"}`}>
           {status.text}
         </p>
       )}

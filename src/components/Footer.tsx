@@ -28,7 +28,7 @@ const COLUMNS = [
 
 export default function Footer() {
   return (
-    <footer className="relative bg-wine text-[#efe6da] overflow-hidden">
+    <footer className="relative bg-forest text-[#efe6da] overflow-hidden">
       <div className="max-w-[1400px] mx-auto px-5 sm:px-8 lg:px-12">
         {/* CTA-строка */}
         <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8 py-16 lg:py-20 border-b border-[#efe6da]/15">

@@ -22,7 +22,7 @@ export default async function ReviewsSection() {
           <div className="max-w-2xl">
             <span className="eyebrow">Отзывы</span>
             <h2 className="mt-6 font-display font-medium text-[1.9rem] sm:text-4xl md:text-[2.75rem] leading-[1.14] text-ink">
-              Пациенты <span className="serif-italic text-terra">о клинике</span>
+              Пациенты <span className="serif-italic text-fern">о клинике</span>
             </h2>
             <p className="mt-5 text-ink-soft text-[15px] md:text-base leading-relaxed">
               Реальные впечатления о приёмах. Каждый отзыв проходит модерацию.

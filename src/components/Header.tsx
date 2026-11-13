@@ -24,7 +24,7 @@ export function Logo({ size = "md" }: { size?: "md" | "lg" }) {
     <Link href="/" className="group inline-flex items-baseline" aria-label="DentaPremium — на главную">
       <span className={`${word} leading-none whitespace-nowrap font-display font-medium tracking-tight text-ink`}>
         Denta
-        <span className="serif-italic text-terra">Premium</span>
+        <span className="serif-italic text-fern">Premium</span>
       </span>
     </Link>
   );
@@ -79,7 +79,7 @@ export default function Header() {
                     active ? "text-ink font-semibold" : "text-ink-soft hover:text-ink font-medium"
                   }`}
                 >
-                  {active && <span className="w-1 h-1 rounded-full bg-terra" aria-hidden="true" />}
+                  {active && <span className="w-1 h-1 rounded-full bg-fern" aria-hidden="true" />}
                   {link.label}
                 </Link>
               );
@@ -90,7 +90,7 @@ export default function Header() {
           <div className="hidden lg:flex items-center gap-6">
             <a
               href="tel:+79990000000"
-              className="flex items-center gap-2 text-[14px] font-medium text-ink-soft hover:text-terra transition-colors"
+              className="flex items-center gap-2 text-[14px] font-medium text-ink-soft hover:text-fern transition-colors"
             >
               <Phone className="w-3.5 h-3.5" />
               +7 (999) 000-00-00
@@ -139,10 +139,10 @@ export default function Header() {
                     onClick={() => setIsOpen(false)}
                     className="group flex items-baseline gap-5 py-5"
                   >
-                    <span className="font-display italic text-terra/70 text-lg w-8">
+                    <span className="font-display italic text-fern/70 text-lg w-8">
                       0{i + 1}
                     </span>
-                    <span className="font-display text-4xl text-ink group-hover:text-terra transition-colors">
+                    <span className="font-display text-4xl text-ink group-hover:text-fern transition-colors">
                       {link.label}
                     </span>
                   </Link>
@@ -153,7 +153,7 @@ export default function Header() {
 
           <div className="px-8 pb-12 space-y-5">
             <a href="tel:+79990000000" className="flex items-center gap-3 text-ink-soft">
-              <Phone className="w-4 h-4 text-terra" />
+              <Phone className="w-4 h-4 text-fern" />
               +7 (999) 000-00-00
             </a>
             <Link
