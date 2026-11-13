@@ -7,6 +7,7 @@ import { Suspense } from "react";
 import { connection } from "next/server";
 import ReviewsSection from "@/components/ReviewsSection";
 import StructuredData from "@/components/StructuredData";
+import HeroVideo from "@/components/HeroVideo";
 
 const priceFmt = (p: number) => p.toLocaleString("ru-RU");
 
@@ -43,83 +44,121 @@ function SectionHead({
   );
 }
 
-/* ---------- Hero: редакционная композиция с аркой ---------- */
+/* ---------- Hero: видео-обложка в духе ЗАРЯ ---------- */
+const HERO_STATS = [
+  { value: "12", label: "лет клинике", italic: false },
+  { value: "15 000+", label: "счастливых пациентов", italic: false },
+  { value: "9:00–21:00", label: "работаем без выходных", italic: true },
+  { value: "5 мин", label: "на онлайн-запись", italic: false },
+];
+
 function Hero() {
   return (
-    <section className="relative px-5 sm:px-8 lg:px-12 pt-[120px] md:pt-[150px] pb-16 md:pb-24 overflow-hidden">
-      <div className="max-w-[1400px] mx-auto">
-        <div className="grid lg:grid-cols-[1.08fr_0.92fr] gap-12 lg:gap-20 items-center">
-          {/* Левая колонка */}
-          <div className="animate-fade-up">
-            <span className="eyebrow">Премиальная стоматология · Москва</span>
+    <section className="relative flex min-h-[100svh] flex-col overflow-hidden">
+      <HeroVideo />
 
-            <h1 className="mt-8 font-display font-medium text-[2.5rem] sm:text-[3.4rem] xl:text-[4.2rem] leading-[1.06] tracking-tight text-ink uppercase">
-              Стоматология{" "}
-              <span className="serif-italic normal-case text-terra">премиум-класса</span>
-              <br />
+      {/* Молочная вуаль: читаемость текста и мягкий переход из шапки */}
+      <div
+        className="pointer-events-none absolute inset-x-0 top-0 h-44 bg-gradient-to-b from-paper/90 via-paper/40 to-transparent"
+        aria-hidden="true"
+      />
+      <div
+        className="pointer-events-none absolute inset-0 bg-gradient-to-r from-paper/85 via-paper/45 to-paper/5"
+        aria-hidden="true"
+      />
+      <div
+        className="pointer-events-none absolute inset-x-0 bottom-0 h-44 bg-gradient-to-t from-paper/75 via-paper/30 to-transparent"
+        aria-hidden="true"
+      />
+
+      {/* Контент — построчное появление */}
+      <div className="relative mx-auto flex w-full max-w-[1400px] flex-1 flex-col justify-center px-5 pt-[104px] pb-8 sm:px-8 lg:px-12">
+        <span className="eyebrow animate-fade-up" style={{ animationDelay: "0.15s" }}>
+          Премиальная стоматология · Москва
+        </span>
+
+        <h1 className="mt-6 max-w-4xl font-display font-medium uppercase leading-[1.05] tracking-tight text-ink text-[2.6rem] sm:text-[3.8rem] xl:text-[4.5rem]">
+          <span className="block overflow-hidden pb-1">
+            <span className="block line-reveal" style={{ animationDelay: "0.25s" }}>
+              Стоматология
+            </span>
+          </span>
+          <span className="block overflow-hidden pb-1">
+            <span
+              className="block line-reveal serif-italic normal-case text-terra"
+              style={{ animationDelay: "0.4s" }}
+            >
+              премиум-класса
+            </span>
+          </span>
+          <span className="block overflow-hidden pb-1">
+            <span className="block line-reveal" style={{ animationDelay: "0.55s" }}>
               в центре Москвы
-            </h1>
+            </span>
+          </span>
+        </h1>
 
-            <p className="mt-7 text-ink-soft text-base md:text-lg leading-relaxed max-w-lg">
-              Диагностика на оборудовании экспертного класса, врачи с опытом от 10 лет
-              и цены, которые не меняются после осмотра. Запишитесь онлайн —
-              подтверждение придёт на email за минуту.
-            </p>
+        <p
+          className="mt-5 max-w-lg text-ink-soft text-base md:text-lg leading-relaxed animate-fade-up"
+          style={{ animationDelay: "0.7s" }}
+        >
+          Диагностика на оборудовании экспертного класса, врачи с опытом от 10 лет
+          и цены, которые не меняются после осмотра. Подтверждение записи —
+          на email за минуту.
+        </p>
 
-            <div className="mt-10 flex flex-col sm:flex-row gap-4">
-              <Link href="/book" className="btn-primary px-8 py-4 text-[15px] group">
-                Записаться онлайн
-                <ArrowRight className="w-4.5 h-4.5 group-hover:translate-x-1 transition-transform" />
-              </Link>
-              <Link href="/services" className="btn-ghost px-8 py-4 text-[15px]">
-                Услуги и цены
-              </Link>
-            </div>
-          </div>
-
-          {/* Правая колонка — арка с фотографией */}
-          <div className="relative animate-fade-up" style={{ animationDelay: "0.15s" }}>
-            <div className="arch relative aspect-[4/5] max-w-[480px] mx-auto">
-              <Image
-                src="/images/hero-patient.jpg"
-                alt="Пациентка улыбается в кресле стоматологического кабинета"
-                fill
-                priority
-                sizes="(max-width: 1024px) 100vw, 480px"
-                className="object-cover"
-              />
-            </div>
-
-            {/* Подпись-печать */}
-            <div className="absolute -bottom-6 -left-2 sm:left-0 bg-paper px-6 py-4 shadow-[0_18px_50px_-20px_rgba(33,26,19,0.35)] border border-ink/5">
-              <div className="flex items-center gap-3">
-                <Star className="w-4 h-4 text-gold fill-gold" aria-hidden="true" />
-                <div className="leading-tight">
-                  <div className="font-display text-lg text-ink">4.9 из 5</div>
-                  <div className="text-[12px] text-ink-soft">по 1 200+ отзывам пациентов</div>
-                </div>
-              </div>
-            </div>
-          </div>
+        <div
+          className="mt-8 flex flex-col sm:flex-row sm:items-center gap-4 animate-fade-up"
+          style={{ animationDelay: "0.85s" }}
+        >
+          <Link href="/book" className="btn-primary px-8 py-4 text-[15px] group">
+            Записаться онлайн
+            <ArrowRight className="w-4.5 h-4.5 group-hover:translate-x-1 transition-transform" />
+          </Link>
+          <Link
+            href="/services"
+            className="btn-ghost px-8 py-4 text-[15px] bg-paper/70 backdrop-blur-sm"
+          >
+            Услуги и цены
+          </Link>
+          <span className="hidden md:inline-flex chip bg-paper/70 backdrop-blur-sm">
+            <Star className="w-3.5 h-3.5 text-gold fill-gold" aria-hidden="true" />
+            4.9 из 5 — по 1 200+ отзывам
+          </span>
         </div>
+      </div>
 
-        {/* Статистика — числа антиквой, hairline-разделители */}
-        <dl className="mt-20 md:mt-24 grid grid-cols-2 md:grid-cols-4 border-t border-ink/10">
-          {[
-            { value: "12", label: "лет клинике", italic: false },
-            { value: "15 000+", label: "счастливых пациентов", italic: false },
-            { value: "9:00–21:00", label: "работаем без выходных", italic: true },
-            { value: "5 мин", label: "на онлайн-запись", italic: false },
-          ].map((s, i) => (
+      {/* Скролл-подсказка */}
+      <div className="relative pb-3" aria-hidden="true">
+        <div className="mx-auto hidden h-10 w-px overflow-hidden bg-ink/20 md:block">
+          <span className="animate-scroll-line block h-5 w-px bg-ink/70" />
+        </div>
+      </div>
+
+      {/* Статистика — полоса на hairline внизу обложки */}
+      <div className="relative mx-auto w-full max-w-[1400px] px-5 pb-7 sm:px-8 lg:px-12">
+        <dl
+          className="grid grid-cols-2 md:grid-cols-4 gap-y-6 border-t border-ink/15 animate-fade-up"
+          style={{ animationDelay: "1s" }}
+        >
+          {HERO_STATS.map((s, i) => (
             <div
               key={s.label}
-              className={`pt-7 pb-2 ${i !== 0 ? "md:border-l md:border-ink/10 md:pl-8" : ""} ${i === 2 ? "col-start-1 md:col-start-3" : ""} ${i === 3 ? "col-start-2 md:col-start-4" : ""}`}
+              className={`pt-5 pb-1 ${i !== 0 ? "md:border-l md:border-ink/15 md:pl-8" : ""} ${
+                i === 2 ? "col-start-1 md:col-start-3" : ""
+              } ${i === 3 ? "col-start-2 md:col-start-4" : ""}`}
             >
               <dt className="sr-only">{s.label}</dt>
-              <dd className={`font-display text-[1.7rem] md:text-[2.1rem] leading-none text-ink ${s.italic ? "serif-italic" : ""}`}>
+              <dd
+                className={`font-display text-[1.6rem] md:text-[2rem] leading-none text-ink ${
+                  s.italic ? "serif-italic" : ""
+                }`}
+              >
                 {s.value}
               </dd>
-              <dd className="mt-3 text-[12.5px] text-ink-soft leading-snug max-w-[150px]">{s.label}</dd>
+              <dd className="mt-2.5 text-[12.5px] text-ink-soft leading-snug max-w-[150px]">
+                {s.label}
+              </dd>
             </div>
           ))}
         </dl>

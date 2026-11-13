@@ -47,6 +47,24 @@ html {
   scroll-behavior: smooth;
 }
 
+/* Маска-появление строки заголовка (в духе ЗАРЯ) */
+@keyframes line-reveal {
+  from { opacity: 0; transform: translateY(110%); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.line-reveal {
+  animation: line-reveal 0.95s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* Скролл-подсказка: бегущая линия в окне */
+@keyframes scroll-line {
+  0% { transform: translateY(-18px); }
+  75%, 100% { transform: translateY(50px); }
+}
+.animate-scroll-line {
+  animation: scroll-line 1.9s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+}
+
 body {
   background-color: var(--color-paper);
   color: var(--color-ink);
