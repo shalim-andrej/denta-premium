@@ -39,7 +39,7 @@ export default function LoginPage() {
 
           <div className="text-center mb-8">
             <h1 className="font-display text-2xl text-ink mb-2">
-              Панель <span className="serif-italic text-fern">управления</span>
+              Панель управления
             </h1>
             <p className="text-sm text-ink-soft">Вход для сотрудников клиники</p>
           </div>
