@@ -1,42 +1,41 @@
 @import "tailwindcss";
 
 /* ============================================================
-   DentaPremium — дизайн-система «Зелёная редакция №2»
-   Принцип ЗАРЯ: светлая тёплая база + один яркий акцент
-   + золото. Кремовый фон, еловые чернила, свежий изумруд.
+   DentaPremium — дизайн-система «Тихая роскошь»
+   Две гарнитуры и ни одной лишней:
+   Prata — высококонтрастная антиква (заголовки, цифры, вордмарк)
+   Manrope — нейтральный гротеск (текст, лейблы, поля, меню).
 
-   Шрифты — 4 разные семьи, файлами в проекте (src/fonts),
-   кириллица проверена fontTools:
-   Oranienbaum (дидона, заголовки) · Cormorant Italic (акценты)
-   Literata (основной текст) · Jost (капс-лейблы, интерфейс).
+   Палитра: тёплая слоновая кость, чернильный почти-чёрный,
+   единственный акцент — приглушённая бронза. Никаких кислотных
+   цветов, никаких курсивных «акцентных слов», никаких стрелок.
 
-   Действия — ТОЛЬКО типографика: капс + стрелка + линия,
-   вырастающая при наведении. Никаких плашек, овалов, рамок.
-   Формы — на подчёркивании, календарь — квадратные ячейки.
+   Действие — только текст и растущая линия. Кнопка как фигура
+   запрещена; форма отправляется тихой рамочной строкой.
    ============================================================ */
 
 @theme inline {
-  --font-sans: var(--font-literata), Georgia, "Times New Roman", serif;
-  --font-display: var(--font-oranienbaum), Georgia, "Times New Roman", serif;
-  --font-accent: var(--font-cormorant), Georgia, serif;
-  --font-label: var(--font-jost), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-prata), Georgia, "Times New Roman", serif;
+  --font-accent: var(--font-prata), Georgia, serif;
+  --font-label: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
 }
 
 @theme {
   /* Бумага и чернила */
-  --color-paper: #f6f4ee;         /* тёплая молочная бумага — фон */
-  --color-cream: #edeae0;         /* светлая плашка — секции */
-  --color-sand: #e0dbcb;          /* чуть глубже — ховеры плашек */
-  --color-ink: #0f1b15;           /* еловый почти-чёрный — текст */
-  --color-ink-soft: #5d6a5f;      /* приглушённый серо-зелёный */
-  --color-fern: #0e7c57;          /* яркий изумруд — главный акцент */
-  --color-fern-deep: #0a5e40;     /* изумруд при наведении */
-  --color-forest: #0b2016;        /* глубокий ель — тёмные секции */
-  --color-forest-soft: #163224;   /* приподнятые части тёмных секций */
-  --color-gold: #c4a15a;          /* золото — звёзды рейтинга, блики */
+  --color-paper: #f4f1e9;         /* тёплая слоновая кость — фон */
+  --color-cream: #ebe7dc;         /* светлая плашка — секции */
+  --color-sand: #ddd7c7;          /* подложки, плейсхолдеры карточек */
+  --color-ink: #17130c;           /* тёплый чернильный — текст */
+  --color-ink-soft: #6e695c;      /* приглушённый серо-коричневый */
+  --color-fern: #9a7b4f;          /* бронза — единственный акцент */
+  --color-fern-deep: #7d6340;     /* бронза при наведении */
+  --color-forest: #14110b;        /* глубокий тёплый чёрный — тёмные секции */
+  --color-forest-soft: #1f1b13;   /* приподнятые части тёмных секций */
+  --color-gold: #b39a68;          /* старое золото — звёзды рейтинга */
 
   /* Анимации */
-  --animate-marquee: marquee 40s linear infinite;
+  --animate-marquee: marquee 44s linear infinite;
   --animate-fade-up: fade-up 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
 
   @keyframes marquee {
@@ -55,7 +54,7 @@ html {
   scroll-behavior: smooth;
 }
 
-/* Маска-появление строки заголовка (в духе ЗАРЯ) */
+/* Маска-появление строки заголовка */
 @keyframes line-reveal {
   from { opacity: 0; transform: translateY(110%); }
   to { opacity: 1; transform: translateY(0); }
@@ -91,23 +90,24 @@ html {
 body {
   background-color: var(--color-paper);
   color: var(--color-ink);
-  font-family: var(--font-literata), Georgia, serif;
+  font-family: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
+  font-weight: 400;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }
 
 ::selection {
-  background: rgba(14, 124, 87, 0.16);
+  background: rgba(154, 123, 79, 0.22);
   color: var(--color-ink);
 }
 
 ::-webkit-scrollbar { width: 10px; height: 10px; }
 ::-webkit-scrollbar-track { background: var(--color-paper); }
 ::-webkit-scrollbar-thumb {
-  background: #c9c7b8;
+  background: #cdc6b4;
   border: 2px solid var(--color-paper);
 }
-::-webkit-scrollbar-thumb:hover { background: #b0ae9d; }
+::-webkit-scrollbar-thumb:hover { background: #b7ae98; }
 
 img {
   user-select: none;
@@ -116,39 +116,45 @@ img {
 /* ---------- Переиспользуемые компоненты ---------- */
 
 @layer components {
-  /* Надзаголовок-строка: капс Jost с широким трекингом */
+  /*
+    Надзаголовок: капс Manrope с широким трекингом, цвет —
+    приглушённый, НЕ акцентный. Используется раз на секцию.
+  */
   .eyebrow {
-    @apply inline-flex items-center gap-3 text-[11px] font-medium uppercase;
-    font-family: var(--font-jost), sans-serif;
-    letter-spacing: 0.24em;
-    color: var(--color-fern);
+    @apply inline-flex items-center gap-3 text-[10.5px] font-medium uppercase;
+    font-family: var(--font-manrope), sans-serif;
+    letter-spacing: 0.3em;
+    color: var(--color-ink-soft);
   }
   .eyebrow::before {
     content: "";
     width: 2rem;
     height: 1px;
-    background: currentColor;
-    opacity: 0.7;
+    background: var(--color-fern);
+    opacity: 0.8;
   }
   .eyebrow-center::before { display: none; }
 
-  /* Курсивная антиква — вторая строка заголовков, акцентные слова */
+  /*
+    Бывший «курсивный акцент»: теперь просто тихая антиква
+    без курсива и без собственного цвета — так наследуется
+    цвет строки и не возникает пёстрого винегрета.
+  */
   .serif-italic {
-    font-family: var(--font-cormorant), Georgia, serif;
-    font-style: italic;
-    font-weight: 500;
-    font-size: 1.08em;
-    letter-spacing: 0.01em;
+    font-family: var(--font-prata), Georgia, serif;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 1em;
   }
 
   /*
-    Действие — только типографика: капс Jost + стрелка + линия,
-    которая вырастает слева при наведении. Без плашек и рамок.
+    Действие — только типографика: капс Manrope + линия,
+    вырастающая слева при наведении. Без стрелок и плашек.
   */
   .link-action {
-    @apply inline-flex items-center gap-3 text-[12.5px] font-medium uppercase;
-    font-family: var(--font-jost), sans-serif;
-    letter-spacing: 0.18em;
+    @apply inline-flex items-center gap-3 text-[12px] font-medium uppercase;
+    font-family: var(--font-manrope), sans-serif;
+    letter-spacing: 0.16em;
     color: var(--color-ink);
     padding-bottom: 7px;
     position: relative;
@@ -166,21 +172,16 @@ img {
     transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
   }
   .link-action:hover::after { transform: scaleX(1); }
-  .link-action svg {
-    color: var(--color-fern);
-    transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
-  }
-  .link-action:hover svg { transform: translateX(5px); }
   .link-action:disabled,
   .link-action[aria-disabled="true"] {
     @apply opacity-45 cursor-not-allowed pointer-events-none;
   }
 
-  /* Тихое действие — приглушённый текст, линия появляется в цвет чернил */
+  /* Тихое действие — приглушённый текст, линия в цвет чернил */
   .link-quiet {
-    @apply inline-flex items-center gap-3 text-[12.5px] font-medium uppercase;
-    font-family: var(--font-jost), sans-serif;
-    letter-spacing: 0.18em;
+    @apply inline-flex items-center gap-3 text-[12px] font-medium uppercase;
+    font-family: var(--font-manrope), sans-serif;
+    letter-spacing: 0.16em;
     color: var(--color-ink-soft);
     padding-bottom: 7px;
     position: relative;
@@ -200,17 +201,13 @@ img {
   }
   .link-quiet:hover { color: var(--color-ink); }
   .link-quiet:hover::after { transform: scaleX(1); }
-  .link-quiet svg {
-    transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
-  }
-  .link-quiet:hover svg { transform: translateX(5px); }
 
   /* Действие на тёмном фоне */
   .link-light {
-    @apply inline-flex items-center gap-3 text-[12.5px] font-medium uppercase;
-    font-family: var(--font-jost), sans-serif;
-    letter-spacing: 0.18em;
-    color: #f1eee5;
+    @apply inline-flex items-center gap-3 text-[12px] font-medium uppercase;
+    font-family: var(--font-manrope), sans-serif;
+    letter-spacing: 0.16em;
+    color: #efeadd;
     padding-bottom: 7px;
     position: relative;
   }
@@ -221,17 +218,38 @@ img {
     bottom: 0;
     width: 100%;
     height: 1px;
-    background: #f1eee5;
+    background: var(--color-gold);
     transform: scaleX(0);
     transform-origin: left;
     transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
   }
   .link-light:hover::after { transform: scaleX(1); }
-  .link-light svg {
-    color: var(--color-gold);
-    transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+
+  /* Тихая рамочная строка — единственный «первичный» жест, для submit */
+  .btn-quiet {
+    @apply inline-flex items-center justify-center gap-3 uppercase;
+    font-family: var(--font-manrope), sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.16em;
+    color: var(--color-ink);
+    border: 1px solid rgba(23, 19, 12, 0.45);
+    border-radius: 999px;
+    padding: 1rem 2.4rem;
+    background: transparent;
+    transition:
+      background-color 0.4s ease,
+      color 0.4s ease,
+      border-color 0.4s ease;
   }
-  .link-light:hover svg { transform: translateX(5px); }
+  .btn-quiet:hover {
+    background: var(--color-ink);
+    color: var(--color-paper);
+    border-color: var(--color-ink);
+  }
+  .btn-quiet:disabled {
+    @apply opacity-40 cursor-not-allowed pointer-events-none;
+  }
 
   /* Арка — фирменная форма фотографий */
   .arch {
@@ -251,30 +269,30 @@ img {
 
   /*
     Поля ввода — линия вместо бокса: фон прозрачный, снизу
-    тонкое подчёркивание, при фокусе линия становится изумрудной.
+    тонкое подчёркивание, при фокусе линия становится бронзовой.
   */
   .field {
     @apply w-full bg-transparent px-0 py-3 text-[15.5px] text-ink outline-none;
-    font-family: var(--font-jost), sans-serif;
+    font-family: var(--font-manrope), sans-serif;
     font-weight: 400;
     border: 0;
-    border-bottom: 1px solid rgba(15, 27, 21, 0.28);
+    border-bottom: 1px solid rgba(23, 19, 12, 0.28);
     border-radius: 0;
     transition: border-color 0.3s ease;
   }
-  .field::placeholder { color: #9aa294; }
+  .field::placeholder { color: #a09a8a; }
   .field:focus { border-bottom-color: var(--color-fern); }
 
   select.field {
     @apply appearance-none;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%235d6a5f' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236e695c' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
     background-repeat: no-repeat;
     background-position: right 0.4rem center;
     padding-right: 2rem;
   }
   select.field option {
-    background-color: #f6f4ee;
-    color: #0f1b15;
+    background-color: #f4f1e9;
+    color: #17130c;
   }
 
   textarea.field {
@@ -286,8 +304,8 @@ img {
 /* ---------- react-day-picker: бумага, линии, квадратные ячейки ---------- */
 
 .rdp-root.rdp-root {
-  --rdp-accent-color: #0e7c57;
-  --rdp-accent-background-color: rgba(14, 124, 87, 0.08);
+  --rdp-accent-color: #9a7b4f;
+  --rdp-accent-background-color: rgba(154, 123, 79, 0.08);
   --rdp-day-height: 2.6rem;
   --rdp-day-width: 2.6rem;
   --rdp-day_button-border-radius: 0;
@@ -296,27 +314,27 @@ img {
   --rdp-day_button-width: 2.6rem;
   --rdp-day_button-font-size: 0.85rem;
   --rdp-outside-opacity: 0.35;
-  --rdp-today-color: #0e7c57;
+  --rdp-today-color: #9a7b4f;
   --rdp-selected-border: 1px solid transparent;
   --rdp-disabled-opacity: 0.3;
-  --rdp-font-family: var(--font-jost), sans-serif;
+  --rdp-font-family: var(--font-manrope), sans-serif;
   margin: 0;
 }
 
 .rdp-root.rdp-root,
 .rdp-root.rdp-root * {
-  color: #0f1b15;
+  color: #17130c;
 }
 
 .rdp-root.rdp-root .rdp-month_caption,
 .rdp-root.rdp-root .rdp-month_caption * {
-  color: #0f1b15;
+  color: #17130c;
   font-weight: 500;
 }
 
 .rdp-root.rdp-root .rdp-weekdays,
 .rdp-root.rdp-root .rdp-weekday {
-  color: #9aa294;
+  color: #a09a8a;
   font-size: 0.68rem;
   text-transform: uppercase;
   letter-spacing: 0.08em;
@@ -324,25 +342,25 @@ img {
 }
 
 .rdp-root.rdp-root .rdp-day_button:hover {
-  border-color: rgba(14, 124, 87, 0.4);
-  background: rgba(14, 124, 87, 0.05);
+  border-color: rgba(154, 123, 79, 0.4);
+  background: rgba(154, 123, 79, 0.05);
 }
 
 .rdp-root.rdp-root .rdp-selected .rdp-day_button {
-  background: #0f1b15;
-  color: #f6f4ee;
+  background: #17130c;
+  color: #f4f1e9;
   font-weight: 500;
   border-color: transparent;
 }
 
 .rdp-root.rdp-root .rdp-nav_button {
-  color: #5d6a5f;
+  color: #6e695c;
   width: 2rem;
   height: 2rem;
 }
 .rdp-root.rdp-root .rdp-nav_button:hover {
-  color: #0e7c57;
-  background: rgba(15, 27, 21, 0.05);
+  color: #9a7b4f;
+  background: rgba(23, 19, 12, 0.05);
 }
 
 .rdp-root.rdp-root .rdp-disabled .rdp-day_button {
@@ -358,7 +376,7 @@ input:focus-visible,
 select:focus-visible,
 textarea:focus-visible,
 summary:focus-visible {
-  outline: 2px solid rgba(14, 124, 87, 0.6);
+  outline: 2px solid rgba(154, 123, 79, 0.6);
   outline-offset: 3px;
 }
 

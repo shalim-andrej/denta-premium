@@ -37,7 +37,7 @@ export default async function ManageBookingPage({
       <div className="max-w-lg mx-auto animate-fade-up">
         <div className="border-t border-ink/15 pt-10">
           <h1 className="font-display text-3xl text-ink mb-1.5">
-            Ваша <span className="serif-italic text-fern">запись</span>
+            Ваша запись
           </h1>
           <p className="text-ink-soft text-sm mb-7">Управление записью без звонка в клинику</p>
 

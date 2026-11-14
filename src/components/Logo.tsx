@@ -4,8 +4,7 @@ import Link from "next/link";
 /*
   Знак clinics — тонкий линейный силуэт зуба без плашки/рамки:
   одна непрерывная кривая, штрих 1.3, текущий цвет текста.
-  Рядом — двухстрочный вордмарк: капс Jost с широким трекингом
-  и курсивная строка Cormorant снизу.
+  Рядом — двухстрочный вордмарк: антиква Prata и капс Manrope снизу.
 */
 function ToothMark({ className = "" }: { className?: string }) {
   return (
@@ -47,15 +46,15 @@ export default function Logo({
       />
       <span className="flex flex-col leading-none">
         <span
-          className={`font-label font-semibold uppercase ${base} whitespace-nowrap ${
-            lg ? "text-[15px] tracking-[0.3em]" : "text-[12.5px] tracking-[0.26em]"
+          className={`font-display ${base} whitespace-nowrap ${
+            lg ? "text-[19px] tracking-[0.04em]" : "text-[15px] tracking-[0.03em]"
           }`}
         >
-          Denta<span className="text-fern">Premium</span>
+          Denta&nbsp;<span className="text-fern">Premium</span>
         </span>
         <span
-          className={`serif-italic ${sub} mt-1.5 ${
-            lg ? "text-[15px]" : "text-[12px]"
+          className={`font-label font-medium uppercase ${sub} mt-2 ${
+            lg ? "text-[10px] tracking-[0.3em]" : "text-[8.5px] tracking-[0.26em]"
           }`}
         >
           стоматология премиум-класса

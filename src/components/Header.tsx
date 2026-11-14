@@ -4,7 +4,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
-import { Phone, X, ArrowRight } from "lucide-react";
+import { Phone, X } from "lucide-react";
 import Logo from "./Logo";
 
 const NAV_LINKS = [
@@ -86,7 +86,6 @@ export default function Header() {
             </a>
             <Link href="/book" className="link-action">
               Записаться
-              <ArrowRight className="w-4 h-4" strokeWidth={1.5} />
             </Link>
           </div>
 
@@ -129,7 +128,7 @@ export default function Header() {
                     onClick={() => setIsOpen(false)}
                     className="group flex items-baseline gap-5 py-5"
                   >
-                    <span className="font-accent italic text-fern/70 text-xl w-9">
+                    <span className="font-display text-fern/70 text-xl w-9">
                       0{i + 1}
                     </span>
                     <span className="font-display text-4xl text-ink group-hover:text-fern transition-colors">
@@ -152,7 +151,6 @@ export default function Header() {
               className="link-action"
             >
               Записаться на приём
-              <ArrowRight className="w-4 h-4" strokeWidth={1.5} />
             </Link>
           </div>
         </div>

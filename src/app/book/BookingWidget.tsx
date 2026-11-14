@@ -149,7 +149,7 @@ export default function BookingWidget({ services, doctors, initialDoctorId, init
   /* ---------- Оформление шагов: открытая композиция на hairline ---------- */
   const stepCls = "flex gap-4 md:gap-6 border-t border-ink/10 pt-9";
   const numCls =
-    "font-accent italic text-xl text-fern/80 w-9 shrink-0 pt-0.5";
+    "font-display text-lg text-fern/80 w-9 shrink-0 pt-0.5";
   const labelCls =
     "block font-label text-[11.5px] font-medium uppercase tracking-[0.18em] text-ink-soft mb-3";
 
@@ -333,11 +333,11 @@ export default function BookingWidget({ services, doctors, initialDoctorId, init
               <button
                 type="submit"
                 disabled={isLoading}
-                className="link-action w-full justify-center text-[13.5px]"
+                className="btn-quiet w-full"
               >
                 {isLoading ? (
                   <>
-                    <Loader2 className="w-5 h-5 animate-spin" />
+                    <Loader2 className="w-4 h-4 animate-spin" />
                     Переходим к оплате…
                   </>
                 ) : (

@@ -1,6 +1,6 @@
 // src/components/Footer.tsx
 import Link from "next/link";
-import { Phone, Mail, ArrowUpRight } from "lucide-react";
+import { Phone, Mail } from "lucide-react";
 import Logo from "./Logo";
 
 // Вычисляем год один раз при загрузке модуля (на сервере)
@@ -33,18 +33,17 @@ export default function Footer() {
         {/* CTA-строка */}
         <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8 py-16 lg:py-20 border-b border-[#efe6da]/15">
           <div className="max-w-xl">
-            <span className="text-[11px] font-semibold uppercase tracking-[0.24em] text-[#c99b7d]">
+            <span className="text-[11px] font-medium uppercase tracking-[0.28em] text-gold">
               Остались вопросы
             </span>
-            <h2 className="mt-5 font-display text-3xl sm:text-4xl lg:text-[2.75rem] leading-[1.12] text-[#f5efe6]">
-              Поможем подобрать врача{" "}
-              <span className="serif-italic">и время визита</span>
+            <h2 className="mt-5 font-display text-3xl sm:text-4xl lg:text-[2.75rem] leading-[1.14] text-[#f5efe6]">
+              Поможем подобрать врача и время визита
             </h2>
           </div>
           <div className="flex flex-col sm:flex-row lg:flex-col xl:flex-row items-start sm:items-center gap-4">
             <a
               href="tel:+79990000000"
-              className="font-display text-2xl text-[#f5efe6] hover:text-[#c99b7d] transition-colors"
+              className="font-display text-2xl text-[#f5efe6] hover:text-gold transition-colors"
             >
               +7 (999) 000-00-00
             </a>
@@ -53,7 +52,6 @@ export default function Footer() {
               className="link-light text-[13px]"
             >
               Записаться
-              <ArrowUpRight className="w-4 h-4" strokeWidth={1.5} />
             </Link>
           </div>
         </div>
@@ -76,7 +74,7 @@ export default function Footer() {
           {/* Навигация и документы */}
           {COLUMNS.map((col) => (
             <div key={col.title}>
-              <h3 className="text-[11px] font-semibold uppercase tracking-[0.22em] text-[#c99b7d] mb-6">
+              <h3 className="text-[11px] font-semibold uppercase tracking-[0.22em] text-gold mb-6">
                 {col.title}
               </h3>
               <ul className="space-y-3.5 text-[14px]">
@@ -96,7 +94,7 @@ export default function Footer() {
 
           {/* Контакты */}
           <div>
-            <h3 className="text-[11px] font-semibold uppercase tracking-[0.22em] text-[#c99b7d] mb-6">
+            <h3 className="text-[11px] font-semibold uppercase tracking-[0.22em] text-gold mb-6">
               Контакты
             </h3>
             <ul className="space-y-4 text-[14px] text-[#efe6da]/80">
@@ -107,13 +105,13 @@ export default function Footer() {
                 </span>
               </li>
               <li className="flex items-center gap-2.5">
-                <Phone className="w-3.5 h-3.5 text-[#c99b7d] shrink-0" />
+                <Phone className="w-3.5 h-3.5 text-gold shrink-0" />
                 <a href="tel:+79990000000" className="hover:text-[#f5efe6] transition-colors">
                   +7 (999) 000-00-00
                 </a>
               </li>
               <li className="flex items-center gap-2.5">
-                <Mail className="w-3.5 h-3.5 text-[#c99b7d] shrink-0" />
+                <Mail className="w-3.5 h-3.5 text-gold shrink-0" />
                 <a href="mailto:info@dentapremium.ru" className="hover:text-[#f5efe6] transition-colors">
                   info@dentapremium.ru
                 </a>

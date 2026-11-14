@@ -3,7 +3,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { ArrowUpRight, Clock } from "lucide-react";
+import { Clock } from "lucide-react";
 
 interface Service {
   id: string;
@@ -59,7 +59,7 @@ export default function ServicesList({ services }: { services: Service[] }) {
               i === filteredServices.length - 1 ? "border-b" : ""
             }`}
           >
-            <span className="hidden md:block font-accent italic text-[15px] text-fern/70 w-10" aria-hidden="true">
+            <span className="hidden md:block font-display text-[14px] text-fern/70 w-10" aria-hidden="true">
               {String(i + 1).padStart(2, "0")}
             </span>
             <div>
@@ -83,7 +83,6 @@ export default function ServicesList({ services }: { services: Service[] }) {
               <span className="font-display text-2xl text-ink whitespace-nowrap">
                 {service.price.toLocaleString("ru-RU")} ₽
               </span>
-              <ArrowUpRight className="w-4.5 h-4.5 text-ink-soft group-hover:text-fern group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all hidden md:block" />
             </div>
           </Link>
         ))}

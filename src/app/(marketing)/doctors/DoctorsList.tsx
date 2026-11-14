@@ -1,9 +1,7 @@
 // src/app/(marketing)/doctors/DoctorsList.tsx
 "use client";
 
-import Link from "next/link";
 import Image from "next/image";
-import { ArrowRight } from "lucide-react";
 
 interface Doctor {
   id: string;
@@ -62,7 +60,9 @@ export default function DoctorsList({ doctors }: { doctors: Doctor[] }) {
 
             <div className="mt-6">
               <h2 className="font-display text-xl text-ink leading-snug">{doctor.name}</h2>
-              <p className="mt-1.5 serif-italic text-[16px] text-fern">{doctor.specialty}</p>
+              <p className="mt-2 font-label text-[10.5px] font-medium uppercase tracking-[0.18em] text-ink-soft">
+                {doctor.specialty}
+              </p>
             </div>
 
             <p className="mt-3 text-[12px] uppercase tracking-[0.14em] text-ink-soft">
@@ -74,14 +74,6 @@ export default function DoctorsList({ doctors }: { doctors: Doctor[] }) {
                 {doctor.description}
               </p>
             )}
-
-            <Link
-              href={`/book?doctor=${doctor.id}`}
-              className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-ink border-b border-ink/30 pb-1 hover:text-fern hover:border-fern transition-colors group/link"
-            >
-              Записаться к врачу
-              <ArrowRight className="w-4 h-4 group-hover/link:translate-x-1 transition-transform" />
-            </Link>
           </div>
         );
       })}

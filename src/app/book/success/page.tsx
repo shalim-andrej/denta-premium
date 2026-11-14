@@ -67,7 +67,7 @@ export default function SuccessPage({
         <CheckCircle2 className="w-10 h-10 text-fern mx-auto mb-7" strokeWidth={1.25} />
 
         <h1 className="font-display text-[1.7rem] leading-snug text-ink mb-2.5">
-          Оплата прошла <span className="serif-italic text-fern">успешно</span>
+          Оплата прошла успешно
         </h1>
         <p className="text-ink-soft mb-8 leading-relaxed">
           Ваша запись подтверждена. Ждём вас в клинике!

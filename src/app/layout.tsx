@@ -6,39 +6,22 @@ import ChromeGate from "@/components/ChromeGate";
 import Header from "@/components/Header";
 
 /*
-  Шрифтовая система — 4 разные семьи, файлы лежат в проекте (src/fonts),
-  кириллица проверена fontTools. Ничего системного и «дефолтного»:
-  - Oranienbaum — русская высококонтрастная дидона: заголовки (400, одновесовая)
-  - Cormorant   — курсивная антиква: акцентные слова, крупные цифры (variable 300–700)
-  - Literata    — книжная антиква для основного текста (variable 300–900)
-  - Jost        — геометрический гротеск: капс-лейблы, навигация, поля (variable 100–900)
+  Шрифтовая система — ровно две гарнитуры, файлы в проекте (src/fonts):
+  - Prata   — высококонтрастная антиква: заголовки, цифры, вордмарк (400)
+  - Manrope — нейтральный гротеск: текст, лейблы, навигация, поля (variable)
+  Никаких курсивных акцентов и «четвёртого шрифта для капса».
 */
-const oranienbaum = localFont({
-  src: "../fonts/Oranienbaum-Regular.ttf",
+const prata = localFont({
+  src: "../fonts/Prata-Regular.ttf",
   weight: "400",
-  variable: "--font-oranienbaum",
+  variable: "--font-prata",
   display: "swap",
 });
 
-const cormorant = localFont({
-  src: "../fonts/Cormorant-Italic.ttf",
-  weight: "300 700",
-  style: "italic",
-  variable: "--font-cormorant",
-  display: "swap",
-});
-
-const literata = localFont({
-  src: "../fonts/Literata.ttf",
-  weight: "300 900",
-  variable: "--font-literata",
-  display: "swap",
-});
-
-const jost = localFont({
-  src: "../fonts/Jost.ttf",
-  weight: "100 900",
-  variable: "--font-jost",
+const manrope = localFont({
+  src: "../fonts/Manrope.ttf",
+  weight: "200 800",
+  variable: "--font-manrope",
   display: "swap",
 });
 
@@ -64,7 +47,7 @@ export default function RootLayout({
   return (
     <html lang="ru">
       <body
-        className={`${oranienbaum.variable} ${cormorant.variable} ${literata.variable} ${jost.variable} bg-paper text-ink antialiased`}
+        className={`${prata.variable} ${manrope.variable} bg-paper text-ink antialiased`}
       >
         <ChromeGate header={<Header />}>{children}</ChromeGate>
       </body>

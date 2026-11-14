@@ -3,7 +3,7 @@
 
 import { useState } from "react";
 import { loginAction } from "@/app/actions";
-import { ArrowRight, ShieldCheck } from "lucide-react";
+import { ShieldCheck } from "lucide-react";
 import Link from "next/link";
 import Logo from "@/components/Logo";
 
@@ -72,10 +72,9 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={isLoading}
-              className="link-action w-full justify-center text-[13.5px]"
+              className="btn-quiet w-full"
             >
               {isLoading ? "Проверка…" : "Войти в систему"}
-              {!isLoading && <ArrowRight className="w-4 h-4" strokeWidth={1.5} />}
             </button>
           </form>
 

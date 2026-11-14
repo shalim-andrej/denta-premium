@@ -2,7 +2,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { prisma } from "@/lib/prisma";
-import { ArrowRight, ArrowUpRight, Star, Clock, Microscope, FileCheck, CreditCard, Baby, CalendarCheck, Wallet, MailCheck, CalendarClock } from "lucide-react";
+import { Star, Clock, Microscope, FileCheck, CreditCard, Baby, CalendarCheck, Wallet, MailCheck, CalendarClock } from "lucide-react";
 import { Suspense } from "react";
 import { connection } from "next/server";
 import ReviewsSection from "@/components/ReviewsSection";
@@ -30,7 +30,7 @@ function SectionHead({
     <div data-reveal className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-14">
       <div className="max-w-2xl">
         <span className="eyebrow">{chip}</span>
-        <h2 className="mt-6 font-display font-normal text-[1.5rem] sm:text-[1.9rem] md:text-[2.1rem] leading-[1.18] uppercase text-ink">
+        <h2 className="mt-6 font-display font-normal text-[1.7rem] sm:text-[2.2rem] md:text-[2.4rem] leading-[1.16] text-ink">
           {title}
         </h2>
         {sub && <p className="mt-5 text-ink-soft text-[15px] md:text-base leading-relaxed max-w-xl">{sub}</p>}
@@ -38,7 +38,6 @@ function SectionHead({
       {href && linkLabel && (
         <Link href={href} className="link-action shrink-0 self-start md:self-auto">
           {linkLabel}
-          <ArrowRight className="w-4 h-4" strokeWidth={1.5} />
         </Link>
       )}
     </div>
@@ -47,10 +46,10 @@ function SectionHead({
 
 /* ---------- Hero: видео-обложка в духе ЗАРЯ ---------- */
 const HERO_STATS = [
-  { value: "12", label: "лет клинике", italic: false },
-  { value: "15 000+", label: "счастливых пациентов", italic: false },
-  { value: "9:00–21:00", label: "работаем без выходных", italic: true },
-  { value: "5 мин", label: "на онлайн-запись", italic: false },
+  { value: "12", label: "лет клинике" },
+  { value: "15 000+", label: "счастливых пациентов" },
+  { value: "9:00–21:00", label: "работаем без выходных" },
+  { value: "5 мин", label: "на онлайн-запись" },
 ];
 
 function Hero() {
@@ -78,7 +77,7 @@ function Hero() {
           Премиальная стоматология · Москва
         </span>
 
-        <h1 className="mt-5 max-w-4xl font-display uppercase leading-[1.08] text-ink text-[1.95rem] sm:text-[3.4rem] xl:text-[4.15rem]">
+        <h1 className="mt-5 max-w-4xl font-display leading-[1.14] text-ink text-[1.85rem] sm:text-[3.1rem] xl:text-[3.9rem]">
           <span className="block overflow-hidden pb-1">
             <span className="block line-reveal" style={{ animationDelay: "0.25s" }}>
               Стоматология
@@ -86,7 +85,7 @@ function Hero() {
           </span>
           <span className="block overflow-hidden pb-1">
             <span
-              className="block line-reveal serif-italic normal-case text-fern"
+              className="block line-reveal"
               style={{ animationDelay: "0.4s" }}
             >
               премиум-класса
@@ -114,11 +113,9 @@ function Hero() {
         >
           <Link href="/book" className="link-action text-[13px] sm:text-sm">
             Записаться онлайн
-            <ArrowRight className="w-4 h-4" strokeWidth={1.5} />
           </Link>
           <Link href="/services" className="link-action text-[13px] sm:text-sm">
             Услуги и цены
-            <ArrowRight className="w-4 h-4" strokeWidth={1.5} />
           </Link>
           <span className="hidden md:inline-flex items-center gap-2 font-label text-[11.5px] font-medium uppercase tracking-[0.14em] text-ink/80">
             <Star className="w-3.5 h-3.5 text-gold fill-gold" aria-hidden="true" />
@@ -130,22 +127,13 @@ function Hero() {
       {/* Статистика — полоса на hairline внизу обложки */}
       <div className="relative mx-auto w-full max-w-[1400px] px-5 pb-5 sm:px-8 lg:px-12">
         <dl
-          className="grid grid-cols-2 md:grid-cols-4 gap-y-6 border-t border-ink/15 animate-fade-up"
+          className="grid grid-cols-2 md:grid-cols-4 gap-y-6 gap-x-8 border-t border-ink/15 animate-fade-up"
           style={{ animationDelay: "1s" }}
         >
-          {HERO_STATS.map((s, i) => (
-            <div
-              key={s.label}
-              className={`pt-5 pb-1 ${i !== 0 ? "md:border-l md:border-ink/15 md:pl-8" : ""} ${
-                i === 2 ? "col-start-1 md:col-start-3" : ""
-              } ${i === 3 ? "col-start-2 md:col-start-4" : ""}`}
-            >
+          {HERO_STATS.map((s) => (
+            <div key={s.label} className="pt-5 pb-1">
               <dt className="sr-only">{s.label}</dt>
-              <dd
-                className={`font-display text-[1.6rem] md:text-[2rem] leading-none text-ink ${
-                  s.italic ? "serif-italic" : ""
-                }`}
-              >
+              <dd className="font-display text-[1.6rem] md:text-[1.9rem] leading-none text-ink">
                 {s.value}
               </dd>
               <dd className="mt-2.5 text-[12.5px] text-ink-soft leading-snug max-w-[150px]">
@@ -172,7 +160,7 @@ function Marquee() {
       <div className="flex w-max gap-12 animate-marquee">
         {row.map((item, i) => (
           <span key={i} className="flex items-center gap-12 whitespace-nowrap">
-            <span className="font-display text-[15px] uppercase tracking-[0.2em] text-ink/75">{item}</span>
+            <span className="font-display text-[16px] text-ink/75">{item}</span>
             <span className="w-1.5 h-1.5 rounded-full bg-fern/60" />
           </span>
         ))}
@@ -198,9 +186,8 @@ async function ServicesMenu() {
         {/* Центрированный заголовок в духе референсов */}
         <div data-reveal className="text-center max-w-2xl mx-auto mb-16">
           <span className="eyebrow eyebrow-center justify-center">01 · Услуги и цены</span>
-          <h2 className="mt-6 font-display font-normal text-[1.5rem] sm:text-[1.9rem] md:text-[2.1rem] leading-[1.18] text-ink uppercase">
-            Всё для здоровья улыбки{" "}
-            <span className="serif-italic normal-case text-fern">в одном месте</span>
+          <h2 className="mt-6 font-display font-normal text-[1.7rem] sm:text-[2.2rem] md:text-[2.4rem] leading-[1.16] text-ink">
+            Всё для здоровья улыбки в одном месте
           </h2>
           <p className="mt-5 text-ink-soft text-[15px] md:text-base leading-relaxed">
             Цена на сайте равна цене в договоре — без скрытых доплат на месте.
@@ -242,7 +229,6 @@ async function ServicesMenu() {
                 </div>
                 <Link href={`/book?service=${featured.id}`} className="link-action text-[13px]">
                   Записаться
-                  <ArrowRight className="w-4 h-4" strokeWidth={1.5} />
                 </Link>
               </div>
             </div>
@@ -257,7 +243,7 @@ async function ServicesMenu() {
                 className={`group flex items-baseline justify-between gap-6 py-7 border-t border-ink/10 hover:border-fern/40 transition-colors ${i === rest.length - 1 ? "border-b" : ""}`}
               >
                 <div className="flex items-baseline gap-5">
-                  <span className="font-accent italic text-[15px] text-fern/70 w-8 shrink-0" aria-hidden="true">
+                  <span className="font-display text-[14px] text-fern/70 w-8 shrink-0" aria-hidden="true">
                     {String(i + 2).padStart(2, "0")}
                   </span>
                   <div>
@@ -272,16 +258,11 @@ async function ServicesMenu() {
                 <div className="text-right shrink-0 flex items-baseline gap-4">
                   <span className="font-display text-xl text-ink">{priceFmt(s.price)} ₽</span>
                   <span className="hidden sm:block text-[12px] text-ink-soft whitespace-nowrap">{s.duration} мин</span>
-                  <ArrowUpRight className="w-4 h-4 text-ink-soft group-hover:text-fern group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all hidden md:block" />
                 </div>
               </Link>
             ))}
-            <Link
-              href="/services"
-              className="mt-10 inline-flex items-center gap-2 text-sm font-semibold text-ink border-b border-ink/30 pb-1 hover:text-fern hover:border-fern transition-colors group"
-            >
+            <Link href="/services" className="mt-10 link-action">
               Смотреть все услуги
-              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </Link>
           </div>
         </div>
@@ -322,9 +303,8 @@ function About() {
         {/* Текст */}
         <div data-reveal style={{ transitionDelay: "0.12s" }}>
           <span className="eyebrow">02 · О клинике</span>
-          <h2 className="mt-6 font-display font-normal text-[1.5rem] sm:text-[1.9rem] md:text-[2.1rem] leading-[1.18] uppercase text-ink">
-            Лечим бережно{" "}
-            <span className="serif-italic normal-case text-fern">и не считаем минуты</span>
+          <h2 className="mt-6 font-display font-normal text-[1.7rem] sm:text-[2.2rem] md:text-[2.4rem] leading-[1.16] text-ink">
+            Лечим бережно и не считаем минуты
           </h2>
           <p className="mt-6 text-ink-soft text-[15px] md:text-base leading-relaxed max-w-xl">
             DentaPremium — клиника полного цикла: от гигиены и лечения каналов
@@ -337,15 +317,15 @@ function About() {
             лучевой нагрузкой и стерилизация по международному протоколу.
           </p>
 
-          <dl className="mt-12 grid grid-cols-3 border-t border-ink/10">
+          <dl className="mt-12 grid grid-cols-3 gap-x-8 border-t border-ink/10">
             {[
-              { v: "12", l: "лет заботы", i: false },
-              { v: "10+", l: "лет опыта врачей", i: false },
-              { v: "24 ч", l: "ответ по гарантиям", i: true },
-            ].map((s, i) => (
-              <div key={s.l} className={`pt-7 pb-2 ${i !== 0 ? "border-l border-ink/10 pl-6" : ""}`}>
+              { v: "12", l: "лет заботы" },
+              { v: "10+", l: "лет опыта врачей" },
+              { v: "24 ч", l: "ответ по гарантиям" },
+            ].map((s) => (
+              <div key={s.l} className="pt-7 pb-2">
                 <dt className="sr-only">{s.l}</dt>
-                <dd className={`font-display text-[1.6rem] md:text-[1.9rem] leading-none text-ink ${s.i ? "serif-italic" : ""}`}>
+                <dd className="font-display text-[1.6rem] md:text-[1.9rem] leading-none text-ink">
                   {s.v}
                 </dd>
                 <dd className="mt-3 text-[12.5px] text-ink-soft leading-snug">{s.l}</dd>
@@ -388,8 +368,7 @@ function Advantages() {
       <div className="max-w-[1400px] mx-auto">
         <SectionHead
           chip="03 · Почему мы"
-          title={<>Стоматология, в которую{" "}
-            <span className="serif-italic text-fern">не страшно</span> идти</>}
+          title={<>Стоматология, в которую не страшно идти</>}
         />
         <div>
           {ADVANTAGES.map((a, i) => (
@@ -399,7 +378,7 @@ function Advantages() {
               style={{ transitionDelay: `${i * 0.06}s` }}
               className={`grid md:grid-cols-[auto_1fr_1.2fr] gap-x-10 gap-y-3 items-baseline py-8 border-t border-ink/10 group ${i === ADVANTAGES.length - 1 ? "border-b" : ""}`}
             >
-              <span className="font-accent italic text-xl text-fern/80 w-12" aria-hidden="true">
+              <span className="font-display text-lg text-fern/80 w-12" aria-hidden="true">
                 0{i + 1}
               </span>
               <h3 className="font-display text-xl md:text-2xl text-ink leading-snug group-hover:text-fern transition-colors">
@@ -435,8 +414,7 @@ async function TopDoctors() {
       <div className="max-w-[1400px] mx-auto">
         <SectionHead
           chip="04 · Команда"
-          title={<>Врачи, которым{" "}
-            <span className="serif-italic text-fern">доверяют улыбки</span></>}
+          title={<>Врачи, которым доверяют улыбки</>}
           sub="Каждый специалист — узкий эксперт в своём направлении с подтверждённой квалификацией."
           href="/doctors"
           linkLabel="Все врачи"
@@ -463,20 +441,13 @@ async function TopDoctors() {
                 )}
               </div>
               <h3 className="mt-5 font-display text-lg md:text-xl text-ink leading-snug">{doctor.name}</h3>
-              <p className="mt-1 serif-italic text-[15px] text-fern">{doctor.specialty}</p>
-              <div className="mt-4 flex items-center justify-between text-[13px] text-ink-soft">
-                <span className="flex items-center gap-1.5">
-                  <CalendarCheck className="w-3.5 h-3.5 text-fern" />
-                  Опыт {doctor.experience} лет
-                </span>
-                <Link
-                  href={`/book?doctor=${doctor.id}`}
-                  className="font-semibold text-ink hover:text-fern transition-colors inline-flex items-center gap-1 group/link"
-                >
-                  Записаться
-                  <ArrowRight className="w-3.5 h-3.5 group-hover/link:translate-x-0.5 transition-transform" />
-                </Link>
-              </div>
+              <p className="mt-1.5 font-label text-[10.5px] font-medium uppercase tracking-[0.18em] text-ink-soft">
+                {doctor.specialty}
+              </p>
+              <p className="mt-3 flex items-center gap-1.5 text-[12.5px] text-ink-soft">
+                <CalendarCheck className="w-3.5 h-3.5 text-fern" />
+                Опыт {doctor.experience} лет
+              </p>
             </div>
           ))}
         </div>
@@ -515,14 +486,13 @@ function Steps() {
       <div className="max-w-[1400px] mx-auto">
         <SectionHead
           chip="05 · Как это работает"
-          title={<>Запись{" "}
-            <span className="serif-italic text-fern">за четыре шага</span></>}
+          title={<>Запись за четыре шага</>}
         />
         <div className="grid grid-cols-1 md:grid-cols-4 gap-x-10 gap-y-10">
           {STEPS.map((s, i) => (
             <div key={s.title} data-reveal style={{ transitionDelay: `${i * 0.08}s` }} className="border-t border-ink/10 pt-7">
               <div className="flex items-baseline justify-between">
-                <span className="font-accent italic text-2xl text-fern/80" aria-hidden="true">
+                <span className="font-display text-xl text-fern/80" aria-hidden="true">
                   0{i + 1}
                 </span>
                 <s.icon className="w-4.5 h-4.5 text-ink-soft" strokeWidth={1.5} />
@@ -563,15 +533,15 @@ function Faq() {
       <div className="max-w-[900px] mx-auto">
         <div className="text-center mb-14">
           <span className="eyebrow eyebrow-center justify-center">06 · Вопросы и ответы</span>
-          <h2 className="mt-6 font-display font-normal text-[1.5rem] sm:text-[1.9rem] md:text-[2.1rem] leading-[1.18] text-ink uppercase">
-            Частые <span className="serif-italic normal-case text-fern">вопросы</span>
+          <h2 className="mt-6 font-display font-normal text-[1.7rem] sm:text-[2.2rem] md:text-[2.4rem] leading-[1.16] text-ink">
+            Частые вопросы
           </h2>
         </div>
         <div data-reveal>
           {FAQ_ITEMS.map((item, i) => (
             <details key={i} className={`group border-t border-ink/10 ${i === FAQ_ITEMS.length - 1 ? "border-b" : ""}`}>
               <summary className="cursor-pointer list-none px-2 md:px-4 py-6 flex items-center gap-5 select-none">
-                <span className="font-accent italic text-lg text-fern/70 w-8 shrink-0" aria-hidden="true">
+                <span className="font-display text-[15px] text-fern/70 w-8 shrink-0" aria-hidden="true">
                   0{i + 1}
                 </span>
                 <span className="font-display text-lg md:text-xl text-ink flex-1">{item.q}</span>
@@ -601,9 +571,8 @@ function Cta() {
         <span className="eyebrow eyebrow-center justify-center text-[#c4a15a]">
           Первый шаг — проще, чем кажется
         </span>
-        <h2 className="mt-8 font-display font-normal text-[1.9rem] sm:text-[2.8rem] md:text-[3.4rem] leading-[1.12] text-[#f2efe7] uppercase max-w-4xl mx-auto">
-          Запишитесь на{" "}
-          <span className="serif-italic normal-case text-[#c4a15a]">первый визит</span>
+        <h2 className="mt-8 font-display font-normal text-[1.9rem] sm:text-[2.8rem] md:text-[3.4rem] leading-[1.14] text-[#f2efe7] max-w-4xl mx-auto">
+          Запишитесь на первый визит
         </h2>
         <p className="mt-7 text-[#f2efe7]/70 text-base md:text-lg max-w-xl mx-auto leading-relaxed">
           Первичная консультация с планом лечения. Оплата после записи —
@@ -612,7 +581,6 @@ function Cta() {
         <div className="mt-10 flex flex-col sm:flex-row justify-center gap-x-8 gap-y-5">
           <Link href="/book" className="link-light text-[13px] sm:text-sm">
             Записаться на приём
-            <ArrowRight className="w-4 h-4" strokeWidth={1.5} />
           </Link>
         </div>
       </div>
