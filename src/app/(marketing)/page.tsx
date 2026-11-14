@@ -197,7 +197,7 @@ async function ServicesMenu() {
       <div className="max-w-[1400px] mx-auto">
         {/* Центрированный заголовок в духе референсов */}
         <div data-reveal className="text-center max-w-2xl mx-auto mb-16">
-          <span className="eyebrow eyebrow-center justify-center">Услуги и цены</span>
+          <span className="eyebrow eyebrow-center justify-center">01 · Услуги и цены</span>
           <h2 className="mt-6 font-display font-normal text-[1.5rem] sm:text-[1.9rem] md:text-[2.1rem] leading-[1.18] text-ink uppercase">
             Всё для здоровья улыбки{" "}
             <span className="serif-italic normal-case text-fern">в одном месте</span>
@@ -321,7 +321,7 @@ function About() {
 
         {/* Текст */}
         <div data-reveal style={{ transitionDelay: "0.12s" }}>
-          <span className="eyebrow">О клинике</span>
+          <span className="eyebrow">02 · О клинике</span>
           <h2 className="mt-6 font-display font-normal text-[1.5rem] sm:text-[1.9rem] md:text-[2.1rem] leading-[1.18] uppercase text-ink">
             Лечим бережно{" "}
             <span className="serif-italic normal-case text-fern">и не считаем минуты</span>
@@ -387,7 +387,7 @@ function Advantages() {
     <section className="px-5 sm:px-8 lg:px-12 py-24 md:py-32">
       <div className="max-w-[1400px] mx-auto">
         <SectionHead
-          chip="Почему мы"
+          chip="03 · Почему мы"
           title={<>Стоматология, в которую{" "}
             <span className="serif-italic text-fern">не страшно</span> идти</>}
         />
@@ -434,7 +434,7 @@ async function TopDoctors() {
     <section id="doctors" className="bg-cream/60 border-y border-ink/10 px-5 sm:px-8 lg:px-12 py-24 md:py-32">
       <div className="max-w-[1400px] mx-auto">
         <SectionHead
-          chip="Команда"
+          chip="04 · Команда"
           title={<>Врачи, которым{" "}
             <span className="serif-italic text-fern">доверяют улыбки</span></>}
           sub="Каждый специалист — узкий эксперт в своём направлении с подтверждённой квалификацией."
@@ -514,7 +514,7 @@ function Steps() {
     <section className="px-5 sm:px-8 lg:px-12 py-24 md:py-32">
       <div className="max-w-[1400px] mx-auto">
         <SectionHead
-          chip="Как это работает"
+          chip="05 · Как это работает"
           title={<>Запись{" "}
             <span className="serif-italic text-fern">за четыре шага</span></>}
         />
@@ -562,7 +562,7 @@ function Faq() {
     <section className="px-5 sm:px-8 lg:px-12 pb-24 md:pb-32">
       <div className="max-w-[900px] mx-auto">
         <div className="text-center mb-14">
-          <span className="eyebrow eyebrow-center justify-center">Вопросы и ответы</span>
+          <span className="eyebrow eyebrow-center justify-center">06 · Вопросы и ответы</span>
           <h2 className="mt-6 font-display font-normal text-[1.5rem] sm:text-[1.9rem] md:text-[2.1rem] leading-[1.18] text-ink uppercase">
             Частые <span className="serif-italic normal-case text-fern">вопросы</span>
           </h2>

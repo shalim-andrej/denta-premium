@@ -27,21 +27,21 @@ export default async function ManageBookingPage({
 
   const statusLabel =
     booking.status === "CONFIRMED"
-      ? { text: "Подтверждена", cls: "bg-emerald-50 text-emerald-700 border-emerald-200" }
+      ? { text: "Подтверждена", cls: "text-emerald-700" }
       : cancelled
-        ? { text: "Отменена", cls: "bg-rose-50 text-rose-700 border-rose-200" }
-        : { text: "Ожидает подтверждения клиники", cls: "bg-amber-50 text-amber-700 border-amber-200" };
+        ? { text: "Отменена", cls: "text-rose-700" }
+        : { text: "Ожидает подтверждения клиники", cls: "text-amber-700" };
 
   return (
     <main className="px-5 sm:px-8 pt-[110px] md:pt-[150px] pb-24 md:pb-32">
       <div className="max-w-lg mx-auto animate-fade-up">
-        <div className="bg-white border border-ink/10 rounded-3xl p-8 md:p-10">
+        <div className="border-t border-ink/15 pt-10">
           <h1 className="font-display text-3xl text-ink mb-1.5">
             Ваша <span className="serif-italic text-fern">запись</span>
           </h1>
           <p className="text-ink-soft text-sm mb-7">Управление записью без звонка в клинику</p>
 
-          <span className={`inline-flex text-xs font-semibold px-3.5 py-1.5 rounded-[2px] border mb-8 ${statusLabel.cls}`}>
+          <span className={`inline-flex font-label text-[11.5px] font-medium uppercase tracking-[0.18em] mb-8 ${statusLabel.cls}`}>
             {statusLabel.text}
           </span>
 
@@ -83,12 +83,12 @@ export default async function ManageBookingPage({
           </dl>
 
           {!cancelled && (
-            <div className="space-y-3">
+            <div className="space-y-5">
               <a
                 href={`/api/bookings/${token}/ics`}
                 className="link-quiet w-full justify-center text-[13px]"
               >
-                <Download className="w-4.5 h-4.5" />
+                <Download className="w-4 h-4" strokeWidth={1.5} />
                 Добавить в календарь
               </a>
               <form action={rescheduleBookingByToken}>
@@ -97,7 +97,7 @@ export default async function ManageBookingPage({
                   type="submit"
                   className="link-action w-full justify-center text-[13px]"
                 >
-                  <CalendarClock className="w-4.5 h-4.5" />
+                  <CalendarClock className="w-4 h-4" strokeWidth={1.5} />
                   Перенести запись
                 </button>
               </form>
@@ -105,9 +105,9 @@ export default async function ManageBookingPage({
                 <input type="hidden" name="token" value={token} />
                 <button
                   type="submit"
-                  className="w-full py-3.5 rounded-[2px] text-sm font-semibold text-rose-700 border border-rose-300 hover:bg-rose-50 transition-all duration-300 inline-flex items-center justify-center gap-2"
+                  className="w-full inline-flex items-center justify-center gap-3 font-label text-[12.5px] font-medium uppercase tracking-[0.18em] text-rose-700 pb-1.5 border-b border-transparent hover:border-rose-400 transition-colors duration-300"
                 >
-                  <CalendarX2 className="w-4.5 h-4.5" />
+                  <CalendarX2 className="w-4 h-4" strokeWidth={1.5} />
                   Отменить запись
                 </button>
               </form>
@@ -120,18 +120,16 @@ export default async function ManageBookingPage({
           )}
 
           {cancelled && (
-            <div className="bg-paper border border-ink/10 rounded-2xl p-5 text-sm">
-              <p className="text-ink-soft flex items-start gap-2.5 leading-relaxed">
-                <Stethoscope className="w-4 h-4 mt-0.5 shrink-0 text-fern" />
-                <span>
-                  Запись отменена, время освобождено. Хотите записаться снова —{" "}
-                  <a href="/book" className="text-fern underline underline-offset-2 hover:text-ink transition-colors">
-                    форма онлайн-записи
-                  </a>
-                  .
-                </span>
-              </p>
-            </div>
+            <p className="text-ink-soft text-sm flex items-start gap-2.5 leading-relaxed">
+              <Stethoscope className="w-4 h-4 mt-0.5 shrink-0 text-fern" />
+              <span>
+                Запись отменена, время освобождено. Хотите записаться снова —{" "}
+                <a href="/book" className="text-fern underline underline-offset-2 hover:text-ink transition-colors">
+                  форма онлайн-записи
+                </a>
+                .
+              </span>
+            </p>
           )}
         </div>
       </div>

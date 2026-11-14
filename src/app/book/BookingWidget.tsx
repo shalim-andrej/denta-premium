@@ -146,11 +146,12 @@ export default function BookingWidget({ services, doctors, initialDoctorId, init
     }
   };
 
-  /* ---------- Оформление шагов ---------- */
-  const stepCls = "flex gap-4 md:gap-6";
+  /* ---------- Оформление шагов: открытая композиция на hairline ---------- */
+  const stepCls = "flex gap-4 md:gap-6 border-t border-ink/10 pt-9";
   const numCls =
     "font-accent italic text-xl text-fern/80 w-9 shrink-0 pt-0.5";
-  const labelCls = "block text-sm font-semibold text-ink mb-2.5";
+  const labelCls =
+    "block font-label text-[11.5px] font-medium uppercase tracking-[0.18em] text-ink-soft mb-3";
 
   const payOptions = [
     { id: "sbp" as const, title: "СБП", sub: "По QR-коду" },
@@ -158,7 +159,7 @@ export default function BookingWidget({ services, doctors, initialDoctorId, init
   ];
 
   return (
-    <div className="bg-white border border-ink/10 rounded-3xl p-7 md:p-10 relative overflow-hidden">
+    <div className="relative max-w-2xl">
       <div className="space-y-9">
         {/* Шаг 1: Врач (опционально) */}
         <div className={stepCls}>
@@ -218,7 +219,7 @@ export default function BookingWidget({ services, doctors, initialDoctorId, init
             <span className={numCls} aria-hidden="true">03</span>
             <div className="flex-1 min-w-0">
               <span className={labelCls}>Дата</span>
-              <div className="inline-block bg-paper border border-ink/10 rounded-2xl p-4 md:p-5">
+              <div>
                 <DayPicker
                   mode="single"
                   selected={selectedDate}
@@ -249,7 +250,7 @@ export default function BookingWidget({ services, doctors, initialDoctorId, init
                     : "На выбранную дату свободных слотов нет. Попробуйте другой день."}
                 </div>
               ) : (
-                <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-2.5">
+                <div className="flex flex-wrap gap-x-7 gap-y-3.5">
                   {availableSlots.map((slot) => {
                     const active = selectedSlot?.time === slot.time;
                     return (
@@ -258,10 +259,10 @@ export default function BookingWidget({ services, doctors, initialDoctorId, init
                         type="button"
                         onClick={() => setSelectedSlot(slot)}
                         title={doctors.find((d) => d.id === slot.doctorId)?.name}
-                        className={`py-2.5 text-sm font-semibold rounded-xl border transition-all duration-200 ${
+                        className={`font-label text-[13.5px] tracking-[0.08em] pb-1.5 border-b transition-colors duration-200 ${
                           active
-                            ? "text-[#f6f4ee] border-transparent bg-ink"
-                            : "text-ink border-ink/15 bg-white hover:border-fern hover:text-fern"
+                            ? "text-fern border-fern"
+                            : "text-ink/70 border-ink/15 hover:text-ink hover:border-fern"
                         }`}
                       >
                         {format(new Date(slot.time), "HH:mm")}
@@ -301,10 +302,10 @@ export default function BookingWidget({ services, doctors, initialDoctorId, init
                 autoComplete="email"
               />
 
-              {/* Выбор оплаты */}
+              {/* Выбор оплаты — только текст и линия */}
               <fieldset>
-                <legend className="text-sm font-semibold text-ink mb-3">Способ оплаты</legend>
-                <div className="grid grid-cols-2 gap-3">
+                <legend className="font-label text-[11.5px] font-medium uppercase tracking-[0.18em] text-ink-soft mb-3">Способ оплаты</legend>
+                <div className="flex flex-wrap gap-x-8 gap-y-3">
                   {payOptions.map((opt) => {
                     const active = paymentMethod === opt.id;
                     return (
@@ -313,24 +314,16 @@ export default function BookingWidget({ services, doctors, initialDoctorId, init
                         type="button"
                         onClick={() => setPaymentMethod(opt.id)}
                         aria-pressed={active}
-                        className={`p-4 rounded-2xl border text-left transition-all duration-300 ${
+                        className={`flex items-baseline gap-2.5 pb-1.5 border-b transition-colors duration-200 ${
                           active
-                            ? "border-fern/60 bg-fern/[0.06]"
-                            : "border-ink/15 bg-white hover:border-ink/35"
+                            ? "border-fern"
+                            : "border-ink/15 hover:border-ink/40"
                         }`}
                       >
-                        <div className="flex items-center justify-between gap-2">
-                          <span className="font-bold text-sm text-ink">{opt.title}</span>
-                          <span
-                            className={`w-4.5 h-4.5 rounded-full border-2 flex items-center justify-center ${
-                              active ? "border-fern" : "border-ink/25"
-                            }`}
-                            aria-hidden="true"
-                          >
-                            {active && <span className="w-2 h-2 rounded-full bg-fern" />}
-                          </span>
-                        </div>
-                        <div className="text-xs text-ink-soft mt-1.5">{opt.sub}</div>
+                        <span className={`font-label text-[13px] font-medium uppercase tracking-[0.14em] ${active ? "text-fern" : "text-ink"}`}>
+                          {opt.title}
+                        </span>
+                        <span className="text-xs text-ink-soft">{opt.sub}</span>
                       </button>
                     );
                   })}
@@ -363,10 +356,8 @@ export default function BookingWidget({ services, doctors, initialDoctorId, init
         {message && (
           <div
             role="status"
-            className={`p-4 rounded-2xl border text-sm font-medium ${
-              message.type === "error"
-                ? "bg-rose-50 border-rose-200 text-rose-700"
-                : "bg-emerald-50 border-emerald-200 text-emerald-700"
+            className={`flex items-center gap-2 text-sm font-medium ${
+              message.type === "error" ? "text-rose-700" : "text-fern"
             }`}
           >
             {message.text}

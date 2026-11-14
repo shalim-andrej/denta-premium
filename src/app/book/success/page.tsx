@@ -63,12 +63,8 @@ export default function SuccessPage({
 }) {
   return (
     <main className="flex items-center justify-center px-5 sm:px-8 py-24 md:py-32">
-      <div className="max-w-md w-full bg-white border border-ink/10 rounded-3xl p-8 md:p-10 text-center animate-fade-up">
-        <div
-          className="w-20 h-20 rounded-full border border-fern/30 bg-fern/[0.06] flex items-center justify-center mx-auto mb-7"
-        >
-          <CheckCircle2 className="w-9 h-9 text-fern" strokeWidth={1.5} />
-        </div>
+      <div className="max-w-md w-full border-t border-ink/15 pt-12 text-center animate-fade-up">
+        <CheckCircle2 className="w-10 h-10 text-fern mx-auto mb-7" strokeWidth={1.25} />
 
         <h1 className="font-display text-[1.7rem] leading-snug text-ink mb-2.5">
           Оплата прошла <span className="serif-italic text-fern">успешно</span>
