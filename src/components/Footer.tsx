@@ -62,7 +62,7 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 py-14">
           {/* Бренд */}
           <div className="space-y-6">
-            <Logo />
+            <Logo tone="light" />
             <p className="text-[13.5px] leading-relaxed text-[#efe6da]/65 max-w-xs">
               Премиальная стоматология в центре Москвы. Оборудование
               экспертного класса, врачи с опытом более 10 лет.

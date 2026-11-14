@@ -26,8 +26,16 @@ function ToothMark({ className = "" }: { className?: string }) {
   );
 }
 
-export default function Logo({ size = "md" }: { size?: "md" | "lg" }) {
+export default function Logo({
+  size = "md",
+  tone = "ink",
+}: {
+  size?: "md" | "lg";
+  tone?: "ink" | "light";
+}) {
   const lg = size === "lg";
+  const base = tone === "light" ? "text-[#f1eee5]" : "text-ink";
+  const sub = tone === "light" ? "text-[#f1eee5]/60" : "text-ink-soft";
   return (
     <Link
       href="/"
@@ -35,18 +43,18 @@ export default function Logo({ size = "md" }: { size?: "md" | "lg" }) {
       aria-label="DentaPremium — на главную"
     >
       <ToothMark
-        className={`${lg ? "w-10" : "w-8"} transition-colors duration-500 text-ink group-hover:text-fern`}
+        className={`${lg ? "w-10" : "w-8"} transition-colors duration-500 ${base} group-hover:text-fern`}
       />
       <span className="flex flex-col leading-none">
         <span
-          className={`font-label font-semibold uppercase text-ink whitespace-nowrap ${
+          className={`font-label font-semibold uppercase ${base} whitespace-nowrap ${
             lg ? "text-[15px] tracking-[0.3em]" : "text-[12.5px] tracking-[0.26em]"
           }`}
         >
           Denta<span className="text-fern">Premium</span>
         </span>
         <span
-          className={`serif-italic text-ink-soft mt-1.5 ${
+          className={`serif-italic ${sub} mt-1.5 ${
             lg ? "text-[15px]" : "text-[12px]"
           }`}
         >

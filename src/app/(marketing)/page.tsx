@@ -452,7 +452,7 @@ async function TopDoctors() {
                     alt={doctor.name}
                     fill
                     sizes="(max-width: 768px) 50vw, 300px"
-                    className="object-cover transition-transform duration-700 group-hover:scale-[1.03]"
+                    className="object-cover grayscale transition-all duration-700 group-hover:scale-[1.03] group-hover:grayscale-0"
                   />
                 ) : (
                   <div className="absolute inset-0 flex items-center justify-center">

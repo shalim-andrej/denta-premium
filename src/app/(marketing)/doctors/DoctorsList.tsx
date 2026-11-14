@@ -20,6 +20,11 @@ const LOCAL_PHOTOS: Record<string, string> = {
   "Волкова Елена Сергеевна": "/images/doctor-volkova.jpg",
   "Ким Ирина Викторовна": "/images/doctor-kim.jpg",
   "Гаврилов Дмитрий Павлович": "/images/doctor-gavrilov.jpg",
+  "Абаев Тимур Русланович": "/images/doctor-abaev.jpg",
+  "Соколов Игорь Валерьевич": "/images/doctor-sokolov.jpg",
+  "Морозова Анна Александровна": "/images/doctor-morozova.jpg",
+  "Лебедев Артём Викторович": "/images/doctor-lebedev.jpg",
+  "Дементьева Ольга Николаевна": "/images/doctor-dementieva.jpg",
 };
 
 export default function DoctorsList({ doctors }: { doctors: Doctor[] }) {
@@ -33,20 +38,20 @@ export default function DoctorsList({ doctors }: { doctors: Doctor[] }) {
   };
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-14">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-10 gap-y-16">
       {doctors.map((doctor, i) => {
         const photo = doctor.imageUrl || LOCAL_PHOTOS[doctor.name];
         return (
-          <div key={doctor.id} data-reveal style={{ transitionDelay: `${(i % 4) * 0.08}s` }} className="group">
-            {/* Арочный портрет */}
+          <div key={doctor.id} data-reveal style={{ transitionDelay: `${(i % 3) * 0.08}s` }} className="group">
+            {/* Арочный портрет: единая подача — grayscale, цвет проявляется на hover */}
             <div className="arch-sm relative aspect-[3/4] bg-sand">
               {photo ? (
                 <Image
                   src={photo}
                   alt={doctor.name}
                   fill
-                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 300px"
-                  className="object-cover transition-transform duration-700 group-hover:scale-[1.03]"
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 420px"
+                  className="object-cover grayscale transition-all duration-700 group-hover:scale-[1.03] group-hover:grayscale-0"
                 />
               ) : (
                 <div className="absolute inset-0 flex items-center justify-center">

@@ -60,6 +60,69 @@ const doctors = [
       { dayOfWeek: 6, startTime: "10:00", endTime: "16:00" },
     ],
   },
+  {
+    name: "Абаев Тимур Русланович",
+    specialty: "Челюстно-лицевой хирург",
+    description:
+      "Сложное удаление зубов мудрости, удаление ретинированных зубов, подсадка мембран. Работает с микротравмой тканей и быстрым восстановлением.",
+    experience: 14,
+    schedule: [
+      { dayOfWeek: 2, startTime: "09:00", endTime: "19:00" },
+      { dayOfWeek: 3, startTime: "09:00", endTime: "19:00" },
+      { dayOfWeek: 5, startTime: "09:00", endTime: "19:00" },
+      { dayOfWeek: 6, startTime: "09:00", endTime: "14:00" },
+    ],
+  },
+  {
+    name: "Соколов Игорь Валерьевич",
+    specialty: "Периодонтолог",
+    description:
+      "Лечение заболеваний дёсен от гингивита до пародонтита, шинирование, плазмолифтинг. Ведёт пациентов с подвижностью зубов любой степени.",
+    experience: 11,
+    schedule: [
+      { dayOfWeek: 1, startTime: "10:00", endTime: "18:00" },
+      { dayOfWeek: 3, startTime: "10:00", endTime: "18:00" },
+      { dayOfWeek: 5, startTime: "10:00", endTime: "18:00" },
+    ],
+  },
+  {
+    name: "Морозова Анна Александровна",
+    specialty: "Детский стоматолог",
+    description:
+      "Адаптационные приёмы, лечение молочных и постоянных зубов, герметизация фиссур. Умеет превратить визит к врачу в спокойную игру.",
+    experience: 10,
+    schedule: [
+      { dayOfWeek: 1, startTime: "09:00", endTime: "15:00" },
+      { dayOfWeek: 4, startTime: "09:00", endTime: "15:00" },
+      { dayOfWeek: 6, startTime: "10:00", endTime: "16:00" },
+      { dayOfWeek: 7, startTime: "10:00", endTime: "16:00" },
+    ],
+  },
+  {
+    name: "Лебедев Артём Викторович",
+    specialty: "Терапевт-эстетист",
+    description:
+      "Художественная реставрация, прямые композитные виниры, отбеливание. Специализируется на естественной форме и цвете зуба.",
+    experience: 8,
+    schedule: [
+      { dayOfWeek: 2, startTime: "12:00", endTime: "20:00" },
+      { dayOfWeek: 4, startTime: "12:00", endTime: "20:00" },
+      { dayOfWeek: 5, startTime: "12:00", endTime: "20:00" },
+    ],
+  },
+  {
+    name: "Дементьева Ольга Николаевна",
+    specialty: "Врач-гигиенист",
+    description:
+      "Ультразвуковая чистка, Air Flow, глубокое фторирование, индивидуальные программы домашнего ухода для всей семьи.",
+    experience: 7,
+    schedule: [
+      { dayOfWeek: 1, startTime: "09:00", endTime: "18:00" },
+      { dayOfWeek: 2, startTime: "09:00", endTime: "18:00" },
+      { dayOfWeek: 6, startTime: "09:00", endTime: "18:00" },
+      { dayOfWeek: 7, startTime: "09:00", endTime: "18:00" },
+    ],
+  },
 ];
 
 const services = [
