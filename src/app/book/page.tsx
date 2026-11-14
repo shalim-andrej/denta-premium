@@ -44,7 +44,7 @@ export default function BookPage({ searchParams }: BookPageProps) {
       <div className="max-w-2xl mx-auto">
         <div className="max-w-xl mb-12 animate-fade-up">
           <span className="eyebrow">Оплата онлайн</span>
-          <h1 className="mt-6 font-display font-medium text-[2.2rem] sm:text-5xl leading-[1.1] text-ink uppercase">
+          <h1 className="mt-6 font-display text-[2.2rem] sm:text-5xl leading-[1.1] text-ink uppercase">
             Запись <span className="serif-italic normal-case text-fern">на приём</span>
           </h1>
           <p className="mt-5 text-ink-soft text-base md:text-lg leading-relaxed">

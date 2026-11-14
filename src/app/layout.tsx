@@ -1,30 +1,45 @@
 // src/app/layout.tsx
 import type { Metadata } from "next";
-import { Unbounded, Cormorant_Garamond, Golos_Text } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 import ChromeGate from "@/components/ChromeGate";
 import Header from "@/components/Header";
 
-// Дисплейный широкий гротеск (подача ЗАРЯ) — капс-заголовки, числа, навигация
-const unbounded = Unbounded({
-  subsets: ["latin", "cyrillic"],
-  weight: ["300", "400", "500"],
-  variable: "--font-unbounded",
+/*
+  Шрифтовая система — 4 разные семьи, файлы лежат в проекте (src/fonts),
+  кириллица проверена fontTools. Ничего системного и «дефолтного»:
+  - Oranienbaum — русская высококонтрастная дидона: заголовки (400, одновесовая)
+  - Cormorant   — курсивная антиква: акцентные слова, крупные цифры (variable 300–700)
+  - Literata    — книжная антиква для основного текста (variable 300–900)
+  - Jost        — геометрический гротеск: капс-лейблы, навигация, поля (variable 100–900)
+*/
+const oranienbaum = localFont({
+  src: "../fonts/Oranienbaum-Regular.ttf",
+  weight: "400",
+  variable: "--font-oranienbaum",
+  display: "swap",
 });
 
-// Тонкая антиква-курсив — акцентные слова в заголовках
-const cormorant = Cormorant_Garamond({
-  subsets: ["latin", "cyrillic"],
-  weight: ["400", "500", "600"],
-  style: ["normal", "italic"],
+const cormorant = localFont({
+  src: "../fonts/Cormorant-Italic.ttf",
+  weight: "300 700",
+  style: "italic",
   variable: "--font-cormorant",
+  display: "swap",
 });
 
-// Основной текст — аккуратный русский гротеск
-const golos = Golos_Text({
-  subsets: ["latin", "cyrillic"],
-  weight: ["400", "500", "600", "700"],
-  variable: "--font-golos",
+const literata = localFont({
+  src: "../fonts/Literata.ttf",
+  weight: "300 900",
+  variable: "--font-literata",
+  display: "swap",
+});
+
+const jost = localFont({
+  src: "../fonts/Jost.ttf",
+  weight: "100 900",
+  variable: "--font-jost",
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -49,7 +64,7 @@ export default function RootLayout({
   return (
     <html lang="ru">
       <body
-        className={`${golos.variable} ${unbounded.variable} ${cormorant.variable} bg-paper text-ink antialiased`}
+        className={`${oranienbaum.variable} ${cormorant.variable} ${literata.variable} ${jost.variable} bg-paper text-ink antialiased`}
       >
         <ChromeGate header={<Header />}>{children}</ChromeGate>
       </body>

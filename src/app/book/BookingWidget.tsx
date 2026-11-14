@@ -149,7 +149,7 @@ export default function BookingWidget({ services, doctors, initialDoctorId, init
   /* ---------- Оформление шагов ---------- */
   const stepCls = "flex gap-4 md:gap-6";
   const numCls =
-    "font-display italic text-xl text-fern/80 w-9 shrink-0 pt-0.5";
+    "font-accent italic text-xl text-fern/80 w-9 shrink-0 pt-0.5";
   const labelCls = "block text-sm font-semibold text-ink mb-2.5";
 
   const payOptions = [
@@ -340,7 +340,7 @@ export default function BookingWidget({ services, doctors, initialDoctorId, init
               <button
                 type="submit"
                 disabled={isLoading}
-                className="btn-primary w-full py-4 text-base"
+                className="link-action w-full justify-center text-[13.5px]"
               >
                 {isLoading ? (
                   <>

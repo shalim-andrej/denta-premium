@@ -38,7 +38,7 @@ export default function ServicesPage() {
       <div className="max-w-[1400px] mx-auto">
         <div className="max-w-3xl mb-14 md:mb-20 animate-fade-up">
           <span className="eyebrow">Прайс-лист</span>
-          <h1 className="mt-7 font-display font-medium text-[2.3rem] sm:text-5xl md:text-[3.4rem] leading-[1.1] text-ink uppercase">
+          <h1 className="mt-7 font-display text-[2.3rem] sm:text-5xl md:text-[3.4rem] leading-[1.1] text-ink uppercase">
             Услуги и цены{" "}
             <span className="serif-italic normal-case text-fern">без сюрпризов</span>
           </h1>

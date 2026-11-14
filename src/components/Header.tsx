@@ -4,7 +4,8 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
-import { Phone, X } from "lucide-react";
+import { Phone, X, ArrowRight } from "lucide-react";
+import Logo from "./Logo";
 
 const NAV_LINKS = [
   { href: "/", label: "Главная" },
@@ -16,18 +17,6 @@ const NAV_LINKS = [
 function isActive(pathname: string, href: string) {
   if (href === "/") return pathname === "/";
   return pathname.startsWith(href);
-}
-
-export function Logo({ size = "md" }: { size?: "md" | "lg" }) {
-  const word = size === "lg" ? "text-[30px]" : "text-[22px]";
-  return (
-    <Link href="/" className="group inline-flex items-baseline" aria-label="DentaPremium — на главную">
-      <span className={`${word} leading-none whitespace-nowrap font-display font-medium tracking-tight text-ink`}>
-        Denta
-        <span className="serif-italic text-fern">Premium</span>
-      </span>
-    </Link>
-  );
 }
 
 export default function Header() {
@@ -95,8 +84,9 @@ export default function Header() {
               <Phone className="w-3.5 h-3.5" />
               +7 (999) 000-00-00
             </a>
-            <Link href="/book" className="btn-primary px-6 py-2.5 text-[13.5px]">
+            <Link href="/book" className="link-action">
               Записаться
+              <ArrowRight className="w-4 h-4" strokeWidth={1.5} />
             </Link>
           </div>
 
@@ -139,7 +129,7 @@ export default function Header() {
                     onClick={() => setIsOpen(false)}
                     className="group flex items-baseline gap-5 py-5"
                   >
-                    <span className="font-display italic text-fern/70 text-lg w-8">
+                    <span className="font-accent italic text-fern/70 text-xl w-9">
                       0{i + 1}
                     </span>
                     <span className="font-display text-4xl text-ink group-hover:text-fern transition-colors">
@@ -151,7 +141,7 @@ export default function Header() {
             </ul>
           </nav>
 
-          <div className="px-8 pb-12 space-y-5">
+          <div className="px-8 pb-12 space-y-6">
             <a href="tel:+79990000000" className="flex items-center gap-3 text-ink-soft">
               <Phone className="w-4 h-4 text-fern" />
               +7 (999) 000-00-00
@@ -159,9 +149,10 @@ export default function Header() {
             <Link
               href="/book"
               onClick={() => setIsOpen(false)}
-              className="btn-primary w-full py-4"
+              className="link-action"
             >
               Записаться на приём
+              <ArrowRight className="w-4 h-4" strokeWidth={1.5} />
             </Link>
           </div>
         </div>

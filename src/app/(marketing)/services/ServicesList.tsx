@@ -59,7 +59,7 @@ export default function ServicesList({ services }: { services: Service[] }) {
               i === filteredServices.length - 1 ? "border-b" : ""
             }`}
           >
-            <span className="hidden md:block font-display italic text-[15px] text-fern/70 w-10" aria-hidden="true">
+            <span className="hidden md:block font-accent italic text-[15px] text-fern/70 w-10" aria-hidden="true">
               {String(i + 1).padStart(2, "0")}
             </span>
             <div>

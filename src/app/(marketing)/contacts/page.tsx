@@ -49,7 +49,7 @@ export default function ContactsPage() {
       <div className="max-w-[1400px] mx-auto">
         <div className="max-w-3xl mb-14 md:mb-20 animate-fade-up">
           <span className="eyebrow">Связаться с нами</span>
-          <h1 className="mt-7 font-display font-medium text-[2.3rem] sm:text-5xl md:text-[3.4rem] leading-[1.1] text-ink uppercase">
+          <h1 className="mt-7 font-display text-[2.3rem] sm:text-5xl md:text-[3.4rem] leading-[1.1] text-ink uppercase">
             Контакты{" "}
             <span className="serif-italic normal-case text-fern">клиники</span>
           </h1>
@@ -92,17 +92,17 @@ export default function ContactsPage() {
             </div>
 
             {/* Действия */}
-            <div data-reveal style={{ transitionDelay: "0.1s" }} className="mt-10 flex flex-col sm:flex-row gap-3">
+            <div data-reveal style={{ transitionDelay: "0.1s" }} className="mt-10 flex flex-col sm:flex-row gap-x-8 gap-y-5">
               <a
                 href="https://wa.me/79990000000"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="btn-ghost px-6 py-3.5 text-sm flex-1"
+                className="link-quiet flex-1 justify-center text-[13px]"
               >
                 <MessageCircle className="w-4 h-4 text-fern" />
                 Написать в WhatsApp
               </a>
-              <a href="tel:+79990000000" className="btn-primary px-6 py-3.5 text-sm flex-1">
+              <a href="tel:+79990000000" className="link-action flex-1 justify-center text-[13px]">
                 <Phone className="w-4 h-4" />
                 Позвонить
               </a>

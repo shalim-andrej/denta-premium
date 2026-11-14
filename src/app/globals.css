@@ -1,18 +1,25 @@
 @import "tailwindcss";
 
 /* ============================================================
-   DentaPremium — дизайн-система «Зелёная редакция»
+   DentaPremium — дизайн-система «Зелёная редакция №2»
    Принцип ЗАРЯ: светлая тёплая база + один яркий акцент
-   + золото. Кремовый фон, еловые чернила, свежий изумруд,
-   широкая антиква-гротеск Unbounded в капсах, курсивная
-   антиква Cormorant для акцентных слов, Golos Text — текст.
-   Кнопки — только прямоугольные (radius 2px), никаких овалов.
+   + золото. Кремовый фон, еловые чернила, свежий изумруд.
+
+   Шрифты — 4 разные семьи, файлами в проекте (src/fonts),
+   кириллица проверена fontTools:
+   Oranienbaum (дидона, заголовки) · Cormorant Italic (акценты)
+   Literata (основной текст) · Jost (капс-лейблы, интерфейс).
+
+   Действия — ТОЛЬКО типографика: капс + стрелка + линия,
+   вырастающая при наведении. Никаких плашек, овалов, рамок.
+   Формы — на подчёркивании, календарь — квадратные ячейки.
    ============================================================ */
 
 @theme inline {
-  --font-sans: var(--font-golos), ui-sans-serif, system-ui, sans-serif;
-  --font-display: var(--font-unbounded), var(--font-golos), sans-serif;
+  --font-sans: var(--font-literata), Georgia, "Times New Roman", serif;
+  --font-display: var(--font-oranienbaum), Georgia, "Times New Roman", serif;
   --font-accent: var(--font-cormorant), Georgia, serif;
+  --font-label: var(--font-jost), ui-sans-serif, system-ui, sans-serif;
 }
 
 @theme {
@@ -84,7 +91,7 @@ html {
 body {
   background-color: var(--color-paper);
   color: var(--color-ink);
-  font-family: var(--font-golos), ui-sans-serif, system-ui, sans-serif;
+  font-family: var(--font-literata), Georgia, serif;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }
@@ -98,7 +105,6 @@ body {
 ::-webkit-scrollbar-track { background: var(--color-paper); }
 ::-webkit-scrollbar-thumb {
   background: #c9c7b8;
-  border-radius: 999px;
   border: 2px solid var(--color-paper);
 }
 ::-webkit-scrollbar-thumb:hover { background: #b0ae9d; }
@@ -110,9 +116,10 @@ img {
 /* ---------- Переиспользуемые компоненты ---------- */
 
 @layer components {
-  /* Надзаголовок-строка: капс с широким трекингом */
+  /* Надзаголовок-строка: капс Jost с широким трекингом */
   .eyebrow {
-    @apply inline-flex items-center gap-3 text-[11px] font-semibold uppercase;
+    @apply inline-flex items-center gap-3 text-[11px] font-medium uppercase;
+    font-family: var(--font-jost), sans-serif;
     letter-spacing: 0.24em;
     color: var(--color-fern);
   }
@@ -134,59 +141,97 @@ img {
     letter-spacing: 0.01em;
   }
 
-  /* Кнопка — сплошные еловые чернила; строго прямоугольная */
-  .btn-primary {
-    @apply inline-flex items-center justify-center gap-2.5 rounded-[2px] font-semibold uppercase transition-all duration-300;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    font-size: 0.82em;
-    background: var(--color-ink);
-    color: var(--color-paper);
+  /*
+    Действие — только типографика: капс Jost + стрелка + линия,
+    которая вырастает слева при наведении. Без плашек и рамок.
+  */
+  .link-action {
+    @apply inline-flex items-center gap-3 text-[12.5px] font-medium uppercase;
+    font-family: var(--font-jost), sans-serif;
+    letter-spacing: 0.18em;
+    color: var(--color-ink);
+    padding-bottom: 7px;
+    position: relative;
   }
-  .btn-primary:hover {
+  .link-action::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 1px;
     background: var(--color-fern);
-    transform: translateY(-1px);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
   }
-  .btn-primary:active { transform: translateY(0); }
-  .btn-primary:disabled {
-    @apply opacity-50 cursor-not-allowed pointer-events-none;
+  .link-action:hover::after { transform: scaleX(1); }
+  .link-action svg {
+    color: var(--color-fern);
+    transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
   }
-
-  /* Тихая кнопка — одна тонкая линия; тоже прямоугольная */
-  .btn-ghost {
-    @apply inline-flex items-center justify-center gap-2.5 rounded-[2px] font-medium uppercase text-ink transition-all duration-300;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    font-size: 0.82em;
-    border: 1px solid rgba(15, 27, 21, 0.28);
-    background: transparent;
-  }
-  .btn-ghost:hover {
-    border-color: var(--color-ink);
-    background: rgba(15, 27, 21, 0.04);
-    transform: translateY(-1px);
+  .link-action:hover svg { transform: translateX(5px); }
+  .link-action:disabled,
+  .link-action[aria-disabled="true"] {
+    @apply opacity-45 cursor-not-allowed pointer-events-none;
   }
 
-  /* Кнопка на тёмном фоне */
-  .btn-light {
-    @apply inline-flex items-center justify-center gap-2.5 rounded-[2px] font-semibold uppercase transition-all duration-300;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    font-size: 0.82em;
-    background: var(--color-paper);
-    color: var(--color-forest);
-  }
-  .btn-light:hover {
-    background: var(--color-cream);
-    transform: translateY(-1px);
-  }
-
-  /* Тихая плашка — линия и лёгкий фон */
-  .chip {
-    @apply inline-flex items-center gap-2 rounded-[2px] px-4 py-1.5 text-[12.5px] font-medium;
-    border: 1px solid rgba(15, 27, 21, 0.16);
+  /* Тихое действие — приглушённый текст, линия появляется в цвет чернил */
+  .link-quiet {
+    @apply inline-flex items-center gap-3 text-[12.5px] font-medium uppercase;
+    font-family: var(--font-jost), sans-serif;
+    letter-spacing: 0.18em;
     color: var(--color-ink-soft);
+    padding-bottom: 7px;
+    position: relative;
+    transition: color 0.3s ease;
   }
+  .link-quiet::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 1px;
+    background: var(--color-ink);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .link-quiet:hover { color: var(--color-ink); }
+  .link-quiet:hover::after { transform: scaleX(1); }
+  .link-quiet svg {
+    transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .link-quiet:hover svg { transform: translateX(5px); }
+
+  /* Действие на тёмном фоне */
+  .link-light {
+    @apply inline-flex items-center gap-3 text-[12.5px] font-medium uppercase;
+    font-family: var(--font-jost), sans-serif;
+    letter-spacing: 0.18em;
+    color: #f1eee5;
+    padding-bottom: 7px;
+    position: relative;
+  }
+  .link-light::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 1px;
+    background: #f1eee5;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .link-light:hover::after { transform: scaleX(1); }
+  .link-light svg {
+    color: var(--color-gold);
+    transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .link-light:hover svg { transform: translateX(5px); }
 
   /* Арка — фирменная форма фотографий */
   .arch {
@@ -204,38 +249,48 @@ img {
     overflow: hidden;
   }
 
-  /* Поля ввода — бумага и линия, прямоугольные */
+  /*
+    Поля ввода — линия вместо бокса: фон прозрачный, снизу
+    тонкое подчёркивание, при фокусе линия становится изумрудной.
+  */
   .field {
-    @apply w-full rounded-[2px] px-4 py-3.5 text-[15px] text-ink placeholder-[#9aa294] outline-none transition-all duration-300;
-    background: #ffffff;
-    border: 1px solid rgba(15, 27, 21, 0.16);
+    @apply w-full bg-transparent px-0 py-3 text-[15.5px] text-ink outline-none;
+    font-family: var(--font-jost), sans-serif;
+    font-weight: 400;
+    border: 0;
+    border-bottom: 1px solid rgba(15, 27, 21, 0.28);
+    border-radius: 0;
+    transition: border-color 0.3s ease;
   }
-  .field:focus {
-    border-color: rgba(14, 124, 87, 0.6);
-    box-shadow: 0 0 0 3px rgba(14, 124, 87, 0.09);
-  }
+  .field::placeholder { color: #9aa294; }
+  .field:focus { border-bottom-color: var(--color-fern); }
 
   select.field {
     @apply appearance-none;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%235d6a5f' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%235d6a5f' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
     background-repeat: no-repeat;
-    background-position: right 1.1rem center;
-    padding-right: 2.75rem;
+    background-position: right 0.4rem center;
+    padding-right: 2rem;
   }
   select.field option {
-    background-color: #ffffff;
+    background-color: #f6f4ee;
     color: #0f1b15;
+  }
+
+  textarea.field {
+    @apply resize-none;
+    min-height: 6.5rem;
   }
 }
 
-/* ---------- react-day-picker на молочной бумаге ---------- */
+/* ---------- react-day-picker: бумага, линии, квадратные ячейки ---------- */
 
 .rdp-root.rdp-root {
   --rdp-accent-color: #0e7c57;
   --rdp-accent-background-color: rgba(14, 124, 87, 0.08);
   --rdp-day-height: 2.6rem;
   --rdp-day-width: 2.6rem;
-  --rdp-day_button-border-radius: 9999px;
+  --rdp-day_button-border-radius: 0;
   --rdp-day_button-border: 1px solid transparent;
   --rdp-day_button-height: 2.6rem;
   --rdp-day_button-width: 2.6rem;
@@ -244,7 +299,7 @@ img {
   --rdp-today-color: #0e7c57;
   --rdp-selected-border: 1px solid transparent;
   --rdp-disabled-opacity: 0.3;
-  --rdp-font-family: var(--font-golos), sans-serif;
+  --rdp-font-family: var(--font-jost), sans-serif;
   margin: 0;
 }
 
@@ -256,16 +311,16 @@ img {
 .rdp-root.rdp-root .rdp-month_caption,
 .rdp-root.rdp-root .rdp-month_caption * {
   color: #0f1b15;
-  font-weight: 700;
+  font-weight: 500;
 }
 
 .rdp-root.rdp-root .rdp-weekdays,
 .rdp-root.rdp-root .rdp-weekday {
   color: #9aa294;
-  font-size: 0.7rem;
+  font-size: 0.68rem;
   text-transform: uppercase;
-  letter-spacing: 0.06em;
-  font-weight: 600;
+  letter-spacing: 0.08em;
+  font-weight: 500;
 }
 
 .rdp-root.rdp-root .rdp-day_button:hover {
@@ -276,7 +331,7 @@ img {
 .rdp-root.rdp-root .rdp-selected .rdp-day_button {
   background: #0f1b15;
   color: #f6f4ee;
-  font-weight: 700;
+  font-weight: 500;
   border-color: transparent;
 }
 
@@ -284,7 +339,6 @@ img {
   color: #5d6a5f;
   width: 2rem;
   height: 2rem;
-  border-radius: 9999px;
 }
 .rdp-root.rdp-root .rdp-nav_button:hover {
   color: #0e7c57;
@@ -304,9 +358,8 @@ input:focus-visible,
 select:focus-visible,
 textarea:focus-visible,
 summary:focus-visible {
-  outline: 2px solid rgba(14, 124, 87, 0.55);
+  outline: 2px solid rgba(14, 124, 87, 0.6);
   outline-offset: 3px;
-  border-radius: 2px;
 }
 
 /* Уважение к reduced motion */

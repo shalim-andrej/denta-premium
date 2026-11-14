@@ -36,9 +36,9 @@ function SectionHead({
         {sub && <p className="mt-5 text-ink-soft text-[15px] md:text-base leading-relaxed max-w-xl">{sub}</p>}
       </div>
       {href && linkLabel && (
-        <Link href={href} className="btn-ghost px-6 py-3 text-sm shrink-0 self-start md:self-auto group">
+        <Link href={href} className="link-action shrink-0 self-start md:self-auto">
           {linkLabel}
-          <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
+          <ArrowRight className="w-4 h-4" strokeWidth={1.5} />
         </Link>
       )}
     </div>
@@ -78,7 +78,7 @@ function Hero() {
           Премиальная стоматология · Москва
         </span>
 
-        <h1 className="mt-5 max-w-4xl font-display font-medium uppercase leading-[1.08] text-ink text-[1.95rem] sm:text-[3.4rem] xl:text-[4.15rem]">
+        <h1 className="mt-5 max-w-4xl font-display uppercase leading-[1.08] text-ink text-[1.95rem] sm:text-[3.4rem] xl:text-[4.15rem]">
           <span className="block overflow-hidden pb-1">
             <span className="block line-reveal" style={{ animationDelay: "0.25s" }}>
               Стоматология
@@ -109,20 +109,18 @@ function Hero() {
         </p>
 
         <div
-          className="mt-7 flex flex-col sm:flex-row sm:items-center gap-4 animate-fade-up"
+          className="mt-8 flex flex-col sm:flex-row sm:items-center gap-x-8 gap-y-5 animate-fade-up"
           style={{ animationDelay: "0.85s" }}
         >
-          <Link href="/book" className="btn-primary px-8 py-4 text-[15px] group">
+          <Link href="/book" className="link-action text-[13px] sm:text-sm">
             Записаться онлайн
-            <ArrowRight className="w-4.5 h-4.5 group-hover:translate-x-1 transition-transform" />
+            <ArrowRight className="w-4 h-4" strokeWidth={1.5} />
           </Link>
-          <Link
-            href="/services"
-            className="btn-ghost px-8 py-4 text-[15px] bg-paper/70 backdrop-blur-sm"
-          >
+          <Link href="/services" className="link-action text-[13px] sm:text-sm">
             Услуги и цены
+            <ArrowRight className="w-4 h-4" strokeWidth={1.5} />
           </Link>
-          <span className="hidden md:inline-flex chip bg-paper/70 backdrop-blur-sm">
+          <span className="hidden md:inline-flex items-center gap-2 font-label text-[11.5px] font-medium uppercase tracking-[0.14em] text-ink/80">
             <Star className="w-3.5 h-3.5 text-gold fill-gold" aria-hidden="true" />
             4.9 из 5 — по 1 200+ отзывам
           </span>
@@ -242,9 +240,9 @@ async function ServicesMenu() {
                     под ключ · {featured.duration} минут
                   </div>
                 </div>
-                <Link href={`/book?service=${featured.id}`} className="btn-primary px-6 py-3 text-sm">
+                <Link href={`/book?service=${featured.id}`} className="link-action text-[13px]">
                   Записаться
-                  <ArrowRight className="w-4 h-4" />
+                  <ArrowRight className="w-4 h-4" strokeWidth={1.5} />
                 </Link>
               </div>
             </div>
@@ -259,7 +257,7 @@ async function ServicesMenu() {
                 className={`group flex items-baseline justify-between gap-6 py-7 border-t border-ink/10 hover:border-fern/40 transition-colors ${i === rest.length - 1 ? "border-b" : ""}`}
               >
                 <div className="flex items-baseline gap-5">
-                  <span className="font-display italic text-[15px] text-fern/70 w-8 shrink-0" aria-hidden="true">
+                  <span className="font-accent italic text-[15px] text-fern/70 w-8 shrink-0" aria-hidden="true">
                     {String(i + 2).padStart(2, "0")}
                   </span>
                   <div>
@@ -401,7 +399,7 @@ function Advantages() {
               style={{ transitionDelay: `${i * 0.06}s` }}
               className={`grid md:grid-cols-[auto_1fr_1.2fr] gap-x-10 gap-y-3 items-baseline py-8 border-t border-ink/10 group ${i === ADVANTAGES.length - 1 ? "border-b" : ""}`}
             >
-              <span className="font-display italic text-xl text-fern/80 w-12" aria-hidden="true">
+              <span className="font-accent italic text-xl text-fern/80 w-12" aria-hidden="true">
                 0{i + 1}
               </span>
               <h3 className="font-display text-xl md:text-2xl text-ink leading-snug group-hover:text-fern transition-colors">
@@ -524,7 +522,7 @@ function Steps() {
           {STEPS.map((s, i) => (
             <div key={s.title} data-reveal style={{ transitionDelay: `${i * 0.08}s` }} className="border-t border-ink/10 pt-7">
               <div className="flex items-baseline justify-between">
-                <span className="font-display italic text-2xl text-fern/80" aria-hidden="true">
+                <span className="font-accent italic text-2xl text-fern/80" aria-hidden="true">
                   0{i + 1}
                 </span>
                 <s.icon className="w-4.5 h-4.5 text-ink-soft" strokeWidth={1.5} />
@@ -573,7 +571,7 @@ function Faq() {
           {FAQ_ITEMS.map((item, i) => (
             <details key={i} className={`group border-t border-ink/10 ${i === FAQ_ITEMS.length - 1 ? "border-b" : ""}`}>
               <summary className="cursor-pointer list-none px-2 md:px-4 py-6 flex items-center gap-5 select-none">
-                <span className="font-display italic text-lg text-fern/70 w-8 shrink-0" aria-hidden="true">
+                <span className="font-accent italic text-lg text-fern/70 w-8 shrink-0" aria-hidden="true">
                   0{i + 1}
                 </span>
                 <span className="font-display text-lg md:text-xl text-ink flex-1">{item.q}</span>
@@ -611,10 +609,10 @@ function Cta() {
           Первичная консультация с планом лечения. Оплата после записи —
           СБП или банковской картой.
         </p>
-        <div className="mt-10 flex flex-col sm:flex-row justify-center gap-4">
-          <Link href="/book" className="btn-light px-9 py-4 text-[15px] group">
+        <div className="mt-10 flex flex-col sm:flex-row justify-center gap-x-8 gap-y-5">
+          <Link href="/book" className="link-light text-[13px] sm:text-sm">
             Записаться на приём
-            <ArrowRight className="w-4.5 h-4.5 group-hover:translate-x-1 transition-transform" />
+            <ArrowRight className="w-4 h-4" strokeWidth={1.5} />
           </Link>
         </div>
       </div>

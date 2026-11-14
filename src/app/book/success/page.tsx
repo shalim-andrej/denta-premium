@@ -39,14 +39,14 @@ async function BookingDetails({ token }: { token?: string }) {
       <div className="space-y-3">
         <Link
           href={`/booking/${token}`}
-          className="btn-primary w-full py-3.5 text-sm"
+          className="link-action w-full justify-center text-[13px]"
         >
           <Calendar className="w-4.5 h-4.5" />
           Управление записью
         </Link>
         <a
           href={`/api/bookings/${token}/ics`}
-          className="btn-ghost w-full py-3.5 text-sm"
+          className="link-quiet w-full justify-center text-[13px]"
         >
           <Download className="w-4.5 h-4.5" />
           Добавить в календарь (.ics)
@@ -84,7 +84,7 @@ export default function SuccessPage({
         <div className="space-y-2 mt-7">
           <Link
             href="/"
-            className="btn-ghost w-full py-3.5 text-sm"
+            className="link-quiet w-full justify-center text-[13px]"
           >
             Вернуться на главную
           </Link>

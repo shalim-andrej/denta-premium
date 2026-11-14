@@ -38,7 +38,7 @@ export default function ReviewForm() {
   if (!open) {
     return (
       <div className="text-center">
-        <button onClick={() => setOpen(true)} className="btn-ghost px-7 py-3.5 text-sm">
+        <button onClick={() => setOpen(true)} className="link-quiet text-[13px]">
           Оставить свой отзыв
         </button>
       </div>
@@ -85,13 +85,13 @@ export default function ReviewForm() {
         className="field resize-none"
       />
       <div className="flex gap-3 pt-1">
-        <button type="submit" disabled={loading} className="btn-primary px-7 py-3 text-sm">
+        <button type="submit" disabled={loading} className="link-action text-[13px]">
           {loading ? "Отправляем…" : "Отправить отзыв"}
         </button>
         <button
           type="button"
           onClick={() => setOpen(false)}
-          className="btn-ghost px-7 py-3 text-sm"
+          className="link-quiet text-[13px]"
         >
           Отмена
         </button>

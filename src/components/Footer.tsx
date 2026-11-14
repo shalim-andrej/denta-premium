@@ -1,7 +1,7 @@
 // src/components/Footer.tsx
 import Link from "next/link";
 import { Phone, Mail, ArrowUpRight } from "lucide-react";
-import { Logo } from "./Header";
+import Logo from "./Logo";
 
 // Вычисляем год один раз при загрузке модуля (на сервере)
 const CURRENT_YEAR = new Date().getFullYear();
@@ -50,10 +50,10 @@ export default function Footer() {
             </a>
             <Link
               href="/book"
-              className="btn-light px-7 py-3 text-sm group"
+              className="link-light text-[13px]"
             >
               Записаться
-              <ArrowUpRight className="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+              <ArrowUpRight className="w-4 h-4" strokeWidth={1.5} />
             </Link>
           </div>
         </div>

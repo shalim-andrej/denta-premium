@@ -86,7 +86,7 @@ export default async function ManageBookingPage({
             <div className="space-y-3">
               <a
                 href={`/api/bookings/${token}/ics`}
-                className="btn-ghost w-full py-3.5 text-sm"
+                className="link-quiet w-full justify-center text-[13px]"
               >
                 <Download className="w-4.5 h-4.5" />
                 Добавить в календарь
@@ -95,7 +95,7 @@ export default async function ManageBookingPage({
                 <input type="hidden" name="token" value={token} />
                 <button
                   type="submit"
-                  className="btn-primary w-full py-3.5 text-sm inline-flex items-center justify-center gap-2"
+                  className="link-action w-full justify-center text-[13px]"
                 >
                   <CalendarClock className="w-4.5 h-4.5" />
                   Перенести запись
